@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "preLaunchTask": "Serve", 
+        "name": "Launch",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:8080/html/home.html",
+        "webRoot": "${workspaceFolder}"
+      }
+    ]
+  }
+  

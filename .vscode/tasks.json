@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Serve",
+        "type": "shell",
+        "command": "npx",
+        "args": [
+          "http-server",
+          "${workspaceFolder}",
+          "-p",
+          "8080"
+        ],
+        "isBackground": true,
+        "group": "build",
+        "problemMatcher": {
+          "owner": "custom",
+          "fileLocation": ["relative", "${workspaceFolder}"],
+          "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(error|warning):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+          }
+        }
+        
+      }
+    ]
+  }
+  
+  
