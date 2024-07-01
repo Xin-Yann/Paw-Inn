@@ -9,47 +9,188 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
-    <link rel="stylesheet" href="../css/nav-10.css">
-    <link rel="stylesheet" href="../css/home.css">
-    <script type="module" src="/js/firebase-configs.js"></script>
-
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/nav-3.css">
+    <link rel="stylesheet" href="/css/home-12.css">
+    <script type="module" src="/js/firebase-config.js"></script>
 </head>
 
 <body>
-    <div class="container" id="myHeader">
-        <div class="row pt-4">
-            <div class="col-6">
-                <h2 class="title px-2 pt-2"><a href="home.html">Pet Hotel</a></h2>
-            </div>
-            <div class="col-6 links">
-                <a href="home.html">Home</a>
-                <div class="dropdown">
-                    <a href="#">Room Type</a>
-                    <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
-                        <path d="M0-.75h24v24H0z" fill="none"></path>
-                    </svg>
-                    <div class="dropdown-content">
-                        <a href="/html/">Dog</a>
-                        <a href="/html/">Cat</a>
-                        <a href="/html/">Birds</a>
-                        <a href="/html/">Cage</a>
-                    </div>
+    <div class="overflow-hidden">
+        <div class="container" id="myHeader">
+            <div class="row pt-4">
+                <div class="col-6">
+                    <h2 class="title px-2 pt-2"><a href="home.html">Pet Hotel</a></h2>
                 </div>
-                <a href="/html/offerdetails.html">Booking History</a>
-                <a href="/html/contact.html">Contact Us</a>
-                <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
-                <span style="cursor:pointer"><i class="fa fa-sign-out" id="signOut"></i></span>
+                <div class="col-6 links">
+                    <a href="home.html">Home</a>
+                    <div class="dropdown">
+                        <a href="#">Room Type</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/roomdog.html">Dog</a>
+                            <a href="/html/roomcat.html">Cat</a>
+                            <a href="/html/">Room</a>
+                            <a href="/html/">Cage</a>
+                        </div>
+                    </div>
+                    <a href="/html/offerdetails.html">Booking History</a>
+                    <a href="/html/contact.html">Contact Us</a>
+                    <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
+                    <span style="cursor:pointer"><i class="fa fa-sign-out" id="signOut"></i></span>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="pt-4">
-        <img src="/image/banner.jpg" style="width: 1535px;" />
-        <button class="btn">Book Now</button>
-    </div>
-    <div class="pt-4">
-        <h2 class="text-center about">About Us</h2>
+
+        <div class="pt-4">
+            <img src="/image/banner.jpg" style="width: 1519px;" />
+            <button class="btn">Book Now</button>
+        </div>
+
+        <!--About us-->
+        <div class="pt-5">
+            <h1 class="text-center about">About Us</h1>
+            <div class="container py-5">
+                <p>Welcome to [Your Pet Hotel Name], where your pets are our family! Located in the heart of
+                    [City/Location], our pet hotel offers a cozy and safe haven for your beloved furry friends. Founded
+                    by
+                    passionate pet lovers, we provide top-notch boarding, daycare, and grooming services in a
+                    state-of-the-art facility designed with your pet's comfort in mind. Our dedicated team ensures
+                    personalized care and 24/7 supervision, giving you peace of mind while you're away. Choose [Your Pet
+                    Hotel Name] for a home-away-from-home experience your pets will love!</p>
+            </div>
+        </div>
+
+        <!--Boarding Policy-->
+        <div class="py-5" style="background: #FFF4F0;">
+            <h1 class="text-center about">Boarding Policy</h1>
+            <div class="container card-position pt-4">
+                <div class="card pt-4 pl-3">
+                    <img src="/image/dog.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Dog Boarding</b></h4>
+                        <a href="/html/booking.html">Read More</a>
+                    </div>
+                </div>
+
+                <div class="card pt-4 pl-3">
+                    <img src="/image/cat.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Cat Boarding</b></h4>
+                        <a href="/html/booking.html">Read More</a>
+                    </div>
+                </div>
+
+                <div class="card pt-4 pl-3">
+                    <img src="/image/animal.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Rabbit Boarding</b></h4>
+                        <a href="/html/booking.html">Read More</a>
+                    </div>
+                </div>
+
+                <div class="card pt-4 pl-3">
+                    <img src="/image/feather.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Caged Animal Boarding</b></h4>
+                        <a href="/html/booking.html">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--What to pack-->
+        <div class="pt-5">
+            <h1 class="text-center about">What To Pack</h1>
+            <div class="container py-5">
+                <div class="card-position">
+                    <div class="column">
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct.png" alt="Check Icon">
+                            </div>
+                            <div class="text">
+                                <h2>Bring Your Own Food</h2>
+                                <p>Use small plastic baggies to package pre-measured meals and label them.</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct (1).png" alt="Cross Icon">
+                            </div>
+                            <div class="text">
+                                <h2>Dietary Supplements</h2>
+                                <p>Indicate the appropriate number of doses that your dog will need to take in your
+                                    absence.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dogs">
+                        <img src="/image/Group.png" alt="Dog 1">
+                    </div>
+                    <div class="column">
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct (2).png" alt="Check Icon">
+                            </div>
+                            <div class="text">
+                                <h2>Documents Required</h2>
+                                <p>Be sure that all required documents and forms are ready to present on drop off day.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct-3.png" alt="Check Icon">
+                            </div>
+                            <div class="text">
+                                <h2>A reminder of Home</h2>
+                                <p>To keep your dog feeling close to you in your absence, include something with your
+                                    scent.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Footer-->
+        <div class="row text-left px-5 pt-5 foot">
+            <div class="col-md-7 col-sm-12 pb-3">
+                <h3 class="pb-3">Pet Hotel</h3>
+                <!-- <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.8440470603823!2d100.30465607474414!3d5.440639094538781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac2e275e8ecad%3A0xd2907ed2e6795a85!2sWonderland%20Petshop!5e0!3m2!1sen!2smy!4v1714845441001!5m2!1sen!2smy"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+                <br>
+            </div>
+
+            <div class="col-md-5 col-sm-12 pb-5 pl-5">
+                <h3 class="pb-3">Quick Links</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><a href="/html/home.html">Home</a></p>
+                        <p><a href="/html/productdog.html">Room Type</a></p>
+                        <p><a href="customize.php">Booking History</a></p>
+                        <p><a href="/html/contact.html">Contact Us</a></p>
+                    </div>
+                </div>
+
+                <h3 class="py-3">Follow Us</h3>
+                <a href="https://www.facebook.com/petswonderland.com.my/" target="blank"><i class="fa fa-facebook"
+                        aria-hidden="true" style="color:white !important"></i></a>
+                <a href="https://www.instagram.com/petswonderlandmy/" target="blank"><i class="fa fa-instagram"
+                        aria-hidden="true" style="color:white !important"></i></a>
+            </div>
+
+        </div>
     </div>
 </body>
 

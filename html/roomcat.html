@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Hotel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/nav-3.css">
+    <link rel="stylesheet" href="/css/roomcat.css">
+    <script type="module" src="/js/firebase-config.js"></script>
+</head>
+
+<body>
+    <div class="overflow-hidden">
+        <div class="container" id="myHeader">
+            <div class="row pt-4">
+                <div class="col-6">
+                    <h2 class="title px-2 pt-2"><a href="home.html">Pet Hotel</a></h2>
+                </div>
+                <div class="col-6 links">
+                    <a href="home.html">Home</a>
+                    <div class="dropdown">
+                        <a href="#">Room Type</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/roomdog.html">Dog</a>
+                            <a href="/html/roomcat.html">Cat</a>
+                            <a href="/html/">Rabbit</a>
+                            <a href="/html/">Cage</a>
+                        </div>
+                    </div>
+                    <a href="/html/offerdetails.html">Booking History</a>
+                    <a href="/html/contact.html">Contact Us</a>
+                    <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
+                    <span style="cursor:pointer"><i class="fa fa-sign-out" id="signOut"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-center py-5" style="color: #127369; font-weight: 900;">CAT</h1>
+
+        <div id="rooms" class="container pb-5" style="display: flex;"></div>
+    
+
+        <!-- <div id="rooms" class="container" style="display: flex;"></div> -->
+
+        <!--Footer-->
+        <div class="row text-left px-5 pt-5 foot">
+            <div class="col-md-7 col-sm-12 pb-3">
+                <h3 class="pb-3">Pet Hotel</h3>
+                <!-- <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.8440470603823!2d100.30465607474414!3d5.440639094538781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac2e275e8ecad%3A0xd2907ed2e6795a85!2sWonderland%20Petshop!5e0!3m2!1sen!2smy!4v1714845441001!5m2!1sen!2smy"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+                <br>
+            </div>
+
+            <div class="col-md-5 col-sm-12 pb-5 pl-5">
+                <h3 class="pb-3">Quick Links</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><a href="/html/home.html">Home</a></p>
+                        <p><a href="/html/productdog.html">Room Type</a></p>
+                        <p><a href="customize.php">Booking History</a></p>
+                        <p><a href="/html/contact.html">Contact Us</a></p>
+                    </div>
+                </div>
+
+                <h3 class="py-3">Follow Us</h3>
+                <a href="https://www.facebook.com/petswonderland.com.my/" target="blank"><i class="fa fa-facebook"
+                        aria-hidden="true" style="color:white !important"></i></a>
+                <a href="https://www.instagram.com/petswonderlandmy/" target="blank"><i class="fa fa-instagram"
+                        aria-hidden="true" style="color:white !important"></i></a>
+            </div>
+
+        </div>
+    </div>
+    <script type="module" src="/js/roomcats-1.js"></script>
+</body>
+
+</html>

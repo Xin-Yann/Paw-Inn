@@ -22,7 +22,7 @@
 
 .fa{
     padding-left: 15px;
-    color: #00c9a4 !important;
+    color: #127369 !important;
     font-size: 25px;
 }
 
@@ -124,7 +124,7 @@
 }
 
 .links a:hover{
-    color:gray;
+    color:white;
     text-underline-offset: 10px;
 }
 
@@ -133,8 +133,8 @@
 }
 
 /*footer*/
-.foot, h3{
-    background-color: #01647a !important;
+.foot{
+    background-color: #127369 !important;
     color:#fff !important;
     font-family: 'Nunito', sans-serif;
     font-weight: 900;
