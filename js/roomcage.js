@@ -7,8 +7,8 @@ const db = getFirestore();
 async function fetchDataAndDisplay() {
     try {
         // Reference to the specific document with ID "cat" in the "rooms" collection
-        const catDocRef = doc(collection(db, 'rooms'), 'cat');
-        const catRoomsCollectionRef = collection(catDocRef, 'cat rooms');
+        const catDocRef = doc(collection(db, 'rooms'), 'cage');
+        const catRoomsCollectionRef = collection(catDocRef, 'cage rooms');
 
         // Get the documents in the "cat rooms" subcollection
         const catRoomsQuerySnapshot = await getDocs(query(catRoomsCollectionRef));
@@ -28,13 +28,13 @@ async function fetchDataAndDisplay() {
                 const roomHTML = `
                     <div class="rooms-container">
                         <span class="product-id" style="display: none;">${roomData.room_id}</span>
-                        <img class="card-img-top" src="/image/cat/${imageUrl}" alt="${roomData.room_name}" style="height:280px">
+                        <img class="card-img-top" src="/image/cage/${imageUrl}" alt="${roomData.room_name}" style="height:280px">
                         
                         <div class="card-body">
                             <h5 class="card-title">${roomData.room_name}</h5>
-                            <p class="card-desc" style="height:25px">${roomData.room_size}</p>
+                            <p class="card-desc" style="height:25px">${roomData.room_size} sqft</p>
                             <p class="card-desc" style="height:25px">${roomData.room_description}</p>
-                            <p class="card-text"><small class="text-muted">Available Slots: ${roomData.room_slot}</small></p>
+                            <p class="card-text"><small class="text-muted">Available Slots: ${roomData.room_room_quantity}</small></p>
                             <p class="product-price pt-3">Price: RM${roomData.room_price}</p>
                             <a href="" class="btn btn-primary add-cart">Book Now</a>
                         </div>

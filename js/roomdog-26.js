@@ -33,9 +33,9 @@ async function fetchDataAndDisplay() {
                     
                     <div class="card-body">
                         <h4 class="card-title">${roomData.room_name}</h4>
-                        <p class="card-desc" style="height:25px">Room Size: ${roomData.room_size}</p>
+                        <p class="card-desc" style="height:25px">Room Size: ${roomData.room_size} sqft</p>
                         <p class="card-desc" style="height:25px">${roomData.room_description}</p>
-                        <p class="card-text"><small class="text-muted">Available Slots: ${roomData.room_slot}</small></p>
+                        <p class="card-text"><small class="text-muted">Available Slots: ${roomData.room_quantity}</small></p>
                         <p class="product-price pt-3">Price: RM${roomData.room_price}</p>
                         <button class="btn btn-primary add-cart" data-room-name="${roomData.room_name}">Book Now</button>
                     </div>
