@@ -4,16 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Hotel</title>
+    <title>Paws Inn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
-    <link rel="stylesheet" href="/css/nav-3.css">
+    <link rel="stylesheet" href="/css/nav-4.css">
     <link rel="stylesheet" href="/css/home-12.css">
-    <script type="module" src="/js/firebase-config.js"></script>
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black with opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,7 +65,7 @@
         <div class="container" id="myHeader">
             <div class="row pt-4">
                 <div class="col-6">
-                    <h2 class="title px-2 pt-2"><a href="home.html">Pet Hotel</a></h2>
+                    <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
                 </div>
                 <div class="col-6 links">
                     <a href="home.html">Home</a>
@@ -42,7 +86,7 @@
                     <a href="/html/offerdetails.html">Booking History</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
-                    <span style="cursor:pointer"><i class="fa fa-sign-out" id="signOut"></i></span>
+                    <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
                 </div>
             </div>
         </div>
@@ -55,42 +99,66 @@
         <!--About us-->
         <div class="pt-5">
             <h1 class="text-center about">About Us</h1>
-            <div class="container py-5">
-                <p>Welcome to [Your Pet Hotel Name], where your pets are our family! Located in the heart of
-                    [City/Location], our pet hotel offers a cozy and safe haven for your beloved furry friends. Founded
-                    by
-                    passionate pet lovers, we provide top-notch boarding, daycare, and grooming services in a
-                    state-of-the-art facility designed with your pet's comfort in mind. Our dedicated team ensures
-                    personalized care and 24/7 supervision, giving you peace of mind while you're away. Choose [Your Pet
-                    Hotel Name] for a home-away-from-home experience your pets will love!</p>
+            <div class="container py-5" style="line-height: 30px;">
+                <p style=" padding: 0 150px 0 150px;">Welcome to Paw Inn, where your pets are our family! Located in the Georgetown, our pet hotel offers a
+                    cozy and safe haven for your beloved furry friends. Founded by passionate pet lovers, we provide
+                    top-notch boarding, daycare, and grooming services in a state-of-the-art facility designed with your
+                    pet's comfort in mind. Our dedicated team ensures personalized care and 24/7 supervision, giving you
+                    peace of mind while you're away. Choose Paw Inn for a home-away-from-home experience your pets will
+                    love!</p>
             </div>
         </div>
 
         <!--Boarding Policy-->
         <div class="py-5" style="background: #FFF4F0;">
-            <h1 class="text-center about">Boarding Policy</h1>
+            <h1 class="text-center about pb-3">Boarding Policy</h1>
             <div class="container card-position pt-4">
                 <div class="card pt-4 pl-3">
                     <img src="/image/dog.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
                     <div class="container">
                         <h4 class="card-title"><b>Dog Boarding</b></h4>
-                        <a href="/html/booking.html">Read More</a>
+                        <a href="#" class="readMoreLink">Read More</a>
                     </div>
                 </div>
 
+                <!-- Modal for First Card (Hidden by Default) -->
+                <div id="modalDog" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center">Dog Boarding Policy</h3>
+                    </div>
+                </div>
+
+                <!-- Second Card -->
                 <div class="card pt-4 pl-3">
                     <img src="/image/cat.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
                     <div class="container">
                         <h4 class="card-title"><b>Cat Boarding</b></h4>
-                        <a href="/html/booking.html">Read More</a>
+                        <a href="#" class="readMoreLink">Read More</a>
                     </div>
                 </div>
 
+                <!-- Modal for Second Card (Hidden by Default) -->
+                <div id="modalCat" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center">Cat Boarding Policy</h3>
+                    </div>
+                </div>
+                
                 <div class="card pt-4 pl-3">
                     <img src="/image/animal.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
                     <div class="container">
                         <h4 class="card-title"><b>Rabbit Boarding</b></h4>
-                        <a href="/html/booking.html">Read More</a>
+                        <a href="#" class="readMoreLink">Read More</a>
+                    </div>
+                </div>
+
+                <!-- Modal for Second Card (Hidden by Default) -->
+                <div id="modalRabbit" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center">Rabbit Boarding Policy</h3>
                     </div>
                 </div>
 
@@ -98,7 +166,15 @@
                     <img src="/image/feather.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
                     <div class="container">
                         <h4 class="card-title"><b>Caged Animal Boarding</b></h4>
-                        <a href="/html/booking.html">Read More</a>
+                        <a href="#" class="readMoreLink">Read More</a>
+                    </div>
+                </div>
+
+                <!-- Modal for Second Card (Hidden by Default) -->
+                <div id="modalCage" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center">Caged Animal Boarding Policy</h3>
                     </div>
                 </div>
             </div>
@@ -164,7 +240,7 @@
         <!--Footer-->
         <div class="row text-left px-5 pt-5 foot">
             <div class="col-md-7 col-sm-12 pb-3">
-                <h3 class="pb-3">Pet Hotel</h3>
+                <h3 class="pb-3">Paws Inn</h3>
                 <!-- <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.8440470603823!2d100.30465607474414!3d5.440639094538781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304ac2e275e8ecad%3A0xd2907ed2e6795a85!2sWonderland%20Petshop!5e0!3m2!1sen!2smy!4v1714845441001!5m2!1sen!2smy"
                 width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
@@ -192,6 +268,48 @@
 
         </div>
     </div>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/logouts.js"></script>
+    <script>
+        // Get all read more links
+        // Get all read more links
+        var readMoreLinks = document.getElementsByClassName('readMoreLink');
+
+        // Loop through all read more links and add event listeners
+        for (var i = 0; i < readMoreLinks.length; i++) {
+            readMoreLinks[i].addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent the default link behavior
+
+                // Get the modal corresponding to the clicked link
+                var modalId = this.parentNode.parentNode.nextElementSibling.id;
+
+                // Display the corresponding modal
+                document.getElementById(modalId).style.display = 'block';
+            });
+        }
+
+
+        // Get all close buttons
+        var closeBtns = document.querySelectorAll('.close');
+
+        // Loop through all close buttons and add event listeners
+        for (var i = 0; i < closeBtns.length; i++) {
+            closeBtns[i].addEventListener('click', function () {
+                // Hide the modal when close button is clicked
+                this.parentNode.parentNode.style.display = 'none';
+            });
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function (event) {
+            var modals = document.getElementsByClassName('modal');
+            for (var i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>

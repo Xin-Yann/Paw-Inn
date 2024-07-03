@@ -1,0 +1,206 @@
+.section .section-center {
+    position: absolute;
+    top: 57%;
+    left: 0;
+    right: 0;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+#rowbox {
+    width: 1000px;
+    margin-bottom: 50px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin-right: auto;
+    margin-left: auto;
+    background: #f4f4f4;
+    border-radius: 25px;
+}
+
+#profiledetails {
+    background-color: #D7CDC3;
+}
+
+.profiledetails-form {
+    margin: auto;
+}
+
+.profiledetails-form>form {
+    margin-left: 460px;
+    padding: 30px;
+}
+
+.profiledetails-form .form-header {
+    margin-bottom: 30px;
+    margin-top: 60px;
+    position: relative;
+    z-index: 20;
+}
+
+.profiledetails-form .form-header h2 {
+    font-family: 'Chivo', sans-serif;
+    font-size: 20px;
+    margin-left: 30px;
+    margin-bottom: 15px;
+    color: #fff;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+}
+
+.profiledetails-form .form-header p {
+    color: #fff;
+    font-size: 18px;
+}
+
+.row{
+    display: flex;
+}
+
+.form-group {
+    margin-bottom: 2rem !important;
+}
+
+.profiledetails-form .form-control {
+    display: inline;
+    background-color: #fff;
+    height: 40px;
+    width: 200px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #151515;
+    border: 1px solid #e5e5e5;
+    font-size: 16px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 40px;
+    -webkit-transition: 0.2s all;
+    transition: 0.2s all;
+}
+
+.profiledetails-form .form-control::-webkit-input-placeholder {
+    color: #e5e5e5;
+}
+
+.profiledetails-form .form-control:-ms-input-placeholder {
+    color: #e5e5e5;
+}
+
+.profiledetails-form .form-control::placeholder {
+    color: #e5e5e5;
+}
+
+.profiledetails-form .form-control:focus {
+    background: #f8f8f8;
+}
+
+.profiledetails-form input[type="date"].form-control:invalid {
+    color: #e5e5e5;
+}
+
+.profiledetails-form select.form-control {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.profiledetails-form select.form-control:invalid {
+    color: #e5e5e5;
+}
+
+.profiledetails-form select.form-control option {
+    color: #151515;
+}
+
+.profiledetails-form .form-controladdress {
+    padding: 10px;
+    background-color: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #151515;
+    border: 1px solid #e5e5e5;
+    font-size: 16px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 40px;
+    -webkit-transition: 0.2s all;
+    transition: 0.2s all;
+}
+
+.profiledetails-form .form-controladdress:focus {
+    outline: none;
+    border: none;
+}
+
+.profiledetails-form .form-controladdress::-webkit-input-placeholder {
+    color: #e5e5e5;
+}
+
+.profiledetails-form .form-controladdress:-ms-input-placeholder {
+    color: #e5e5e5;
+}
+
+.profiledetails-form .form-controladdress::placeholder {
+    color: #e5e5e5;
+}
+
+.profiledetails-form .form-controladdress:focus {
+    background: #f8f8f8;
+}
+
+.profiledetails-form input[type="date"].form-controladdress:invalid {
+    color: #e5e5e5;
+}
+
+.profiledetails-form select.form-controladdress {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.profiledetails-form select.form-controladdress:invalid {
+    color: #e5e5e5;
+}
+
+.profiledetails-form select.form-controladdress option {
+    color: #151515;
+}
+
+.profiledetails-form .form-label {
+    color: #856849;
+    line-height: 24px;
+    height: 24px;
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 20px;
+}
+
+.profiledetails-form .form-btn {
+    margin-top: 30px;
+}
+
+.profiledetails-form .save-btn {
+    display: block;
+    width: 65%;
+    color: #fff;
+    background-color: #127369;;
+    font-weight: 700;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 70px;
+    -webkit-transition: 0.2s all;
+    transition: 0.2s all;
+}
+
+.profiledetails-form .save-btn:hover,
+.profiledetails-form .save-btn:focus {
+    background-color: #127369;;
+}
