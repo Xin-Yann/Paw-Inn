@@ -1,0 +1,28 @@
+body {
+    background-color: white !important;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+textarea {
+    height: 120px;
+}
+
+.btn.btn-primary {
+    background: #127369 !important;
+    border: #127369 !important;
+    color: #fff !important;
+}
+
+.btn.btn-primary:hover {
+    background: #a5ecfa !important;
+    border: #a5ecfa !important;
+    color: #127369 !important;
+}

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/css/nav-4.css">
     <link rel="stylesheet" href="/css/book.css">
     <script type="module" src="/js/firebase-config.js"></script>
-    <script type="module" src="/js/bookings-7.js"></script>
+    <script type="module" src="/js/bookings-9.js"></script>
 
 </head>
 
@@ -52,41 +52,42 @@
 
     <form>
         <div class="elem-group">
-            <label for="name">Room Name</label>
-            <input type="text" id="selected-room-name" name="visitor_name" placeholder="John Doe" pattern=[A-Z\sa-z]{3,20} disabled>
-        </div>
-        
-        <div class="elem-group inlined">
-            <label for="checkin-date">Check-in Date</label>
-            <input type="date" id="checkin-date" name="checkin" required>
+            <label for="room_name">Room Name</label>
+            <input type="text" id="room_name" name="room_name" pattern=[A-Z\sa-z]{3,20} disabled>
         </div>
 
         <div class="elem-group inlined">
-            <label for="checkout-date">Check-out Date</label>
-            <input type="date" id="checkout-date" name="checkout" required>
+            <label for="checkin">Check-in Date</label>
+            <input type="date" id="checkin" name="checkin" required>
+        </div>
+
+        <div class="elem-group inlined">
+            <label for="checkout">Check-out Date</label>
+            <input type="date" id="checkout" name="checkout" required>
         </div>
 
         <div class="elem-group">
             <label for="name">Pet's Owner Name</label>
-            <input type="text" id="name" name="visitor_name" placeholder="John Doe" pattern=[A-Z\sa-z]{3,20} required>
+            <input type="text" id="owner_name" name="owner_name" placeholder="your name" pattern=[A-Z\sa-z]{3,20}
+                required>
         </div>
 
         <div class="elem-group">
             <label for="name">Pet's Name</label>
-            <input type="text" id="name" name="visitor_name" placeholder="John Doe" pattern=[A-Z\sa-z]{3,20} required>
+            <input type="text" id="pet_name" name="pet_name" placeholder="Pet's Name" pattern=[A-Z\sa-z]{3,20} required>
         </div>
         <div class="elem-group">
             <label for="email">E-mail</label>
-            <input type="email" id="email" name="visitor_email" placeholder="john.doe@email.com" required>
+            <input type="email" id="email" name="email" placeholder="your email" required>
         </div>
         <div class="elem-group">
             <label for="phone">Contact</label>
-            <input type="tel" id="phone" name="visitor_phone" placeholder="498-348-3872"
+            <input type="tel" id="contact" name="contact" placeholder="your phone number"
                 pattern=(\d{3})-?\s?(\d{3})-?\s?(\d{4}) required>
         </div>
         <div class="elem-group">
-            <label for="room-selection">Category of Animal</label>
-            <select class="selection" id="room-selection" name="room_preference" required>
+            <label for="category">Category of Animal</label>
+            <select class="selection" id="category" name="category" required>
                 <option value="">Choose a Category of animal</option>
                 <option value="dog">Dog</option>
                 <option value="cat">Cat</option>
@@ -96,16 +97,21 @@
         </div>
         <div class="elem-group">
             <label for="room-selection">Select Food Category</label>
-            <select id="room-selection" name="room_preference" required>
+            <select id="room-selection" name="room_selection" required>
                 <option value="">Choose a Food Category</option>
                 <option value="normal">Normal</option>
                 <option value="self">Self-Provide</option>
                 <option value="medical">Medical Treatment</option>
             </select>
         </div>
+        <div class="elem-group">
+            <label for="vaccination_image">Vaccination Proof:</label>
+            <input type="file" id="vaccination_image" name="vaccination_image" required><br>
+        </div>
         <hr>
-   
-        <button type="submit">Book The Rooms</button>
+
+        <button type="submit" class="form-control btn btn-primary rounded submit px-3" id="Submit"
+            style="background-color: #01647a;border: none;">Book Now</button>
     </form>
 
 </body>

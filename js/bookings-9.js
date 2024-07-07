@@ -11,8 +11,8 @@ if (month < 10) {
 }
 
 var dateTomorrow = year + "-" + month + "-" + date;
-var checkinElem = document.querySelector("#checkin-date");
-var checkoutElem = document.querySelector("#checkout-date");
+var checkinElem = document.querySelector("checkin");
+var checkoutElem = document.querySelector("checkout");
 
 checkinElem.setAttribute("min", dateTomorrow);
 
@@ -21,8 +21,8 @@ checkinElem.onchange = function () {
 }
 
 // Retrieve selected room name from sessionStorage
-const selectedRoomName = sessionStorage.getItem('selectedRoomName');
+const selectedRoomName = sessionStorage.getItem('room_name');
 if (selectedRoomName) {
     // Update the input field with the selected room name
-    document.getElementById('selected-room-name').value = selectedRoomName;
+    document.getElementById('room_name').value = selectedRoomName;
 }

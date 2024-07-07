@@ -58,6 +58,17 @@
             text-decoration: none;
         }
     </style>
+    <script type="module">
+        import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
+
+        Typebot.initBubble({
+            typebot: "my-typebot-ophui3c",
+            theme: {
+                button: { backgroundColor: "#0042DA" },
+                chatWindow: { backgroundColor: "#fff" },
+            },
+        });
+    </script>
 </head>
 
 <body>
@@ -79,11 +90,11 @@
                         <div class="dropdown-content">
                             <a href="/html/roomdog.html">Dog</a>
                             <a href="/html/roomcat.html">Cat</a>
-                            <a href="/html/">Room</a>
-                            <a href="/html/">Cage</a>
+                            <a href="/html/roomrabbit.html">Rabbit</a>
+                            <a href="/html/roomcage.html">Cage</a>
                         </div>
                     </div>
-                    <a href="/html/offerdetails.html">Booking History</a>
+                    <a href="/html/bookingHistory.html">Booking History</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
                     <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
@@ -93,7 +104,7 @@
 
         <div class="pt-4">
             <img src="/image/banner.jpg" style="width: 1519px;" />
-            <button class="btn">Book Now</button>
+            <a href="/html/roomdog.html" class="btn">Book Now</a>
         </div>
 
         <!--About us-->
