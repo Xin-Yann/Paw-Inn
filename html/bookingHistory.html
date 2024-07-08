@@ -15,33 +15,44 @@
     <link rel="stylesheet" href="../css/styles.css">
     <script type="module" src="/js/firebase-config.js"></script>
     <style>
-        .header, .footer {
+        .header,
+        .footer {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .user-info {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .user-info h2 {
             margin: 0;
             font-size: 1.5em;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid #ddd;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .details-button {
             padding: 10px 10px;
             text-decoration: none;
@@ -58,17 +69,21 @@
             border: none;
             cursor: pointer;
         }
+
         .details-button {
             background: #007bff;
             color: #fff;
         }
+
         .details-button:hover {
             background: #0056b3;
         }
+
         .cancel-button {
             background: #dc3545;
             color: #fff;
         }
+
         .cancel-button:hover {
             background: #c82333;
         }
@@ -110,36 +125,38 @@
 
         <div class="container pb-5">
             <table>
-        <thead>
-            <tr>
-                <th>Booking ID</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>12345</td>
-                <td>2024-07-01</td>
-                <td id="status-12345">Completed</td>
-                <td>
-                    <a href="#" class="details-button">View Details</a>
-                    <a href="/html/cancelBooking.html" class="btn cancel-button" id="cancel-12345" onclick="confirmCancellation(12345)">Cancel</a>
-                </td>
-            </tr>
-            <tr>
-                <td>67890</td>
-                <td>2024-06-15</td>
-                <td id="status-67890">Pending</td>
-                <td>
-                    <a href="#" class="details-button">View Details</a>
-                    <button class="cancel-button" id="cancel-67890" onclick="confirmCancellation(67890)">Cancel</button>
-                </td>
-            </tr>
-            <!-- Add more bookings as needed -->
-        </tbody>
-    </table>
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>12345</td>
+                        <td>2024-07-01</td>
+                        <td id="status-12345">Completed</td>
+                        <td>
+                            <a href="#" class="details-button">View Details</a>
+                            <a href="/html/cancelBooking.html" class="btn cancel-button" id="cancel-12345"
+                                onclick="confirmCancellation(12345)">Cancel</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>67890</td>
+                        <td>2024-06-15</td>
+                        <td id="status-67890">Pending</td>
+                        <td>
+                            <a href="#" class="details-button">View Details</a>
+                            <button class="cancel-button" id="cancel-67890"
+                                onclick="confirmCancellation(67890)">Cancel</button>
+                        </td>
+                    </tr>
+                    <!-- Add more bookings as needed -->
+                </tbody>
+            </table>
         </div>
 
         <!--Footer-->

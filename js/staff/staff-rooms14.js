@@ -10,29 +10,23 @@ function createButton(htmlContent, onClickHandler) {
     return button;
 }
 
-// Map room types to their respective subcollection names
-const subcollectionMap = {
-    cage: 'cage rooms',
-    dog: 'dog rooms',
-    cat: 'cat rooms',
-    rabbit: 'rabbit rooms'
-    // Add other room types and their subcollections here
-};
-
 // Function to fetch data and display it in the webpage based on room type
 async function fetchDataAndDisplay() {
     try {
         const roomType = document.getElementById('room-type').value;
         console.log('Selected room type:', roomType);
 
-        const subcollectionName = subcollectionMap[roomType];
+        // Extract the main room type from the subcollection name (e.g., "dog" from "dog rooms")
+        const mainRoomType = roomType.split(' ')[0];
+        const subcollectionName = roomType;
+
         if (!subcollectionName) {
             console.error('Unknown room type:', roomType);
             return;
         }
 
-        const catDocRef = doc(db, 'rooms', roomType);
-        const subcollectionRef = collection(catDocRef, subcollectionName);
+        const roomDocRef = doc(db, 'rooms', mainRoomType);
+        const subcollectionRef = collection(roomDocRef, subcollectionName);
 
         const q = query(subcollectionRef, orderBy("room_id", "asc"));
         const querySnapshot = await getDocs(q);
@@ -70,7 +64,7 @@ async function fetchDataAndDisplay() {
                 const td = document.createElement('td');
                 if (field === 'room_image' && roomData[field]) {
                     const roomImage = document.createElement('img');
-                    roomImage.src = `/image/${roomType}/${roomData[field]}`;
+                    roomImage.src = `/image/${mainRoomType}/${roomData[field]}`;
                     roomImage.alt = 'Room Image';
                     roomImage.style.width = '375px';   
                     roomImage.style.height = '201px';
@@ -85,7 +79,7 @@ async function fetchDataAndDisplay() {
             // Edit button
             const action1 = document.createElement('td');
             const editButton = createButton('Edit', () => {
-                editRoom(roomData.id, roomType);
+                editRoom(roomData.id, mainRoomType, roomType);
             });
             editButton.classList.add('btn');
             action1.appendChild(editButton);
@@ -94,7 +88,7 @@ async function fetchDataAndDisplay() {
             // Delete button
             const action2 = document.createElement('td');
             const deleteButton = createButton('Delete', async () => {
-                await deleteRoom(roomData.id, roomType);
+                await deleteRoom(roomData.id, mainRoomType);
             });
             deleteButton.classList.add('btn', 'btn-danger');
             action2.appendChild(deleteButton);
@@ -114,15 +108,16 @@ function naturalSort(a, b) {
 }
 
 // Function to delete room
-async function deleteRoom(roomId, roomType) {
+async function deleteRoom(roomId, mainRoomType) {
     try {
-        const subcollectionName = subcollectionMap[roomType];
+        const roomType = document.getElementById('room-type').value;
+        const subcollectionName = roomType;
         if (!subcollectionName) {
             console.error('Unknown room type:', roomType);
             return;
         }
 
-        const roomRef = doc(db, `rooms/${roomType}/${subcollectionName}/${roomId}`);
+        const roomRef = doc(db, `rooms/${mainRoomType}/${subcollectionName}/${roomId}`);
         await deleteDoc(roomRef);
         alert('Room deleted successfully!');
         fetchDataAndDisplay();
@@ -133,8 +128,8 @@ async function deleteRoom(roomId, roomType) {
 }
 
 // Function to edit room page
-function editRoom(roomId, roomType) {
-    window.location.href = `/html/staff/staff-editroom.html?category=room&id=${roomId}&type=${encodeURIComponent(roomType)}`;
+function editRoom(roomId,mainRoomType, roomType) {
+    window.location.href = `/html/staff/staff-editroom.html?category=${mainRoomType}&id=${roomId}&type=${encodeURIComponent(roomType)}`;
 }
 
 document.getElementById('room-type').addEventListener('change', fetchDataAndDisplay);

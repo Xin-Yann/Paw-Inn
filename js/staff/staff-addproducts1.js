@@ -7,15 +7,15 @@ document.getElementById("add").addEventListener("click", async () => {
         const category = document.getElementById('product_category').value;
         const type = document.getElementById('product_type').value;
         const productId = document.getElementById('product_id').value;
-
+        const productBarcode = document.getElementById('product_barcode').value;
         const productName = document.getElementById('product_name').value;
         const productDescription = document.getElementById('product_description').value;
         const productPrice = document.getElementById('product_price').value;
         const productStock = document.getElementById('product_stock').value;
         const productWeight = document.getElementById('product_weight').value;
 
-        if (!productId || !productName || !productPrice || !productStock || !productWeight) {
-            alert('Please fill out all required fields: category, type, ID, name, price, stock, weight.');
+        if (!productId || !productName || !productPrice || !productStock || !productWeight || !productBarcode) {
+            alert('Please fill out all required fields: category, type, ID, name, price, stock, weight, barcode.');
             return;
         }
 
@@ -56,6 +56,7 @@ document.getElementById("add").addEventListener("click", async () => {
         await setDoc(productRef, {
             product_id: productId,
             product_image: imageName,
+            product_barcode: productBarcode,
             product_name: productName,
             product_description: productDescription,
             product_price: productPrice,
