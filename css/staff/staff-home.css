@@ -1,0 +1,29 @@
+.button-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    margin: 0;
+    gap: 150px;
+    margin: 10px 0;
+}
+
+.btn {
+    padding: 55px 20px;
+    font-size: 25px;
+    cursor: pointer;
+    border: none;
+    background-color: #127369;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: 480px;
+    height: 150px;
+}
+
+.btn:hover {
+    background-color: #127369;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}

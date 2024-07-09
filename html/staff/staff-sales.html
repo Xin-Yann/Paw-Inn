@@ -14,88 +14,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <link rel="stylesheet" href="/css/staff/staff-nav3.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/staff/staff-products.css">
+    <link rel="stylesheet" href="/css/staff/staff-sales.css">
     <script type="module" src="/js/firebase-config.js"></script>
     <style>
-        h1,
-        h2 {
-            text-align: center;
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .search-bar input {
-            width: 50%;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        .main-content {
-            display: flex;
-            gap: 20px;
-        }
-
-        .products {
-            flex: 1;
-        }
-
-        .cart {
-            flex: 2;
-        }
-
-        .product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 10px;
-            justify-items: center;
-        }
-
-        .product-item {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 10px;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .product-item:hover {
-            background-color: #e9e9e9;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .totals {
-            text-align: right;
-            margin-top: 20px;
-        }
-
-        button {
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
+        
     </style>
 </head>
 
@@ -154,12 +76,11 @@
                 </ul>
             </li>
             <li>
-                <a href="#">
+                <a href="/html/staff/staff-calendar.html">
                     <i class='bx bx-calendar'></i>
                     <span class="link_name">Calendar</span>
                 </a>
             </li>
-
             <li>
                 <a href="/html/staff/staff-report.html">
                     <i class='bx bx-line-chart'></i>
