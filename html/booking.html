@@ -14,9 +14,12 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <link rel="stylesheet" href="/css/nav-4.css">
     <link rel="stylesheet" href="/css/books.css">
-    <script type="module" src="/js/firebase-config.js"></script>
-    <script type="module" src="/js/bookings-15.js"></script>
+
     <style>
+        .fc-event-time {
+            display: none !important;
+        }
+
         .dog-deluxe {
             color: #ffffff !important;
             background-color: #4CAF50 !important;
@@ -161,8 +164,7 @@
             <div class="col pb-5 pl-5">
                 <div class="elem-group">
                     <label for="phone">Contact</label>
-                    <input type="tel" id="contact" name="contact" placeholder="your phone number"
-                        pattern=(\d{3})-?\s?(\d{3})-?\s?(\d{4}) required>
+                    <input type="tel" id="contact" name="contact" placeholder="your phone number" required>
                 </div>
                 <div class="elem-group">
                     <label for="category">Category of Animal</label>
@@ -190,104 +192,22 @@
             </div>
 
             <hr>
+            <p class="form-control px-3" style="border: none; font-size: 24px;">Total Price: RM <span id="price"></span>
+            </p>
 
-            <button type="submit" class="form-control btn btn-primary rounded submit px-3" id="submit"
-                style="background-color: #01647a;border: none;">Book Now</button>
+            <input type="hidden" id="status" value="pending">
+
+            <a href="#" type="submit" class="form-control btn btn-primary rounded submit px-3" id="submit"
+                style="background-color: #01647a;border: none;">Book Now</a>
         </div>
+
     </form>
+
+
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        initialDate: '2024-06-07',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: ''
-        },
-        events: [
-            // Dog events
-            {
-                title: 'Dog Deluxe Room',
-                start: '2024-06-01',
-                className: 'dog-deluxe'
-            },
-            {
-                title: 'Dog Suite Room',
-                start: '2024-06-07',
-                end: '2024-06-10',
-                className: 'dog-suite'
-            },
-            {
-                title: 'Dog Royal Room',
-                start: '2024-06-09T16:00:00',
-                className: 'dog-royal'
-            },
-            // Cat events
-            {
-                title: 'Cat Deluxe Room',
-                start: '2024-06-11',
-                end: '2024-06-13',
-                className: 'cat-deluxe'
-            },
-            {
-                title: 'Cat Suite Room',
-                start: '2024-06-12T10:30:00',
-                end: '2024-06-12T12:30:00',
-                className: 'cat-suite'
-            },
-            {
-                title: 'Cat Royal Room',
-                start: '2024-06-12T14:30:00',
-                className: 'cat-royal'
-            },
-            // Rabbit events
-            {
-                title: 'Rabbit Deluxe Room',
-                start: '2024-06-13T07:00:00',
-                className: 'rabbit-deluxe'
-            },
-            {
-                title: 'Rabbit Suite Room',
-                start: '2024-06-28',
-                className: 'rabbit-suite'
-            },
-            {
-                title: 'Rabbit Royal Room',
-                start: '2024-06-16T16:00:00',
-                className: 'rabbit-royal'
-            },
-            // Cage Animal events
-            {
-                title: 'Cage Animal Deluxe Room',
-                start: '2024-06-12T12:00:00',
-                className: 'cage-deluxe'
-            },
-            {
-                title: 'Cage Animal Suite Room',
-                start: '2024-06-12T12:00:00',
-                className: 'cage-suite'
-            },
-            {
-                title: 'Cage Animal Royal Room',
-                start: '2024-06-28',
-                className: 'cage-royal'
-            }
-        ],
-        eventDidMount: function (info) {
-            // This function is called for each event after it has been rendered
-            // Apply the event's className to its element as a CSS class
-            info.el.classList.add(info.event.extendedProps.className);
-        }
-    });
-
-    calendar.render();
-});
-
-    </script>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/booking-30.js"></script>
+    <script type="module" src="/js/logouts.js"></script>
 </body>
 
 </html>

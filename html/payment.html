@@ -14,28 +14,33 @@
     <link rel="stylesheet" href="/css/nav-4.css">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="/css/contact.css">
-    <script type="module" src="/js/firebase-config.js"></script>
     <style>
-        .header, .footer {
+        .header,
+        .footer {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .order-summary {
             margin-bottom: 20px;
         }
+
         .order-summary h2 {
             margin: 0;
             font-size: 1.5em;
             font-weight: 900;
             font-family: 'Nunito', sans-serif;
         }
+
         .order-summary p {
-            margin: 5px 0;
+            margin: 10px 0;
         }
+
         .payment-form label {
             display: block;
             margin-bottom: 5px;
         }
+
         .payment-form input {
             width: 100%;
             padding: 10px;
@@ -43,6 +48,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         .payment-form button {
             width: 100%;
             padding: 10px;
@@ -53,8 +59,45 @@
             cursor: pointer;
             font-size: 1em;
         }
+
         .payment-form button:hover {
             background: #127369;
+        }
+
+        .result-message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .otp-label {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .otp-label input {
+            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .send-otp-button {
+            width: 20% !important;
+            padding: 10px;
+            background: #127369;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .book {
+            display: flex;
+            justify-content: center;
+            gap: 100px;
         }
     </style>
 </head>
@@ -91,35 +134,82 @@
         </div>
         <h1 class="text-center pt-5 pb-3" style="color: #127369; font-weight: 900;">Payment</h1>
         <div class="container pb-5">
-        
+
             <div class="order-summary pt-5">
-                <h2>Booking Summary</h2>
-                <p>Item 1: $10.00</p>
-                <p>Item 2: $20.00</p>
-                <p><strong>Total: $30.00</strong></p>
+                <h2 class="text-center pb-5">Booking Summary</h2>
+                <div class="book">
+                    <div>
+                        <p>Room Name: <span id="room_name"></span></p>
+
+                        <p>Check-in Date: <span id="checkin_date"></span></p>
+
+                        <p>Check-out Date: <span id="checkout_date"></span></p>
+
+                        <p>Owner Name: <span id="owner_name"></span></p>
+
+                        <p>Pet Name: <span id="pet_name"></span></p>
+                    </div>
+                    <div>
+
+                        <p>Email: <span id="email"></span></p>
+
+                        <p>Contact: <span id="contact"></span></p>
+
+                        <p>Category: <span id="category"></span></p>
+
+                        <p>Food Category: <span id="food_category"></span></p>
+                    </div>
+                </div>
             </div>
+
             
-            <form class="payment-form">
-                <label for="cardNumber">Card Number</label>
-                <input type="text" id="cardNumber" name="cardNumber" required>
-                
-                <label for="expiryDate">Expiry Date</label>
-                <input type="text" id="expiryDate" name="expiryDate" required>
-                
-                <label for="cvv">CVV</label>
-                <input type="text" id="cvv" name="cvv" required>
-                
-                <label for="cardHolder">Cardholder Name</label>
-                <input type="text" id="cardHolder" name="cardHolder" required>
-                
-                <label for="billingAddress">Billing Address</label>
-                <input type="text" id="billingAddress" name="billingAddress" style="margin-bottom: 40px;" required>
-                
-                <button type="submit">Pay Now</button>
+            <form id="payment-form" class="payment-form order-summary">
+                <h2 class="text-center py-5">Credit Card Details</h2>
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <div id="card-number-element" class="form-control">
+                        <!-- Stripe Element for Card Number -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date</label>
+                    <div id="card-expiry-element" class="form-control">
+                        <!-- Stripe Element for Expiry Date -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <div id="card-cvc-element" class="form-control">
+                        <!-- Stripe Element for CVV -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cardHolder">Cardholder Name</label>
+                    <input type="text" id="cardHolder" name="cardHolder" class="form-control" required>
+                </div>
+
+                <label for="otp">Enter OTP:</label>
+                <div class="form-group otp-label">
+                    <input type="text" id="otp" name="otp" class="form-control" placeholder="Enter OTP" required>
+                    <button class="send-otp-button" id="send-otp">Send OTP</button>
+                </div>
+
+                <div>
+                    <p class="form-control px-3" style="border: none; font-size: 24px;">Total Price: RM <span
+                            id="price"></span></p>
+                </div>
+
+                <br>
+                <button type="submit" id="confirm-payment">Pay Now</button>
             </form>
             <div class="non-refund-notice pt-5">
-                <p>Note: All bookings are non-refundable. Please ensure your information is correct before proceeding.</p>
+                <p>Note: All bookings are non-refundable. Please ensure your information is correct before proceeding.
+                </p>
             </div>
+            <div id="result-message" class="result-message"></div>
         </div>
 
         <!--Footer-->
@@ -153,8 +243,11 @@
 
         </div>
     </div>
-    <script type="module" src="/js/contacts.js"></script>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/payment1.js"></script>
     <script type="module" src="/js/logouts.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
 </body>
 
 </html>

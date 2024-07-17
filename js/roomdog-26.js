@@ -37,24 +37,40 @@ async function fetchDataAndDisplay() {
                         <p class="card-desc" style="height:25px">${roomData.room_description}</p>
                         <p class="card-text"><small class="text-muted">Available Slots: ${roomData.room_quantity}</small></p>
                         <p class="product-price pt-3">Price: RM${roomData.room_price}</p>
-                        <button class="btn btn-primary add-cart" data-room-name="${roomData.room_name}">Book Now</button>
+                        <button class="btn btn-primary submit" data-room-name="${roomData.room_name}" product_price="${roomData.room_price}">Book Now</button>
                     </div>
                 </div>
             `;
             roomContainer.innerHTML += roomHTML;
         }
 
-        const bookButtons = document.querySelectorAll('.add-cart');
+        const bookButtons = document.querySelectorAll('.submit');
         bookButtons.forEach(button => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
                 const roomName = button.getAttribute('data-room-name');
-                // Store selected room name in sessionStorage
+                
+                // Retrieve the price associated with the selected room
+                const roomPriceElement = button.parentElement.querySelector('.product-price');
+                
+                // Check if roomPriceElement is not null or undefined and then retrieve the price
+                let roomPrice = '';
+                if (roomPriceElement) {
+                    roomPrice = roomPriceElement.textContent.replace('Price: RM', '').trim(); // Remove 'Price: RM' and trim whitespace
+                } else {
+                    console.error('Price element not found for room:', roomName);
+                    // Handle the error or fallback gracefully
+                }
+        
+                // Store selected room name and price in sessionStorage
                 sessionStorage.setItem('selectedRoomName', roomName);
+                sessionStorage.setItem('selectedRoomPrice', roomPrice);
+        
                 // Redirect to booking page
                 window.location.href = `/html/booking.html`;
             });
         });
+        
 
     } catch (error) {
         console.error("Error fetching and displaying data:", error);
