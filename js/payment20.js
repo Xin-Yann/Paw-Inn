@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, setDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 const db = getFirestore();
@@ -14,19 +14,17 @@ function getCurrentUserId() {
 // Function to display bookings from Firestore
 async function fetchAndDisplayBooking(userId) {
   try {
-    // Fetch the user's bookings from Firestore
     const userDocRef = doc(db, 'book', userId);
     const docSnap = await getDoc(userDocRef);
 
     if (docSnap.exists()) {
       const userData = docSnap.data();
       const bookings = userData.bookings || [];
-
-      // Get the most recent booking (assuming the latest booking is the last one in the array)
       const newestBooking = bookings[bookings.length - 1];
 
-      // Display the newest booking details on the payment page
       if (newestBooking) {
+        document.getElementById('book_id').textContent = newestBooking.book_id;
+        document.getElementById('book_date').textContent = newestBooking.book_date;
         document.getElementById('room_name').textContent = newestBooking.room_name;
         document.getElementById('checkin_date').textContent = newestBooking.checkin_date;
         document.getElementById('checkout_date').textContent = newestBooking.checkout_date;
@@ -45,6 +43,56 @@ async function fetchAndDisplayBooking(userId) {
     }
   } catch (error) {
     console.error('Error fetching booking details:', error);
+  }
+}
+
+// Function to update room quantity
+async function updateRoomQuantity(category, roomName, quantity) {
+  try {
+    const roomCategories = [
+      { category: 'cat', collectionName: 'cat rooms' },
+      { category: 'dog', collectionName: 'dog rooms' },
+      { category: 'rabbit', collectionName: 'rabbit rooms' },
+      { category: 'cage', collectionName: 'cage rooms' },
+    ];
+
+    console.log(`Updating room quantity for category: ${category}, roomName: ${roomName}, quantity: ${quantity}`);
+
+    for (const { category: roomCategory, collectionName } of roomCategories) {
+      console.log(`Checking category: ${roomCategory}, collection: ${collectionName}`);
+      
+      if (roomCategory === category) {
+        const docRef = doc(collection(db, 'rooms'), roomCategory);
+        const roomCollectionRef = collection(docRef, collectionName);
+        const roomQuerySnapshot = await getDocs(roomCollectionRef);
+
+        console.log(`Documents in ${collectionName}: ${roomQuerySnapshot.size}`);
+
+        for (const docSnap of roomQuerySnapshot.docs) {
+          const roomData = docSnap.data();
+          console.log(`Checking room: ${roomData.room_name}`);
+
+          if (roomData.room_name === roomName) {
+            const roomDocRef = doc(roomCollectionRef, docSnap.id);
+            const currentQuantity = roomData.room_quantity || 0;
+            const newQuantity = currentQuantity - quantity;
+
+            await updateDoc(roomDocRef, {
+              room_quantity: newQuantity
+            });
+
+            console.log(`Room quantity updated for ${roomName} in ${category}: ${currentQuantity} - ${quantity} = ${newQuantity}`);
+            return true; // Indicate success and exit function
+          }
+        }
+      }
+    }
+
+    console.log(`Room ${roomName} not found in category ${category}.`);
+    return false; // Indicate room not found
+  } catch (error) {
+    console.error('Error updating room quantity:', error);
+    throw error;
   }
 }
 
@@ -74,7 +122,6 @@ async function generatePaymentID() {
   }
 }
 
-
 // Handle form submission for payment
 const form = document.getElementById('payment-form');
 form.addEventListener('submit', async (event) => {
@@ -87,15 +134,12 @@ form.addEventListener('submit', async (event) => {
       return;
     }
 
-    // Fetch user's bookings from Firestore
     const userDocRef = doc(db, 'book', userId);
     const docSnap = await getDoc(userDocRef);
 
     if (docSnap.exists()) {
       const userData = docSnap.data();
       const bookingsArray = userData.bookings || [];
-
-      // Assuming you want to process the most recent booking
       const newestBooking = bookingsArray[bookingsArray.length - 1];
 
       if (!newestBooking) {
@@ -105,13 +149,12 @@ form.addEventListener('submit', async (event) => {
 
       const paymentId = await generatePaymentID();
 
-      // Fetch client secret from server for each payment attempt
       const response = await fetch('/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount: newestBooking.price, currency: 'myr' }), // Adjust as per your needs
+        body: JSON.stringify({ amount: newestBooking.price, currency: 'myr' }),
       });
 
       if (!response.ok) {
@@ -120,7 +163,6 @@ form.addEventListener('submit', async (event) => {
 
       const { clientSecret } = await response.json();
 
-      // Confirm payment with Stripe using clientSecret
       const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardNumberElement,
@@ -134,31 +176,32 @@ form.addEventListener('submit', async (event) => {
         console.error('Error confirming payment:', error);
         alert('Error confirming payment: ' + error.message);
       } else {
+        console.log('Newest booking:', newestBooking);
+        console.log('Category:', newestBooking.category);
+
         if (paymentIntent.status === 'succeeded') {
-          // Payment succeeded, process the booking in Firestore
+          const remainingBookings = bookingsArray.slice(0, -1);
 
-          // Placeholder logic: Remove the processed booking from the user's bookings
-          const remainingBookings = bookingsArray.slice(0, -1); // Remove the last booking
-
-          // Update Firestore document with remaining bookings
           await setDoc(userDocRef, { bookings: remainingBookings }, { merge: true });
 
           const paymentDocRef = doc(db, 'payments', userId);
 
           try {
             const docSnap = await getDoc(paymentDocRef);
-          
-            // Check if the user document exists
+
             if (docSnap.exists()) {
               const paymentData = docSnap.data();
               let paymentsArray = paymentData.payments || [];
-          
-              // Add new payment details to the array
+
+              console.log('Payment data before push:', paymentsArray);
+
               paymentsArray.push({
                 paymentId: paymentId,
                 userId: userId,
                 amount: newestBooking.price,
                 payment_date: new Date().toISOString(),
+                book_id:newestBooking.book_id,
+                book_date:newestBooking.book_date,
                 room_name: newestBooking.room_name,
                 checkin_date: newestBooking.checkin_date,
                 checkout_date: newestBooking.checkout_date,
@@ -169,14 +212,17 @@ form.addEventListener('submit', async (event) => {
                 category: newestBooking.category,
                 food_category: newestBooking.food_category,
                 price: newestBooking.price,
-                booking_date: new Date().toISOString(),
-                status: 'paid',
-                // Add more payment details as needed
+                status: 'Paid',
               });
-          
-              // Update Firestore document with the updated payments array
-              await setDoc(paymentDocRef, { payments: paymentsArray }, { merge: true })
+
+              console.log('Payment data after push:', paymentsArray);
+
+              await setDoc(paymentDocRef, { payments: paymentsArray }, { merge: true });
+
+              const deductionResult = await updateRoomQuantity(newestBooking.category, newestBooking.room_name, 1);
+              console.log(deductionResult); // Optional: log the result of the deduction function
             }
+
             console.log('Payment details successfully saved.');
           } catch (error) {
             console.error('Error saving payment details:', error);
@@ -184,8 +230,11 @@ form.addEventListener('submit', async (event) => {
           }
 
           alert('Payment confirmed for the latest booking.');
-          window.location.href = "../html/bookingHistory.html"; // Redirect to success page
+          window.location.href = "../html/bookingHistory.html";
+        } else {
+          console.error("No bookings found for user ID:", userId);
         }
+
       }
     } else {
       console.error("No bookings found for user ID:", userId);
@@ -196,7 +245,6 @@ form.addEventListener('submit', async (event) => {
   }
 });
 
-// Ensure the function is called when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {

@@ -7,23 +7,81 @@
     <title>OTP Verification</title>
     <!-- Include EmailJS SDK -->
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-    
+
     <script type="module" src="/js/firebase-config.js"></script>
     <script type="module" src="/js/otp.js"></script>
 </head>
 
 <body>
     <h1>Enter OTP to Verify</h1>
-    <form id="otp-form">
-        <!-- Form fields for Name, Email, OTP -->
-        <label for="from_name">Name:</label>
-        <input type="text" id="from_name" name="from_name" required><br><br>
-        <label for="email_id">Email:</label>
-        <input type="email" id="email_id" name="email_id" required><br><br>
-        <label for="otp">OTP:</label>
-        <input type="text" id="otp" name="otp" required><br><br>
-        <button type="submit">Verify OTP</button>
-    </form>
+    <div class="container">
+        <header>
+          <i class="bx bxs-check-shield"></i>
+        </header>
+        <h4>Enter OTP Code</h4>
+        <form action="#">
+          <div class="input-field">
+            <input type="number" />
+            <input type="number" disabled />
+            <input type="number" disabled />
+            <input type="number" disabled />
+          </div>
+          <button>Verify OTP</button>
+        </form>
+      </div>
 </body>
+<script>
+    const inputs = document.querySelectorAll("input"),
+        button = document.querySelector("button");
+
+    // iterate over all inputs
+    inputs.forEach((input, index1) => {
+        input.addEventListener("keyup", (e) => {
+            // This code gets the current input element and stores it in the currentInput variable
+            // This code gets the next sibling element of the current input element and stores it in the nextInput variable
+            // This code gets the previous sibling element of the current input element and stores it in the prevInput variable
+            const currentInput = input,
+                nextInput = input.nextElementSibling,
+                prevInput = input.previousElementSibling;
+
+            // if the value has more than one character then clear it
+            if (currentInput.value.length > 1) {
+                currentInput.value = "";
+                return;
+            }
+            // if the next input is disabled and the current value is not empty
+            //  enable the next input and focus on it
+            if (nextInput && nextInput.hasAttribute("disabled") && currentInput.value !== "") {
+                nextInput.removeAttribute("disabled");
+                nextInput.focus();
+            }
+
+            // if the backspace key is pressed
+            if (e.key === "Backspace") {
+                // iterate over all inputs again
+                inputs.forEach((input, index2) => {
+                    // if the index1 of the current input is less than or equal to the index2 of the input in the outer loop
+                    // and the previous element exists, set the disabled attribute on the input and focus on the previous element
+                    if (index1 <= index2 && prevInput) {
+                        input.setAttribute("disabled", true);
+                        input.value = "";
+                        prevInput.focus();
+                    }
+                });
+            }
+            //if the fourth input( which index number is 3) is not empty and has not disable attribute then
+            //add active class if not then remove the active class.
+            if (!inputs[3].disabled && inputs[3].value !== "") {
+                button.classList.add("active");
+                return;
+            }
+            button.classList.remove("active");
+        });
+    });
+
+    //focus the first input which index is 0 on window load
+    window.addEventListener("load", () => inputs[0].focus());
+
+</script>
 
 </html>

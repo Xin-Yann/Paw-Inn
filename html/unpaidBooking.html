@@ -53,7 +53,7 @@
             background-color: #f2f2f2;
         }
 
-        .cancel-button {
+        .pay-button {
             padding: 5px 10px;
             text-decoration: none;
             border-radius: 5px;
@@ -61,13 +61,13 @@
             cursor: pointer;
         }
 
-        .cancel-button {
-            background: #dc3545;
+        .pay-button {
+            background: #127369;
             color: #fff;
         }
 
-        .cancel-button:hover {
-            background: #c82333;
+        .pay-button:hover {
+            background: #127369;
         }
     </style>
 </head>
@@ -76,10 +76,10 @@
     <div class="overflow-hidden">
         <div class="container" id="myHeader">
             <div class="row pt-4">
-                <div class="col-6">
+                <div class="col-5">
                     <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
                 </div>
-                <div class="col-6 links">
+                <div class="col-7 links">
                     <a href="home.html">Home</a>
                     <div class="dropdown">
                         <a href="#">Room Type</a>
@@ -107,6 +107,7 @@
                             <a href="/html/bookingSummary.html">Unpaid Bookings</a>
                         </div>
                     </div>
+                    <a href="/html/contact.html">Check-in</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
                     <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
@@ -115,7 +116,7 @@
         </div>
 
         <div class="container pt-2 pb-5">
-            <h1 class="text-center pt-5 pb-5" style="color: #127369; font-weight: 900;">Booking History</h1>
+            <h1 class="text-center pt-5 pb-5" style="color: #127369; font-weight: 900;">Unpaid Bookings</h1>
             <div id="statusContainer"> </div>
         </div>
 
@@ -150,7 +151,7 @@
 
         </div>
     </div>
-    <script type="module" src="/js/booking-history13.js"></script>
+    <script type="module" src="/js/unpaidBooking3.js"></script>
     <script type="module" src="/js/logouts.js"></script>
 </body>
 

@@ -16,80 +16,27 @@
     <link rel="stylesheet" href="/css/books.css">
 
     <style>
-        .fc-event-time {
-            display: none !important;
+        .fc-event {
+            background: #127369;
+            border: none;
         }
 
-        .dog-deluxe {
-            color: #ffffff !important;
-            background-color: #4CAF50 !important;
-            border: 1px solid #4CAF50 !important;
+        .fc-daygrid-day.fc-day-past {
+            background-color: #f0f0f0;
+            /* Example grey color */
+            color: #a0a0a0;
+            /* Example grey text color */
         }
-
-        .dog-suite {
-            color: #ffffff !important;
-            background-color: #FFC107 !important;
-            border: 1px solid #FFC107 !important;
-        }
-
-        .dog-royal {
-            color: #ffffff !important;
-            background-color: #3F51B5 !important;
-            border: 1px solid #3F51B5 !important;
-        }
-
-        .cat-deluxe {
-            color: #ffffff !important;
-            background-color: #FF5722 !important;
-            border: 1px solid #FF5722 !important;
-        }
-
-        .cat-suite {
-            color: #ffffff !important;
-            background-color: #9C27B0 !important;
-            border: 1px solid #9C27B0 !important;
-        }
-
-        .cat-royal {
-            color: #ffffff !important;
-            background-color: #00BCD4 !important;
-            border: 1px solid #00BCD4 !important;
-        }
-
-        .rabbit-deluxe {
-            color: #ffffff !important;
-            background-color: #E91E63 !important;
-            border: 1px solid #E91E63 !important;
-        }
-
-        .rabbit-suite {
-            color: #ffffff !important;
-            background-color: #795548 !important;
-            border: 1px solid #795548 !important;
-        }
-
-        .rabbit-royal {
-            color: #ffffff !important;
-            background-color: #607D8B !important;
-            border: 1px solid #607D8B !important;
-        }
-
-        .cage-deluxe {
-            color: #ffffff !important;
-            background-color: #FFEB3B !important;
-            border: 1px solid #FFEB3B !important;
-        }
-
-        .cage-suite {
-            color: #ffffff !important;
-            background-color: #8BC34A !important;
-            border: 1px solid #8BC34A !important;
-        }
-
-        .cage-royal {
-            color: #ffffff !important;
-            background-color: #9E9E9E !important;
-            border: 1px solid #9E9E9E !important;
+        
+        .filter-controls button {
+            margin: 5px;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            width: 60%;
+            flex-direction: column;
+            align-items: center;
+            transform: translate(30%, -50%);
         }
     </style>
 </head>
@@ -124,7 +71,29 @@
     </div>
 
     <h1 class="text-center pt-5" style="color: #127369; font-weight: 900;">Book A Room</h1>
+
+
     <div id='calendar' style="padding: 50px;"></div>
+
+    <!-- Modal Structure -->
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Event details will be injected here -->
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <form>
         <h1 class="text-center pt-5" style="color: #127369; font-weight: 900;">Fill The Booking Details</h1>
@@ -203,10 +172,17 @@
 
     </form>
 
+    <div id="room_quantity"></div>
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
     <script type="module" src="/js/firebase-config.js"></script>
-    <script type="module" src="/js/booking-30.js"></script>
+    <script type="module" src="/js/booking-107.js"></script>
     <script type="module" src="/js/logouts.js"></script>
 </body>
 
