@@ -273,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function () {
       ];
 
       const roomData = [];
-      const today = new Date();
 
       for (const { category, collectionName } of roomCategories) {
         const docRef = doc(collection(db, 'rooms'), category);
@@ -284,161 +283,116 @@ document.addEventListener('DOMContentLoaded', function () {
           if (docSnap.exists()) {
             const room = docSnap.data();
             const roomName = room.room_name || 'Unknown';
-            const roomQuantities = room.room_quantity || []; // Map of quantities
+            const roomQuantities = room.room_quantity || []; // Array of maps
 
-            // Get the current date to display only relevant quantities
-            const currentDate = new Date();
-            const currentDay = currentDate.getDate();
-
-            // Push data for each day that has a quantity
-            for (const [index, quantity] of Object.entries(roomQuantities)) {
-              const day = parseInt(index, 10) + 1; // Convert index to day (1-based)
-              roomData.push({
-                category,
-                roomName,
-                day,
-                quantity: parseInt(quantity, 10)
-              });
-            }
+            // Process data for each month
+            roomQuantities.forEach((monthData, monthIndex) => {
+              for (const [date, quantity] of Object.entries(monthData)) {
+                const roomDate = new Date(date);
+                if (roomDate.getFullYear() === year) {
+                  roomData.push({
+                    category,
+                    roomName,
+                    date: date, // Store date as string
+                    quantity: parseInt(quantity, 10),
+                    month: roomDate.getMonth(), // Store month index for filtering
+                  });
+                }
+              }
+            });
           }
         });
       }
 
       console.log('Fetched room data:', roomData);
-
       return roomData;
     } catch (error) {
       console.error('Error fetching room quantity:', error);
       return [];
     }
   }
-  async function fetchRoomQuantity(year = new Date().getFullYear()) {
-    try {
-        const roomCategories = [
-            { category: 'cat', collectionName: 'cat rooms' },
-            { category: 'dog', collectionName: 'dog rooms' },
-            { category: 'rabbit', collectionName: 'rabbit rooms' },
-            { category: 'cage', collectionName: 'cage rooms' },
-        ];
-
-        const roomData = [];
-
-        for (const { category, collectionName } of roomCategories) {
-            const docRef = doc(collection(db, 'rooms'), category);
-            const roomCollectionRef = collection(docRef, collectionName);
-            const roomQuerySnapshot = await getDocs(roomCollectionRef);
-
-            roomQuerySnapshot.forEach(docSnap => {
-                if (docSnap.exists()) {
-                    const room = docSnap.data();
-                    const roomName = room.room_name || 'Unknown';
-                    const roomQuantities = room.room_quantity || {}; // Ensure this is an object
-
-                    // Adjust for 0-based day indexing
-                    for (const [index, quantity] of Object.entries(roomQuantities)) {
-                        const day = parseInt(index, 10) + 1; // Convert index to day (1-based)
-                        roomData.push({
-                            category,
-                            roomName,
-                            day,
-                            quantity: parseInt(quantity, 10)
-                        });
-                    }
-                }
-            });
-        }
-
-        console.log('Fetched room data:', roomData);
-
-        return roomData;
-    } catch (error) {
-        console.error('Error fetching room quantity:', error);
-        return [];
-    }
-}
-
-async function initCalendar() {
+  async function initCalendar() {
     const calendarEl = document.getElementById('calendar');
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        initialDate: new Date().toISOString().split('T')[0],
-        events: [], // No events to show
-        validRange: {
-            start: new Date().getFullYear() + '-01-01', // Start of the year
-            end: new Date().getFullYear() + '-12-31'   // End of the year
-        },
-        dayCellDidMount: async function (info) {
-            const cellDate = new Date(info.date);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+      initialView: 'dayGridMonth',
+      initialDate: new Date().toISOString().split('T')[0],
+      events: [], // No events to show
+      validRange: {
+        start: new Date().getFullYear() + '-01-01', // Start of the year
+        end: new Date().getFullYear() + '-12-31'   // End of the year
+      },
+      dayCellDidMount: async function (info) {
+        const cellDate = new Date(info.date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-            if (cellDate >= today) {
-                const cell = info.el.querySelector('.fc-daygrid-day-frame');
-                if (cell) {
-                    const roomData = await fetchRoomQuantity(); // Fetch room data
+        if (cellDate >= today) {
+          const cell = info.el.querySelector('.fc-daygrid-day-frame');
+          if (cell) {
+            const roomData = await fetchRoomQuantity(); // Fetch room data
 
-                    const filterContainer = document.createElement('div');
-                    filterContainer.className = 'filter-controls';
-                    filterContainer.innerHTML = `
-                        <button data-category="dog">Dog</button>
-                        <button data-category="cat">Cat</button>
-                        <button data-category="rabbit">Rabbit</button>
-                        <button data-category="cage">Cage</button>
-                    `;
+            const filterContainer = document.createElement('div');
+            filterContainer.className = 'filter-controls';
+            filterContainer.innerHTML = `
+              <button data-category="dog">Dog</button>
+              <button data-category="cat">Cat</button>
+              <button data-category="rabbit">Rabbit</button>
+              <button data-category="cage">Cage</button>
+            `;
 
-                    cell.appendChild(filterContainer);
+            cell.appendChild(filterContainer);
 
-                    filterContainer.querySelectorAll('button').forEach(button => {
-                        button.addEventListener('click', function () {
-                            const category = this.getAttribute('data-category');
-                            filterRoomData(category, roomData, cellDate.getDate());
-                        });
-                    });
-                }
-            }
+            filterContainer.querySelectorAll('button').forEach(button => {
+              button.addEventListener('click', function () {
+                const category = this.getAttribute('data-category');
+                filterRoomData(category, roomData, cellDate.getDate(), cellDate.getMonth());
+              });
+            });
+          }
         }
+      }
     });
 
-    function filterRoomData(category, roomData, day) {
-        let filteredData = roomData.filter(room => room.day === day);
-        if (category && category !== 'all') {
-            filteredData = filteredData.filter(room => room.category === category);
-        }
-        console.log('Filtered room data:', filteredData);
-        displayRoomDetails(filteredData);
+    function filterRoomData(category, roomData, day, month) {
+      const filteredData = roomData.filter(room => {
+        const roomDate = new Date(room.date);
+        return roomDate.getDate() === day && roomDate.getMonth() === month && (category === 'all' || room.category === category);
+      });
+      console.log('Filtered room data:', filteredData);
+      displayRoomDetails(filteredData);
     }
 
     function displayRoomDetails(roomData) {
-        const modalTitle = document.getElementById('eventModalLabel');
-        const modalBody = document.querySelector('#eventModal .modal-body');
+      const modalTitle = document.getElementById('eventModalLabel');
+      const modalBody = document.querySelector('#eventModal .modal-body');
 
-        let modalContent = '<ul>';
-        roomData.forEach(room => {
-            modalContent += `
-                <li>
-                    <strong>Room Name:</strong> ${room.roomName}<br>
-                    <strong>Quantity:</strong> ${room.quantity}
-                </li>
-            `;
-        });
-        modalContent += '</ul>';
+      let modalContent = '<ul>';
+      roomData.forEach(room => {
+        modalContent += `
+          <li>
+            <strong>Room Name:</strong> ${room.roomName}<br>
+            <strong>Quantity:</strong> ${room.quantity}
+          </li>
+        `;
+      });
+      modalContent += '</ul>';
 
-        modalTitle.textContent = `Room Details`;
-        modalBody.innerHTML = modalContent;
+      modalTitle.textContent = `Room Details`;
+      modalBody.innerHTML = modalContent;
 
-        // Show the modal
-        const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
-        eventModal.show();
+      // Show the modal
+      const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+      eventModal.show();
     }
 
     calendar.render();
-}
-
-
+  }
 
   document.addEventListener('DOMContentLoaded', function () {
     initCalendar();
   });
+
+
 
 });

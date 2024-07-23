@@ -83,7 +83,7 @@
         }
 
         .send-otp-button {
-            width: 20% !important;
+            width: 40% !important;
             padding: 10px;
             background: #127369;
             color: #fff;
@@ -95,9 +95,28 @@
         }
 
         .book {
-            display: flex;
+            /* display: flex; */
             justify-content: center;
             gap: 100px;
+        }
+
+        .verify-otp-button {
+            display: none;
+            /* Hide the button by default */
+            margin-top: 10px;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            /* Gray background */
+            color: #666666;
+            /* Darker gray text */
+            cursor: not-allowed;
+            /* Show not-allowed cursor */
+            opacity: 0.6;
+            /* Slightly transparent */
+            border: 1px solid #999999;
+            /* Gray border */
         }
     </style>
 </head>
@@ -106,10 +125,10 @@
     <div class="overflow-hidden">
         <div class="container" id="myHeader">
             <div class="row pt-4">
-                <div class="col-6">
+                <div class="col-5">
                     <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
                 </div>
-                <div class="col-6 links">
+                <div class="col-7 links">
                     <a href="home.html">Home</a>
                     <div class="dropdown">
                         <a href="#">Room Type</a>
@@ -125,95 +144,107 @@
                             <a href="/html/roomcage.html">Cage</a>
                         </div>
                     </div>
-                    <a href="/html/offerdetails.html">Booking History</a>
+                    <div class="dropdown">
+                        <a href="#">History</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/bookingHistory.html">Booking History</a>
+                            <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
+                        </div>
+                    </div>
+                    <a href="/html/contact.html">Check-in</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
                     <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
                 </div>
             </div>
         </div>
-        <h1 class="text-center pt-5 pb-3" style="color: #127369; font-weight: 900;">Payment</h1>
-        <div class="container pb-5">
 
-            <div class="order-summary pt-5">
-                <h2 class="text-center pb-5">Booking Summary</h2>
-                <div class="book">
-                    <div>
-                        <p>Booking Id: <span id="book_id"></span></p>
+        <h1 class="text-center py-5" style="color: #127369; font-weight: 900;">Payment</h1>
+        <div class="container">
+            <div class="row container justify-content-center mb-5 px-5 pt-5" style=" box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; margin-left: 95px; width: 85%; ">
+                <div class="col-5 order-summary border-right pb-3 ml-5">
+                    <div class="book">
+                        <h2 class="text-left py-5">Booking Summary</h2>
+                       
+                            <p>Booking Id: <span id="book_id"></span></p>
 
-                        <p style="display: none;">Booking Date: <span id="book_date"></span></p>
+                            <p style="display: none;">Booking Date: <span id="book_date"></span></p>
 
-                        <p>Room Name: <span id="room_name"></span></p>
+                            <p>Room Name: <span id="room_name"></span></p>
 
-                        <p>Check-in Date: <span id="checkin_date"></span></p>
+                            <p>Check-in Date: <span id="checkin_date"></span></p>
 
-                        <p>Check-out Date: <span id="checkout_date"></span></p>
+                            <p>Check-out Date: <span id="checkout_date"></span></p>
 
-                        <p>Owner Name: <span id="owner_name"></span></p>
+                            <p>Owner Name: <span id="owner_name"></span></p>
 
-                        
+                            <p>Pet Name: <span id="pet_name"></span></p>
+                            <p>Email: <span id="email"></span></p>
+
+                            <p>Contact: <span id="contact"></span></p>
+
+                            <p>Category: <span id="category"></span></p>
+
+                            <p>Food Category: <span id="food_category"></span></p>
                     </div>
-                    <div>
-                        <p>Pet Name: <span id="pet_name"></span></p>
-                        <p>Email: <span id="email"></span></p>
+                </div>
+                <div class="col-5 pb-5 pl-5 ml-5">
+                    <form id="payment-form" class="payment-form order-summary">
+                        <h2 class="text-center py-5">Credit Card Details</h2>
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <div id="card-number-element" class="form-control">
+                                <!-- Stripe Element for Card Number -->
+                            </div>
+                        </div>
 
-                        <p>Contact: <span id="contact"></span></p>
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <div id="card-expiry-element" class="form-control">
+                                <!-- Stripe Element for Expiry Date -->
+                            </div>
+                        </div>
 
-                        <p>Category: <span id="category"></span></p>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <div id="card-cvc-element" class="form-control">
+                                <!-- Stripe Element for CVV -->
+                            </div>
+                        </div>
 
-                        <p>Food Category: <span id="food_category"></span></p>
-                    </div>
+                        <div class="form-group">
+                            <label for="cardHolder">Cardholder Name</label>
+                            <input type="text" id="cardHolder" name="cardHolder" class="form-control" required>
+                        </div>
+
+                        <label for="otp">Enter OTP:</label>
+                        <div class="form-group otp-label">
+                            <input type="text" id="otp" name="otp" class="form-control" placeholder="Enter OTP"
+                                required>
+                            <button class="send-otp-button" id="send-otp">Send OTP</button>
+                            <button type="button" id="verify-otp" class="verify-otp-button">Verify OTP</button>
+                        </div>
+
+                        <div>
+                            <p class="form-control px-3" style="border: none; font-size: 24px;">Total Price: RM <span
+                                    id="price"></span></p>
+                        </div>
+
+                        <br>
+                        <button type="submit" id="confirm-payment">Pay Now</button>
+                    </form>
+                </div>
+                <div class="non-refund-notice pb-5 pt-3">
+                    <p>Note: All bookings are non-refundable. Please ensure your information is correct before
+                        proceeding.
+                    </p>
                 </div>
             </div>
-
-            
-            <form id="payment-form" class="payment-form order-summary">
-                <h2 class="text-center py-5">Credit Card Details</h2>
-                <div class="form-group">
-                    <label for="cardNumber">Card Number</label>
-                    <div id="card-number-element" class="form-control">
-                        <!-- Stripe Element for Card Number -->
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="expiryDate">Expiry Date</label>
-                    <div id="card-expiry-element" class="form-control">
-                        <!-- Stripe Element for Expiry Date -->
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="cvv">CVV</label>
-                    <div id="card-cvc-element" class="form-control">
-                        <!-- Stripe Element for CVV -->
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="cardHolder">Cardholder Name</label>
-                    <input type="text" id="cardHolder" name="cardHolder" class="form-control" required>
-                </div>
-
-                <label for="otp">Enter OTP:</label>
-                <div class="form-group otp-label">
-                    <input type="text" id="otp" name="otp" class="form-control" placeholder="Enter OTP" required>
-                    <button class="send-otp-button" id="send-otp">Send OTP</button>
-                </div>
-
-                <div>
-                    <p class="form-control px-3" style="border: none; font-size: 24px;">Total Price: RM <span
-                            id="price"></span></p>
-                </div>
-
-                <br>
-                <button type="submit" id="confirm-payment">Pay Now</button>
-            </form>
-            <div class="non-refund-notice pt-5">
-                <p>Note: All bookings are non-refundable. Please ensure your information is correct before proceeding.
-                </p>
-            </div>
-            <div id="result-message" class="result-message"></div>
         </div>
 
         <!--Footer-->
@@ -247,8 +278,9 @@
 
         </div>
     </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="module" src="/js/firebase-config.js"></script>
-    <script type="module" src="/js/payment20.js"></script>
+    <script type="module" src="/js/payment46.js"></script>
     <script type="module" src="/js/logouts.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
 

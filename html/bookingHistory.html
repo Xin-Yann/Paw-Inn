@@ -69,6 +69,20 @@
         .cancel-button:hover {
             background: #c82333;
         }
+
+        .form-control {
+            display: inline;
+            background-color: #fff;
+            height: 40px;
+            width: 200px;
+            padding-left: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+            color: #151515;
+            border: 1px solid #e5e5e5;
+            border-radius: 40px;
+            transition: 0.2s all;
+        }
     </style>
 </head>
 
@@ -76,10 +90,10 @@
     <div class="overflow-hidden">
         <div class="container" id="myHeader">
             <div class="row pt-4">
-                <div class="col-6">
+                <div class="col-5">
                     <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
                 </div>
-                <div class="col-6 links">
+                <div class="col-7 links">
                     <a href="home.html">Home</a>
                     <div class="dropdown">
                         <a href="#">Room Type</a>
@@ -104,9 +118,10 @@
                         </svg>
                         <div class="dropdown-content">
                             <a href="/html/bookingHistory.html">Booking History</a>
-                            <a href="/html/bookingSummary.html">Unpaid Bookings</a>
+                            <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
                         </div>
                     </div>
+                    <a href="/html/contact.html">Check-in</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
                     <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
@@ -116,6 +131,13 @@
 
         <div class="container pt-2 pb-5">
             <h1 class="text-center pt-5 pb-5" style="color: #127369; font-weight: 900;">Booking History</h1>
+            <div class="container pb-5">
+                <label for="status" class="type">Status:</label>
+                <select id="status" class="form-control">
+                    <option value="Paid">Paid</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
             <div id="statusContainer"> </div>
         </div>
 
@@ -136,7 +158,7 @@
                     <div class="col-md-4">
                         <p><a href="/html/home.html">Home</a></p>
                         <p><a href="/html/productdog.html">Room Type</a></p>
-                        <p><a href="customize.php">Booking History</a></p>
+                        <p><a href="/html/bookingHistory.html">Booking History</a></p>
                         <p><a href="/html/contact.html">Contact Us</a></p>
                     </div>
                 </div>
@@ -150,7 +172,7 @@
 
         </div>
     </div>
-    <script type="module" src="/js/booking-history13.js"></script>
+    <script type="module" src="/js/booking-history37.js"></script>
     <script type="module" src="/js/logouts.js"></script>
 </body>
 

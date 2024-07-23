@@ -96,24 +96,4 @@ async function fetchAndDisplayBookStatus(userId) {
 }
 
 
-// window.cancelBooking = async (docId, paymentId) => {
-//     const confirmed = confirm(`Are you sure you want to cancel booking ID: ${paymentId}?`);
-//     if (confirmed) {
-//         try {
-//             // Fetch the document, remove the specific payment, and update the document
-//             const docRef = doc(db, 'payments', docId);
-//             const docSnapshot = await getDoc(docRef);
-//             const data = docSnapshot.data();
-//             let payments = data.payments || [];
-//             payments = payments.filter(payment => payment.paymentId !== paymentId);
 
-//             await updateDoc(docRef, { payments });
-//             alert(`Booking ID: ${paymentId} has been cancelled.`);
-//             const userId = getCurrentUserId();
-//             fetchAndDisplayDeliveryStatus(userId); // Refresh the table
-//         } catch (error) {
-//             console.error('Error cancelling booking:', error);
-//             alert('Failed to cancel booking. Please try again.');
-//         }
-//     }
-// }

@@ -12,15 +12,20 @@ function getCurrentUserId() {
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const userId = getCurrentUserId();
-        fetchAndDisplayDeliveryStatus(userId);
+        fetchAndDisplayBookings(userId);
     } else {
         console.log('No user is authenticated. Redirecting to login page.');
         window.location.href = "/html/login.html";
     }
 });
 
-async function fetchAndDisplayDeliveryStatus(userId) {
+window.cancelBooking = function (bookingId) {
+    window.location.href = `/html/cancelBooking.html?book_id=${encodeURIComponent(bookingId)}`;
+}
+
+async function fetchAndDisplayBookings(userId) {
     try {
+        const status = document.getElementById('status').value;
         const paymentDocRef = doc(db, 'payments', userId); 
         const docSnap = await getDoc(paymentDocRef);
 
@@ -28,17 +33,22 @@ async function fetchAndDisplayDeliveryStatus(userId) {
             const paymentData = docSnap.data();
             const paymentsArray = paymentData.payments || [];
 
-            paymentsArray.sort((a, b) => {
+            const paymentFilter = paymentsArray.filter(payment => {
+                return payment.status === status; 
+            });
+
+            // Sort the filtered payments
+            paymentFilter.sort((a, b) => {
                 const idA = a.book_id || '';
                 const idB = b.book_id || '';
                 return idB.localeCompare(idA); // For strings
-                // For numbers, use: return b.bookingId - a.bookingId;
+                // For numbers, use: return b.book_id - a.book_id;
             });
 
             const statusContainer = document.getElementById('statusContainer');
             statusContainer.innerHTML = '';
 
-            if (paymentsArray.length > 0) {
+            if (paymentFilter.length > 0) {
                 const table = document.createElement('table');
                 table.setAttribute('border', '1');
                 table.setAttribute('width', '100%');
@@ -55,7 +65,7 @@ async function fetchAndDisplayDeliveryStatus(userId) {
                 table.appendChild(thead);
 
                 const tbody = document.createElement('tbody');
-                paymentsArray.forEach(payment => {
+                paymentFilter.forEach(payment => {
                     const bookingId = payment.book_id || 'N/A';
                     const bookingDetails = `
                         <strong>Booking Date:</strong> ${new Date(payment.booking_date).toLocaleString()}<br>
@@ -92,24 +102,11 @@ async function fetchAndDisplayDeliveryStatus(userId) {
     }
 }
 
-// window.cancelBooking = async (docId, paymentId) => {
-//     const confirmed = confirm(`Are you sure you want to cancel booking ID: ${paymentId}?`);
-//     if (confirmed) {
-//         try {
-//             // Fetch the document, remove the specific payment, and update the document
-//             const docRef = doc(db, 'payments', docId);
-//             const docSnapshot = await getDoc(docRef);
-//             const data = docSnapshot.data();
-//             let payments = data.payments || [];
-//             payments = payments.filter(payment => payment.paymentId !== paymentId);
-
-//             await updateDoc(docRef, { payments });
-//             alert(`Booking ID: ${paymentId} has been cancelled.`);
-//             const userId = getCurrentUserId();
-//             fetchAndDisplayDeliveryStatus(userId); // Refresh the table
-//         } catch (error) {
-//             console.error('Error cancelling booking:', error);
-//             alert('Failed to cancel booking. Please try again.');
-//         }
-//     }
-// }
+document.getElementById('status').addEventListener('change', () => {
+    const userId = getCurrentUserId();
+    if (userId) {
+        fetchAndDisplayBookings(userId);
+    } else {
+        console.error('No user ID available.');
+    }
+});

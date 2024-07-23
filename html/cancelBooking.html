@@ -15,20 +15,33 @@
     <link rel="stylesheet" href="../css/styles.css">
     <script type="module" src="/js/firebase-config.js"></script>
     <style>
-        .header, .footer {
+        .header,
+        .footer {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .booking-details {
             margin-bottom: 20px;
+            color: black;
         }
+
         .booking-details h2 {
             margin-top: 0;
         }
+
+        .button {
+            display: flex;
+            justify-content: space-evenly;
+            flex-direction: row;
+        }
+
         .cancel-form {
             text-align: center;
         }
-        .cancel-button, .back-button {
+
+        .cancel-button,
+        .back-button {
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
@@ -36,31 +49,35 @@
             cursor: pointer;
             margin-top: 10px;
         }
+
         .cancel-button {
             background: #dc3545;
             color: #fff;
         }
+
         .cancel-button:hover {
             background: #c82333;
         }
+
         .back-button {
             background: #6c757d;
             color: #fff;
         }
+
         .back-button:hover {
             background: #5a6268;
         }
     </style>
 </head>
 
-<body>
+<body style="background-color: #fff;">
     <div class="overflow-hidden">
         <div class="container" id="myHeader">
             <div class="row pt-4">
-                <div class="col-6">
+                <div class="col-5">
                     <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
                 </div>
-                <div class="col-6 links">
+                <div class="col-7 links">
                     <a href="home.html">Home</a>
                     <div class="dropdown">
                         <a href="#">Room Type</a>
@@ -76,7 +93,19 @@
                             <a href="/html/roomcage.html">Cage</a>
                         </div>
                     </div>
-                    <a href="/html/bookingHistory.html">Booking History</a>
+                    <div class="dropdown">
+                        <a href="#">History</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/bookingHistory.html">Booking History</a>
+                            <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
+                        </div>
+                    </div>
+                    <a href="/html/contact.html">Check-in</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
                     <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
@@ -86,25 +115,8 @@
 
         <h1 class="text-center pt-5 pb-5" style="color: #127369; font-weight: 900;">Cancel Booking</h1>
 
-        <div class="container pb-5">
-            <div class="booking-details">
-                <h2>Booking ID: 12345</h2>
-                <p><strong>Date:</strong> 2024-07-01</p>
-                <p><strong>Status:</strong> Pending</p>
-            </div>
-            
-            <div class="cancel-form">
-                <p>Are you sure you want to cancel this booking?</p>
-                <div id="confirm-buttons">
-                    <button class="cancel-button" onclick="showReasonSection()">Yes, Cancel Booking</button>
-                    <button class="back-button" onclick="window.history.back()">No, Go Back</button>
-                </div>
-                
-                <!-- <div id="reason-section" class="reason-section">
-                    <textarea id="reason-textarea" class="reason-textarea" rows="4" placeholder="Please provide the reason for cancellation..."></textarea>
-                    <button class="submit-button" onclick="submitCancellation(12345)">Submit Cancellation</button>
-                </div> -->
-            </div>
+        <div class="container pb-5" style="display: flex; justify-content: center;">
+            <div class="booking-details" id="book-detials"></div>
         </div>
 
         <!--Footer-->
@@ -138,26 +150,7 @@
 
         </div>
     </div>
-    <script>
-        function showReasonSection() {
-            document.getElementById('reason-section').style.display = 'block';
-            document.getElementById('confirm-buttons').style.display = 'none';
-        }
-
-        function submitCancellation(bookingId) {
-            const reason = document.getElementById('reason-textarea').value;
-            if (reason.trim() === '') {
-                alert('Please provide a reason for cancellation.');
-                return;
-            }
-
-            // Logic to handle the cancellation submission
-            // For now, we'll just display a confirmation alert with the reason
-            alert(`Booking ID ${bookingId} has been cancelled for the following reason: ${reason}`);
-            // Redirect to booking history or another page
-            window.location.href = 'booking-history.html'; // Change to your actual booking history page URL
-        }
-    </script>
+    <script type="module" src="/js/cancelBooking9.js"></script>
     <script type="module" src="/js/contacts.js"></script>
     <script type="module" src="/js/logouts.js"></script>
 </body>
