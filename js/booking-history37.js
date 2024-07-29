@@ -23,10 +23,19 @@ window.cancelBooking = function (bookingId) {
     window.location.href = `/html/cancelBooking.html?book_id=${encodeURIComponent(bookingId)}`;
 }
 
+window.checkinBooking = function (bookingId) {
+    window.location.href = `/html/checkin.html?book_id=${encodeURIComponent(bookingId)}`;
+}
+
+function isPastDate(dateString) {
+    const date = new Date(dateString);
+    return date < new Date();
+}
+
 async function fetchAndDisplayBookings(userId) {
     try {
         const status = document.getElementById('status').value;
-        const paymentDocRef = doc(db, 'payments', userId); 
+        const paymentDocRef = doc(db, 'payments', userId);
         const docSnap = await getDoc(paymentDocRef);
 
         if (docSnap.exists()) {
@@ -34,15 +43,14 @@ async function fetchAndDisplayBookings(userId) {
             const paymentsArray = paymentData.payments || [];
 
             const paymentFilter = paymentsArray.filter(payment => {
-                return payment.status === status; 
+                return payment.status === status;
             });
 
             // Sort the filtered payments
             paymentFilter.sort((a, b) => {
-                const idA = a.book_id || '';
-                const idB = b.book_id || '';
-                return idB.localeCompare(idA); // For strings
-                // For numbers, use: return b.book_id - a.book_id;
+                const idA = parseInt(a.book_id.replace(/^\D+/g, ''), 10); // Extract number part and parse to integer
+                const idB = parseInt(b.book_id.replace(/^\D+/g, ''), 10); // Extract number part and parse to integer
+                return idB - idA; // For numeric comparison
             });
 
             const statusContainer = document.getElementById('statusContainer');
@@ -53,13 +61,14 @@ async function fetchAndDisplayBookings(userId) {
                 table.setAttribute('border', '1');
                 table.setAttribute('width', '100%');
 
+                const actionHeader = paymentFilter.some(payment => payment.status !== 'Cancelled') ? '<th class="text-center">Action</th>' : '';
                 const thead = document.createElement('thead');
                 thead.innerHTML = `
                     <tr>
-                        <th>Booking ID</th>
-                        <th>Booking Details</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th class="text-center">Booking ID</th>
+                        <th class="text-center">Booking Details</th>
+                        <th class="text-center">Status</th>
+                        ${actionHeader}
                     </tr>
                 `;
                 table.appendChild(thead);
@@ -68,22 +77,41 @@ async function fetchAndDisplayBookings(userId) {
                 paymentFilter.forEach(payment => {
                     const bookingId = payment.book_id || 'N/A';
                     const bookingDetails = `
-                        <strong>Booking Date:</strong> ${new Date(payment.booking_date).toLocaleString()}<br>
-                        <strong>Check-in Date:</strong> ${payment.checkin_date}<br>
-                        <strong>Check-out Date:</strong> ${payment.checkout_date}<br>
-                        <strong>Room:</strong> ${payment.room_name}<br>
-                        <strong>Pet Name:</strong> ${payment.pet_name}
+                        <div class="book-details ${isPastDate(payment.checkin_date) || isPastDate(payment.checkout_date) ? 'disabled' : ''}">
+                            <strong>Booking Date:</strong> ${new Date(payment.book_date).toLocaleString()}<br>
+                            <strong>Check-in Date:</strong> ${payment.checkin_date}<br>
+                            <strong>Check-out Date:</strong> ${payment.checkout_date}<br>
+                            <strong>Room:</strong> ${payment.room_name}<br>
+                            <strong>Owner Name:</strong> ${payment.owner_name}<br>
+                            <strong>Pet Name:</strong> ${payment.pet_name}<br>
+                            <strong>Total Price:</strong> ${payment.totalPrice}<br>
+                        </div>
                     `;
                     const bookingStatus = payment.status || 'Pending';
 
+                    // Determine if the row should be disabled
+                    const isPastCheckinDate = isPastDate(payment.checkin_date);
+                    const isPastCheckoutDate = isPastDate(payment.checkout_date);
+                    const buttonDisabled = isPastCheckinDate || isPastCheckoutDate;
+                    const buttonsHidden = bookingStatus === 'Cancelled';
+                    const checkinButtonVisible = bookingStatus !== 'Checked-In' && !buttonsHidden;
+                    const cancelButtonVisible = bookingStatus !== 'Cancelled';
+
+
                     const row = document.createElement('tr');
+                    row.className = isPastCheckinDate || isPastCheckoutDate ? 'disabled' : '';
+
                     row.innerHTML = `
-                        <td>${bookingId}</td>
+                        <td class="text-center book-id ${isPastDate(payment.checkin_date) || isPastDate(payment.checkout_date) ? 'disabled' : ''}">${bookingId}</td>
                         <td>${bookingDetails}</td>
-                        <td>${bookingStatus}</td> 
-                        <td>
-                            <button onclick="cancelBooking('${bookingId}')" class="cancel-button">Cancel Booking</button>
-                        </td>                
+                        <td class="text-center">${bookingStatus}</td> 
+                   
+                        ${buttonsHidden ? '' : `
+                            <td class="text-center">
+                                 ${buttonDisabled ? '' : checkinButtonVisible ? `<button onclick="checkinBooking('${bookingId}')" class="checkin-button" >Check In</button>` : ''} &nbsp;&nbsp;
+                            ${buttonDisabled ? '' : cancelButtonVisible ? `<button onclick="cancelBooking('${bookingId}')" class="cancel-button" >Cancel Booking</button>` : ''}
+                            </td>
+                        `}               
                     `;
                     tbody.appendChild(row);
                 });
@@ -91,11 +119,11 @@ async function fetchAndDisplayBookings(userId) {
 
                 statusContainer.appendChild(table);
             } else {
-                statusContainer.innerHTML = '<p class="pt-3">No orders found.</p>';
+                statusContainer.innerHTML = '<p class="pt-3">No bookings found.</p>';
             }
         } else {
             console.log('No document found for the given userId.');
-            statusContainer.innerHTML = '<p class="pt-3">No orders found.</p>';
+            statusContainer.innerHTML = '<p class="pt-3">No booking found.</p>';
         }
     } catch (error) {
         console.error('Error fetching delivery status:', error);

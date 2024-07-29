@@ -70,6 +70,23 @@
             background: #c82333;
         }
 
+        .checkin-button {
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .checkin-button {
+            background: #127369;
+            color: #fff;
+        }
+
+        .checkin-button:hover {
+            background: #127369;
+        }
+
         .form-control {
             display: inline;
             background-color: #fff;
@@ -83,6 +100,23 @@
             border-radius: 40px;
             transition: 0.2s all;
         }
+
+        .book-details {
+            color: black;
+        }
+
+        .book-id{
+            color: #127369;
+        }
+
+        .disabled {
+            background-color: #f0f0f0;
+            /* Light gray background for disabled rows */
+            color: #a0a0a0;
+            /* Gray text color for disabled rows */
+            pointer-events: none;
+            /* Prevent any mouse interactions */
+        }
     </style>
 </head>
 
@@ -90,10 +124,10 @@
     <div class="overflow-hidden">
         <div class="container" id="myHeader">
             <div class="row pt-4">
-                <div class="col-5">
+                <div class="col-6">
                     <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
                 </div>
-                <div class="col-7 links">
+                <div class="col-6 links">
                     <a href="home.html">Home</a>
                     <div class="dropdown">
                         <a href="#">Room Type</a>
@@ -121,7 +155,6 @@
                             <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
                         </div>
                     </div>
-                    <a href="/html/contact.html">Check-in</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
                     <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
@@ -136,6 +169,7 @@
                 <select id="status" class="form-control">
                     <option value="Paid">Paid</option>
                     <option value="Cancelled">Cancelled</option>
+                    <option value="Checked-In">Checked In</option>
                 </select>
             </div>
             <div id="statusContainer"> </div>

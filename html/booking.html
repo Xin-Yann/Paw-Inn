@@ -37,6 +37,11 @@
             align-items: center;
             transform: translate(30%, -50%);
         }
+
+        .error-message {
+            color: red;
+            /* Hidden by default */
+        }
     </style>
 </head>
 
@@ -44,10 +49,10 @@
     <div class="overflow-hidden">
         <div class="container" id="myHeader">
             <div class="row pt-4">
-                <div class="col-5">
+                <div class="col-6">
                     <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
                 </div>
-                <div class="col-7 links">
+                <div class="col-6 links">
                     <a href="home.html">Home</a>
                     <div class="dropdown">
                         <a href="#">Room Type</a>
@@ -75,7 +80,6 @@
                             <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
                         </div>
                     </div>
-                    <a href="/html/contact.html">Check-in</a>
                     <a href="/html/contact.html">Contact Us</a>
                     <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
                     <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
@@ -115,38 +119,47 @@
                     <div class="elem-group">
                         <label for="room_name">Room Name</label>
                         <input type="text" id="room_name" name="room_name" pattern=[A-Z\sa-z]{3,20} disabled>
+                        <p id="name_error" class="error-message"></p>
                     </div>
 
                     <div class="elem-group inlined">
                         <label for="checkin">Check-in Date</label>
                         <input type="date" id="checkin" name="checkin" required>
+                        <p id="checkin_error" class="error-message"></p>
                     </div>
 
                     <div class="elem-group inlined">
                         <label for="checkout">Check-out Date</label>
                         <input type="date" id="checkout" name="checkout" required>
+                        <p id="checkout_error" class="error-message"></p>
                     </div>
+
+                    <p id="available_error" class="error-message"></p>
 
                     <div class="elem-group">
                         <label for="name">Pet's Owner Name</label>
                         <input type="text" id="owner_name" name="owner_name" placeholder="your name"
                             pattern=[A-Z\sa-z]{3,20} required>
+                        <p id="owner_error" class="error-message"></p>
                     </div>
 
                     <div class="elem-group">
                         <label for="name">Pet's Name</label>
                         <input type="text" id="pet_name" name="pet_name" placeholder="Pet's Name"
                             pattern=[A-Z\sa-z]{3,20} required>
+                        <p id="pet_error" class="error-message"></p>
                     </div>
                     <div class="elem-group">
                         <label for="email">E-mail</label>
                         <input type="email" id="email" name="email" placeholder="your email" required>
+                        <p id="email_error" class="error-message"></p>
                     </div>
                 </div>
                 <div class="col pb-5 pl-5">
                     <div class="elem-group">
                         <label for="phone">Contact</label>
                         <input type="tel" id="contact" name="contact" placeholder="your phone number" required>
+                        <p id="contact_error" class="error-message"></p>
                     </div>
                     <div class="elem-group">
                         <label for="category">Category of Animal</label>
@@ -157,6 +170,7 @@
                             <option value="rabbit">Rabbits</option>
                             <option value="caged">Caged</option>
                         </select>
+                        <p id="category_error" class="error-message"></p>
                     </div>
                     <div class="elem-group">
                         <label for="food_category">Select Food Category</label>
@@ -166,24 +180,31 @@
                             <option value="self">Self-Provide</option>
                             <option value="medical">Medical Treatment</option>
                         </select>
+                        <p id="food_error" class="error-message"></p>
                     </div>
                     <div class="elem-group">
-                        <label for="vaccination_image">Vaccination Proof:</label>
+                        <label for="vaccination_image">Vaccination Proof (only accept PDF, PNG, JPG, JPEG):</label>
                         <input type="file" id="vaccination_image" name="vaccination_image" required><br>
+                        <p id="vaccination_error" class="error-message"></p>
                     </div>
                 </div>
-
-                <hr>
-                <p class="form-control px-3" style="border: none; font-size: 24px;">Total Price: RM <span
-                        id="price"></span>
-                </p>
-
-                <input type="hidden" id="status" value="pending">
-
-                <a href="#" type="submit" class="form-control btn btn-primary rounded submit px-3" id="submit"
-                    style="background-color: #01647a;border: none;">Book Now</a>
             </div>
 
+            <hr>
+            <div class="container px-4 py-4">
+                <p class="form-control px-3" style="border: none; font-size: 18px;" >Total Nights: <span id="nights"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 18px;">Price (per night): RM <span id="price"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 24px;">Subtotal: RM <span id="subtotal"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 24px;">Service Tax (SST 6%): RM <span id="service"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 24px;">Sales Tax (10%): RM <span id="sales"></span></p>
+                <p class="form-control px-3 mb-5" style="border: none; font-size: 24px;">Total Price: RM <span  id="totalprice"></span></p>
+            
+            <input type="hidden" id="status" value="Pending">
+
+            <a href="#" type="submit" class="form-control btn btn-primary rounded submit px-3" id="submit"
+                style="background-color: #01647a;border: none;">Book Now</a>
+            
+            </div>
         </form>
     </div>
 
@@ -197,7 +218,7 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script type="module" src="/js/firebase-config.js"></script>
-    <script type="module" src="/js/booking-114.js"></script>
+    <script type="module" src="/js/booking-115.js"></script>
     <script type="module" src="/js/logouts.js"></script>
 </body>
 

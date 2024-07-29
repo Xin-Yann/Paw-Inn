@@ -30,68 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Get the current date and format it as YYYY-MM-DD
-  var currentDateTime = new Date();
-  var year = currentDateTime.getFullYear();
-  var month = (currentDateTime.getMonth() + 1);
-  var date = currentDateTime.getDate();
-
-  if (date < 10) {
-    date = '0' + date;
-  }
-  if (month < 10) {
-    month = '0' + month;
-  }
-
-  var todayDate = year + "-" + month + "-" + date;
-
-  // Calculate tomorrow's date
-  var dateTomorrow = new Date();
-  dateTomorrow.setDate(dateTomorrow.getDate() + 1);
-  var yearTomorrow = dateTomorrow.getFullYear();
-  var monthTomorrow = (dateTomorrow.getMonth() + 1);
-  var dateTmrw = dateTomorrow.getDate();
-
-  if (dateTmrw < 10) {
-    dateTmrw = '0' + dateTmrw;
-  }
-  if (monthTomorrow < 10) {
-    monthTomorrow = '0' + monthTomorrow;
-  }
-
-  var dateTomorrowFormatted = yearTomorrow + "-" + monthTomorrow + "-" + dateTmrw;
-
-  // Set the min attribute and default value for the check-in input field
-  var checkinElem = document.querySelector("#checkin");
-  var checkoutElem = document.querySelector("#checkout");
-
-  checkinElem.setAttribute("min", dateTomorrowFormatted);
-  checkinElem.value = dateTomorrowFormatted;
-
-  // Ensure the checkout date cannot be earlier than the check-in date
-  checkinElem.onchange = function () {
-    checkoutElem.setAttribute("min", this.value);
-  }
-
-  // Optionally set a default value for the checkout field (e.g., the day after the check-in date)
-  var defaultCheckoutDate = new Date();
-  defaultCheckoutDate.setDate(defaultCheckoutDate.getDate() + 2); // Set default checkout to 2 days after check-in
-
-  var yearDefault = defaultCheckoutDate.getFullYear();
-  var monthDefault = (defaultCheckoutDate.getMonth() + 1);
-  var dateDefault = defaultCheckoutDate.getDate();
-
-  if (dateDefault < 10) {
-    dateDefault = '0' + dateDefault;
-  }
-  if (monthDefault < 10) {
-    monthDefault = '0' + monthDefault;
-  }
-
-  var defaultCheckoutDateFormatted = yearDefault + "-" + monthDefault + "-" + dateDefault;
-  checkoutElem.setAttribute("min", dateTomorrowFormatted);
-  checkoutElem.value = defaultCheckoutDateFormatted;
-
   // Retrieve selected room name from sessionStorage
   const selectedRoomName = sessionStorage.getItem('selectedRoomName');
   const selectedRoomPrice = sessionStorage.getItem('selectedRoomPrice');
@@ -101,62 +39,211 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('price').textContent = selectedRoomPrice;
   document.getElementById('category').value = selectedRoomCategory;
 
-  // Fetch room quantity and display it
+  async function checkRoomAvailability(date) {
+    try {
+      const roomCategories = [
+        { category: 'cat', collectionName: 'cat rooms' },
+        { category: 'dog', collectionName: 'dog rooms' },
+        { category: 'rabbit', collectionName: 'rabbit rooms' },
+        { category: 'cage', collectionName: 'cage rooms' },
+      ];
 
-  // async function fetchRoomQuantity(year = new Date().getFullYear()) {
-  //   try {
-  //     const roomCategories = [
-  //       { category: 'cat', collectionName: 'cat rooms' },
-  //       { category: 'dog', collectionName: 'dog rooms' },
-  //       { category: 'rabbit', collectionName: 'rabbit rooms' },
-  //       { category: 'cage', collectionName: 'cage rooms' },
-  //     ];
+      for (const { category, collectionName } of roomCategories) {
+        const docRef = doc(collection(db, 'rooms'), category);
+        const roomCollectionRef = collection(docRef, collectionName);
+        const roomQuerySnapshot = await getDocs(roomCollectionRef);
 
-  //     const events = [];
-  //     const fixedDate = new Date(year, 7, 1); // Set to August 1st, adjust as needed
-  //     const today = new Date(); // Current date
+        for (const docSnap of roomQuerySnapshot.docs) {
+          if (docSnap.exists()) {
+            const room = docSnap.data();
+            const roomQuantities = room.room_quantity || [];
 
-  //     for (const { category, collectionName } of roomCategories) {
-  //       const docRef = doc(collection(db, 'rooms'), category);
-  //       const roomCollectionRef = collection(docRef, collectionName);
-  //       const roomQuerySnapshot = await getDocs(roomCollectionRef);
+            // Check availability for the specific date
+            for (const monthData of roomQuantities) {
+              for (const [roomDate, quantity] of Object.entries(monthData)) {
+                const availableDate = new Date(roomDate);
+                if (availableDate.toDateString() === new Date(date).toDateString() &&
+                  parseInt(quantity, 10) > 0) {
+                  return true; // Room is available
+                }
+              }
+            }
+          }
+        }
+      }
 
-  //       roomQuerySnapshot.forEach(docSnap => {
-  //         if (docSnap.exists()) {
-  //           const roomData = docSnap.data();
-  //           const roomQuantity = roomData.room_quantity || 0;
-  //           const roomName = roomData.room_name || 'Unknown';
+      return false; // No rooms available
+    } catch (error) {
+      console.error('Error checking room availability:', error);
+      return false;
+    }
+  }
 
-  //           // Create an event for the fixed date
-  //           const eventDate = new Date(fixedDate); // Clone the fixed date
-  //           eventDate.setHours(0, 0, 0, 0); // Ensure the time is set to 00:00:00
+  function calculateNights(checkinDate, checkoutDate) {
+    if (!checkinDate || !checkoutDate) return 0;
 
-  //           // Only include events from today onwards
-  //           if (eventDate >= today) {
-  //             const event = {
-  //               title: `Category: ${category.toUpperCase()}, ${roomName}, ${roomQuantity}`,
-  //               extendedProps: { category: category },
-  //               start: eventDate.toISOString().split('T')[0], // Keep only the date part in ISO format
-  //               allDay: true, // Ensure the event is displayed within a single day
-  //               className: 'room-event'
-  //             };
+    const checkin = new Date(checkinDate);
+    const checkout = new Date(checkoutDate);
 
-  //             events.push(event);
+    if (checkout <= checkin) return 0;
 
-  //             console.log(`Event created for date: ${eventDate.toISOString().split('T')[0]}`, event);
-  //           }
-  //         }
-  //       });
-  //     }
+    const timeDiff = checkout - checkin;
+    const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-  //     console.log('Fetched events:', events);
+    return dayDiff;
+  }
 
-  //     return events;
-  //   } catch (error) {
-  //     console.error('Error fetching room quantity:', error);
-  //     return [];
-  //   }
+  // function calculateTotalPrice(nights, roomPrice) {
+  //   return nights * roomPrice;
   // }
+
+  // function calculateServiceTax(amount, taxRate = 6) {
+  //   return amount * (taxRate / 100);
+  // }
+
+  // function calculateSalesTax(amount, taxRate = 10) {
+  //   return amount * (taxRate / 100);
+  // }
+
+  function calculateTotalCost(nights, roomPrice, serviceTaxRate = 6, salesTaxRate = 10) {
+    const basePrice = nights * roomPrice;
+    const serviceTax = basePrice * (serviceTaxRate / 100);
+    const salesTax = basePrice * (salesTaxRate / 100);
+    const totalPrice = basePrice + serviceTax + salesTax;
+
+    return { basePrice, serviceTax, salesTax, totalPrice };
+  }
+
+  async function updateTotalPrice() {
+    const checkinDate = checkinElem.value;
+    const checkoutDate = checkoutElem.value;
+    const nights = calculateNights(checkinDate, checkoutDate);
+
+    // Ensure priceElem has a valid format
+    const priceText = priceElem ? priceElem.textContent.replace('RM ', '').trim() : '0';
+    const roomPrice = parseFloat(priceText) || selectedRoomPrice; // Fallback to selectedRoomPrice if parseFloat fails
+
+    document.querySelectorAll('.error').forEach(el => el.textContent = '');
+    // Check room availability
+    const isCheckinAvailable = await checkRoomAvailability(checkinDate);
+    const isCheckoutAvailable = await checkRoomAvailability(checkoutDate);
+
+    // Determine overall availability
+    const isAvailable = isCheckinAvailable && isCheckoutAvailable;
+    const isSameDay = new Date(checkinDate).toDateString() === new Date(checkoutDate).toDateString();
+    const validNights = isAvailable && !isSameDay ? nights : 0;
+
+    // Calculate subtotal and totalPrice
+    let subtotal = isAvailable && !isSameDay ? roomPrice : 0;
+    subtotal = parseFloat(subtotal) || 0;
+
+    const { basePrice, serviceTax, salesTax, totalPrice: calculatedTotalPrice } = isAvailable && validNights > 0
+      ? calculateTotalCost(validNights, roomPrice)
+      : { basePrice: 0, serviceTax: 0, salesTax: 0, totalPrice: 0 };
+
+
+    // Update elements with appropriate values
+    if (priceElem) {
+      priceElem.textContent = `${subtotal.toFixed(2)}`;
+    } else {
+      console.error('Price element not found');
+    }
+
+    if (subtotalElem) {
+      subtotalElem.textContent = `${basePrice.toFixed(2)}`;
+    } else {
+      console.error('Subtotal element not found');
+    }
+
+    if (nightsElem) {
+      nightsElem.textContent = `${validNights}`;
+    } else {
+      console.error('Nights element not found');
+    }
+
+    if (serviceElem) {
+      service.textContent = `${serviceTax.toFixed(2)}`;
+    } else {
+      console.error('Nights element not found');
+    }
+
+    if (salesElem) {
+      sales.textContent = `${salesTax.toFixed(2)}`;
+    } else {
+      console.error('Nights element not found');
+    }
+
+    if (totalPriceElem) {
+      totalPriceElem.textContent = `${calculatedTotalPrice.toFixed(2)}`;
+    } else {
+      console.error('Total Price element not found');
+    }
+
+    if (!isCheckinAvailable && !isCheckoutAvailable) {
+      document.getElementById('available_error').textContent = 'Sorry, no rooms are available for the selected dates.';
+      document.getElementById('available_error').style.display = 'block';
+    } else if (!isCheckinAvailable) {
+      document.getElementById('available_error').textContent = 'Sorry, no rooms are available for checkin date.';
+      document.getElementById('available_error').style.display = 'block';
+    } else if (!isCheckoutAvailable) {
+      document.getElementById('available_error').textContent = 'Sorry, no rooms are available for checkout date.';
+      document.getElementById('available_error').style.display = 'block';
+    } else {
+      document.getElementById('available_error').textContent = '';
+      document.getElementById('available_error').style.display = 'none';
+    }
+  }
+
+  // Initialize date variables
+  var currentDateTime = new Date();
+  var year = currentDateTime.getFullYear();
+  var month = (currentDateTime.getMonth() + 1).toString().padStart(2, '0');
+  var date = currentDateTime.getDate().toString().padStart(2, '0');
+  var todayDate = `${year}-${month}-${date}`;
+
+  var dateTomorrow = new Date();
+  dateTomorrow.setDate(dateTomorrow.getDate() + 1);
+  var yearTomorrow = dateTomorrow.getFullYear();
+  var monthTomorrow = (dateTomorrow.getMonth() + 1).toString().padStart(2, '0');
+  var dateTomorrowFormatted = `${yearTomorrow}-${monthTomorrow}-${dateTomorrow.getDate().toString().padStart(2, '0')}`;
+
+  var checkinElem = document.querySelector("#checkin");
+  var checkoutElem = document.querySelector("#checkout");
+  var priceElem = document.getElementById('price');
+  var nightsElem = document.getElementById('nights');
+  var serviceElem = document.getElementById('service');
+  var salesElem = document.getElementById('sales');
+  var subtotalElem = document.getElementById('subtotal');
+  var totalPriceElem = document.getElementById('totalprice');
+
+  if (checkinElem && checkoutElem) {
+    checkinElem.setAttribute("min", dateTomorrowFormatted);
+    checkinElem.value = dateTomorrowFormatted;
+
+    var defaultCheckoutDate = new Date();
+    defaultCheckoutDate.setDate(defaultCheckoutDate.getDate() + 2);
+    var yearDefault = defaultCheckoutDate.getFullYear();
+    var monthDefault = (defaultCheckoutDate.getMonth() + 1).toString().padStart(2, '0');
+    var dateDefault = defaultCheckoutDate.getDate().toString().padStart(2, '0');
+    var defaultCheckoutDateFormatted = `${yearDefault}-${monthDefault}-${dateDefault}`;
+
+    checkoutElem.setAttribute("min", dateTomorrowFormatted);
+    checkoutElem.value = defaultCheckoutDateFormatted;
+
+    checkinElem.onchange = async function () {
+      checkoutElem.setAttribute("min", this.value);
+      await updateTotalPrice();
+    }
+
+    checkoutElem.addEventListener('change', async function () {
+      await updateTotalPrice();
+    });
+
+    // Call updateTotalPrice when the page loads to set initial values
+    updateTotalPrice();
+  } else {
+    console.error('Check-in or Check-out elements not found');
+  }
 
   async function generateBookingID() {
     const bookingCounterDocRef = doc(db, 'metadata', 'bookingCounter');
@@ -197,6 +284,10 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       const userId = getCurrentUserId();
 
+      // Clear previous error messages
+      document.querySelectorAll('.error').forEach(el => el.textContent = '');
+
+      // Get form values
       const roomName = document.getElementById('room_name').value;
       const checkinDate = document.getElementById('checkin').value;
       const checkoutDate = document.getElementById('checkout').value;
@@ -209,10 +300,69 @@ document.addEventListener('DOMContentLoaded', function () {
       const roomPrice = document.getElementById('price').textContent;
       const status = document.getElementById('status').value;
       const bookingId = await generateBookingID();
+      const imageInput = document.getElementById('vaccination_image');
+      const imagePath = imageInput ? imageInput.value : '';
+      const imageName = imagePath.split(/[/\\]/).pop();
+      const nights = calculateNights(checkinDate, checkoutDate);
+      const subtotal = document.getElementById('subtotal').textContent;
+      const service = document.getElementById('service').textContent;
+      const sales = document.getElementById('sales').textContent;
+      const totalPrice = document.getElementById('totalprice').textContent;
 
-      // Validate required fields
-      if (!roomName || !checkinDate || !checkoutDate || !ownerName || !petName || !email || !contact || !foodCategory) {
-        alert('Please fill out all required fields.');
+      // Validate inputs
+      let isValid = true;
+
+      if (!roomName) {
+        document.getElementById('name_error').textContent = 'Please select the room from the Dog, Cat, Rabbit, or Cage page.';
+        isValid = false;
+      }
+      if (!checkinDate) {
+        document.getElementById('checkin_error').textContent = 'Please select a check-in date.';
+        isValid = false;
+      }
+      if (!checkoutDate) {
+        document.getElementById('checkout_error').textContent = 'Please select a checkout date.';
+        isValid = false;
+      }
+      if (!ownerName) {
+        document.getElementById('owner_error').textContent = 'Please fill in owner name.';
+        isValid = false;
+      }
+      if (!petName) {
+        document.getElementById('pet_error').textContent = 'Please fill in pet name.';
+        isValid = false;
+      }
+      if (!email) {
+        document.getElementById('email_error').textContent = 'Please fill in your email.';
+        isValid = false;
+      }
+      if (!contact) {
+        document.getElementById('contact_error').textContent = 'Please fill in your contact number.';
+        isValid = false;
+      }
+      if (!category) {
+        document.getElementById('category_error').textContent = 'Please select one of the animal categories.';
+        isValid = false;
+      }
+      if (!foodCategory) {
+        document.getElementById('food_error').textContent = 'Please select a food category.';
+        isValid = false;
+      }
+      if (!imageName) {
+        document.getElementById('vaccination_error').textContent = 'Please upload a file.';
+        isValid = false;
+      } else {
+        const fileExtension = imageName.split('.').pop().toLowerCase();
+        const allowedExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
+        if (!allowedExtensions.includes(fileExtension)) {
+          document.getElementById('vaccination_error').textContent = 'Please upload a file with one of the following file types: PDF, PNG, JPG, JPEG.';
+          isValid = false;
+        }
+      }
+
+      // Stop further processing if validation fails
+      if (!isValid) {
+        window.alert("Please fill in all required fields.");
         return;
       }
 
@@ -242,8 +392,14 @@ document.addEventListener('DOMContentLoaded', function () {
         contact: contact,
         category: category,
         food_category: foodCategory,
+        vaccination_image: imageName,
         price: roomPrice,
-        status: status
+        status: status,
+        nights: nights,
+        serviceTax: service,
+        salesTax: sales,
+        subtotal: subtotal,
+        totalPrice: totalPrice
       };
 
       // Add the new booking to the array
@@ -327,7 +483,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        if (cellDate >= today) {
+        const nextDay = new Date(today);
+        nextDay.setDate(today.getDate() + 1);
+
+        if (cellDate >= nextDay) {
           const cell = info.el.querySelector('.fc-daygrid-day-frame');
           if (cell) {
             const roomData = await fetchRoomQuantity(); // Fetch room data
@@ -392,7 +551,5 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('DOMContentLoaded', function () {
     initCalendar();
   });
-
-
 
 });

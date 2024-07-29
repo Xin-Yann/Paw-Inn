@@ -19,6 +19,10 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+window. payBooking = function (bookingId) {
+    window.location.href = `/html/payment.html?book_id=${encodeURIComponent(bookingId)}`;
+}
+
 async function fetchAndDisplayBookStatus(userId) {
     try {
         const bookDocRef = doc(db, 'book', userId); 
@@ -74,7 +78,7 @@ async function fetchAndDisplayBookStatus(userId) {
                         <td>${bookingDetails}</td>
                         <td>${bookingStatus}</td> 
                         <td>
-                            <button onclick="cancelBooking('${bookingId}')" class="pay-button">Pay</button>
+                            <button onclick="payBooking('${bookingId}')" class="pay-button">Pay</button>
                         </td>                
                     `;
                     tbody.appendChild(row);

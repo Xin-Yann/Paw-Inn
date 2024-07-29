@@ -6,6 +6,8 @@ const auth = getAuth();
 const stripe = Stripe('pk_test_51PLiKDHzquwkd6f4bfXP8K4Vhe69OYRBKhR0SIdtaof4VdVoXDWWI3hLYtqk6KqEKeYYOWbRLMgr4BtumdxhdXBX00GNGUlLiI');
 const elements = stripe.elements();
 
+document.addEventListener("DOMContentLoaded", () => {
+
 (function () {
   emailjs.init("9R5K8FyRub386RIu8"); // Replace with your EmailJS user ID
 })();
@@ -16,33 +18,62 @@ function getCurrentUserId() {
   return user ? user.uid : null;
 }
 
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const userId = user.uid;
+    fetchAndDisplayBooking(userId);
+  } else {
+    console.error('No authenticated user found.');
+  }
+});
+
 // Function to display bookings from Firestore
 async function fetchAndDisplayBooking(userId) {
   try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const book_id = urlParams.get('book_id');
     const userDocRef = doc(db, 'book', userId);
     const docSnap = await getDoc(userDocRef);
 
     if (docSnap.exists()) {
       const userData = docSnap.data();
       const bookings = userData.bookings || [];
-      const newestBooking = bookings[bookings.length - 1];
+      // const newestBooking = bookings[bookings.length - 1];
 
-      if (newestBooking) {
-        document.getElementById('book_id').textContent = newestBooking.book_id;
-        document.getElementById('book_date').textContent = newestBooking.book_date;
-        document.getElementById('room_name').textContent = newestBooking.room_name;
-        document.getElementById('checkin_date').textContent = newestBooking.checkin_date;
-        document.getElementById('checkout_date').textContent = newestBooking.checkout_date;
-        document.getElementById('owner_name').textContent = newestBooking.owner_name;
-        document.getElementById('pet_name').textContent = newestBooking.pet_name;
-        document.getElementById('email').textContent = newestBooking.email;
-        document.getElementById('contact').textContent = newestBooking.contact;
-        document.getElementById('category').textContent = newestBooking.category;
-        document.getElementById('food_category').textContent = newestBooking.food_category;
-        document.getElementById('price').textContent = newestBooking.price;
+      let booking;
+      if (book_id) {
+        // Find the booking with the specific book_id
+        booking = bookings.find(b => b.book_id === book_id);
+        if (!booking) {
+          console.error('No booking found with ID:', book_id);
+          return;
+        }
       } else {
-        console.error('No bookings found for user ID:', userId);
+        // Get the newest booking
+        booking = bookings[bookings.length - 1];
+        if (!booking) {
+          console.error('No bookings found for user ID:', userId);
+          return;
+        }
       }
+        document.getElementById('book_id').textContent = booking.book_id;
+        document.getElementById('book_date').textContent = booking.book_date;
+        document.getElementById('room_name').textContent = booking.room_name;
+        document.getElementById('checkin_date').textContent = booking.checkin_date;
+        document.getElementById('checkout_date').textContent = booking.checkout_date;
+        document.getElementById('owner_name').textContent = booking.owner_name;
+        document.getElementById('pet_name').textContent = booking.pet_name;
+        document.getElementById('email').textContent = booking.email;
+        document.getElementById('contact').textContent = booking.contact;
+        document.getElementById('category').textContent = booking.category;
+        document.getElementById('food_category').textContent = booking.food_category;
+        document.getElementById('nights').textContent = booking.nights;
+        document.getElementById('price').textContent = booking.price;
+        document.getElementById('service').textContent = booking.serviceTax;
+        document.getElementById('sales').textContent = booking.salesTax;
+        document.getElementById('subtotal').textContent = booking.subtotal;
+        document.getElementById('totalprice').textContent = booking.totalPrice;
+      
     } else {
       console.error('No document found for user ID:', userId);
     }
@@ -215,118 +246,118 @@ async function validateCardDetails() {
   return true; // Validation successful
 }
 
-function generateOTP() {
-  let otpNumber = Math.floor(100000 + Math.random() * 900000);
-  return otpNumber.toString();
-}
+// function generateOTP() {
+//   let otpNumber = Math.floor(100000 + Math.random() * 900000);
+//   return otpNumber.toString();
+// }
 
-document.getElementById("confirm-payment").disabled = true;
+// document.getElementById("confirm-payment").disabled = true;
 
-async function SendMail() {
-  try {
+// async function SendMailOtp() {
+//   try {
 
-    const isCardValid = await validateCardDetails();
-    if (!isCardValid) {
-      return; // Exit the function if card details are not valid
-    }
+//     const isCardValid = await validateCardDetails();
+//     if (!isCardValid) {
+//       return;
+//     }
 
-    const userId = getCurrentUserId();
-    const usersCollectionRef = collection(db, 'users');
-    const userQuery = query(usersCollectionRef, where('userId', '==', userId));
-    const querySnapshot = await getDocs(userQuery);
+//     const userId = getCurrentUserId();
+//     const usersCollectionRef = collection(db, 'users');
+//     const userQuery = query(usersCollectionRef, where('userId', '==', userId));
+//     const querySnapshot = await getDocs(userQuery);
 
-    if (!querySnapshot.empty) {
-      for (const doc of querySnapshot.docs) {
-        const userData = doc.data();
-        const userEmail = userData.email;
-        const userName = userData.name;
+//     if (!querySnapshot.empty) {
+//       for (const doc of querySnapshot.docs) {
+//         const userData = doc.data();
+//         const userEmail = userData.email;
+//         const userName = userData.name;
 
-        console.log('User Email:', userEmail);
+//         console.log('User Email:', userEmail);
 
-        if (userEmail && userEmail.trim() !== '') {
-          const otp = generateOTP();
-          const otpGenerationTime = Date.now(); // Current time in milliseconds
-          const otpExpirationTime = otpGenerationTime + 10 * 60 * 1000; // 10 minutes from now
-          sessionStorage.setItem("generatedOTP", otp.trim());
-          sessionStorage.setItem("otpGenerationTime", otpGenerationTime.toString());
-          sessionStorage.setItem("otpExpirationTime", otpExpirationTime.toString());
+//         if (userEmail && userEmail.trim() !== '') {
+//           const otp = generateOTP();
+//           const otpGenerationTime = Date.now(); // Current time in milliseconds
+//           const otpExpirationTime = otpGenerationTime + 10 * 60 * 1000; // 10 minutes from now
+//           sessionStorage.setItem("generatedOTP", otp.trim());
+//           sessionStorage.setItem("otpGenerationTime", otpGenerationTime.toString());
+//           sessionStorage.setItem("otpExpirationTime", otpExpirationTime.toString());
 
-          const templateParams = {
-            from_name: userName,
-            to_email: userEmail,
-            otp: otp,
-            expiration_time: new Date(otpExpirationTime).toLocaleString() // Formatted expiration time
-          };
+//           const templateParams = {
+//             from_name: userName,
+//             to_email: userEmail,
+//             otp: otp,
+//             expiration_time: new Date(otpExpirationTime).toLocaleString() // Formatted expiration time
+//           };
 
-          console.log('Sending email with params:', templateParams);
+//           console.log('Sending email with params:', templateParams);
 
-          try {
-            const response = await emailjs.send('service_7e6jx2j', 'template_l3gma7d', templateParams);
-            alert("Success! OTP sent.");
-            updateButtonVisibility();
-            console.log('Success:', response);
-          } catch (error) {
-            alert("Failed to send OTP.");
-            console.error('Error:', error);
-          }
-        } else {
-          console.log('Invalid email address:', userEmail);
-        }
-      }
-    } else {
-      console.log("No such user found!");
-    }
-  } catch (error) {
-    console.log("Error fetching user data:", error);
-  }
-}
+//           try {
+//             const response = await emailjs.send('service_7e6jx2j', 'template_l3gma7d', templateParams);
+//             alert("Success! OTP sent.");
+//             updateButtonVisibility();
+//             console.log('Success:', response);
+//           } catch (error) {
+//             alert("Failed to send OTP.");
+//             console.error('Error:', error);
+//           }
+//         } else {
+//           console.log('Invalid email address:', userEmail);
+//         }
+//       }
+//     } else {
+//       console.log("No such user found!");
+//     }
+//   } catch (error) {
+//     console.log("Error fetching user data:", error);
+//   }
+// }
 
-function updateButtonVisibility() {
-  document.getElementById("send-otp").style.display = "none";
-  document.getElementById("verify-otp").style.display = "block";
-}
+// function updateButtonVisibility() {
+//   document.getElementById("send-otp").style.display = "none";
+//   document.getElementById("verify-otp").style.display = "block";
+// }
 
-function verifyOTP() {
-  const enteredOTP = document.getElementById("otp").value.trim();
-  const generatedOTP = sessionStorage.getItem("generatedOTP").trim();
-  const otpGenerationTime = parseInt(sessionStorage.getItem("otpGenerationTime"), 10);
-  const otpExpirationTime = parseInt(sessionStorage.getItem("otpExpirationTime"), 10);
-  const currentTime = Date.now();
+// function verifyOTP() {
+//   const enteredOTP = document.getElementById("otp").value.trim();
+//   const generatedOTP = sessionStorage.getItem("generatedOTP").trim();
+//   const otpGenerationTime = parseInt(sessionStorage.getItem("otpGenerationTime"), 10);
+//   const otpExpirationTime = parseInt(sessionStorage.getItem("otpExpirationTime"), 10);
+//   const currentTime = Date.now();
 
-  console.log('Entered OTP:', enteredOTP);
-  console.log('Generated OTP:', generatedOTP);
-  console.log('OTP Expiration Time:', new Date(otpExpirationTime).toLocaleString());
-  console.log('Current Time:', new Date(currentTime).toLocaleString());
+//   console.log('Entered OTP:', enteredOTP);
+//   console.log('Generated OTP:', generatedOTP);
+//   console.log('OTP Expiration Time:', new Date(otpExpirationTime).toLocaleString());
+//   console.log('Current Time:', new Date(currentTime).toLocaleString());
 
-  if (currentTime > otpExpirationTime) {
-    alert("OTP has expired. Please request a new OTP.");
-    return;
-  }
+//   if (currentTime > otpExpirationTime) {
+//     alert("OTP has expired. Please request a new OTP.");
+//     return;
+//   }
 
-  if (enteredOTP === generatedOTP) {
-    alert("OTP verified successfully!");
+//   if (enteredOTP === generatedOTP) {
+//     alert("OTP verified successfully!");
 
-    // Disable or hide OTP section after successful verification
-    document.getElementById("otp").disabled = true;
-    document.getElementById("verify-otp").disabled = true;
-    document.getElementById("confirm-payment").disabled = false;
-    // Optionally, you can show a success message or proceed with further actions
-  } else {
-    alert("Invalid OTP. Please try again.");
-  }
-}
+//     // Disable or hide OTP section after successful verification
+//     document.getElementById("otp").disabled = true;
+//     document.getElementById("verify-otp").disabled = true;
+//     document.getElementById("confirm-payment").disabled = false;
+//     // Optionally, you can show a success message or proceed with further actions
+//   } else {
+//     alert("Invalid OTP. Please try again.");
+//   }
+// }
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("send-otp").addEventListener("click", function (e) {
-    e.preventDefault();
-    SendMail();
-  });
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.getElementById("send-otp").addEventListener("click", function (e) {
+//     e.preventDefault();
+//     SendMailOtp();
+//   });
 
-  document.getElementById("verify-otp").addEventListener("click", function (e) {
-    e.preventDefault();
-    verifyOTP();
-  });
-});
+//   document.getElementById("verify-otp").addEventListener("click", function (e) {
+//     e.preventDefault();
+//     verifyOTP();
+//   });
+// });
 
 // Handle form submission for payment
 const form = document.getElementById('payment-form');
@@ -417,13 +448,20 @@ form.addEventListener('submit', async (event) => {
                 contact: newestBooking.contact,
                 category: newestBooking.category,
                 food_category: newestBooking.food_category,
+                nights: newestBooking.nights,
+                serviceTax: newestBooking.serviceTax,
+                salesTax: newestBooking.salesTax,
                 price: newestBooking.price,
+                subtotal: newestBooking.subtotal,
+                totalPrice: newestBooking.totalPrice,
                 status: 'Paid',
               });
 
               console.log('Payment data after push:', paymentsArray);
 
               await setDoc(paymentDocRef, { payments: paymentsArray }, { merge: true });
+
+              await sendEmailNotificationOnSuccess(newestBooking);
 
               const deductionResult = await updateRoomQuantity(newestBooking.category, newestBooking.room_name, newestBooking.checkin_date, newestBooking.checkout_date);
               console.log(deductionResult); // Optional: log the result of the deduction function
@@ -450,14 +488,49 @@ form.addEventListener('submit', async (event) => {
     alert('Error confirming payment. Please try again.');
   }
 });
+async function sendEmailNotificationOnSuccess(newestBooking) {
+  try {
+    const date = new Date().toISOString();
 
-document.addEventListener("DOMContentLoaded", () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const userId = user.uid;
-      fetchAndDisplayBooking(userId);
-    } else {
-      console.error('No authenticated user found.');
-    }
-  });
+    // Generate invoice and get the URL
+    const invoiceResponse = await fetch('/generate-invoice', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ newestBooking })
+    });
+
+    if (!invoiceResponse.ok) throw new Error('Failed to generate invoice');
+
+    const { invoiceUrl } = await invoiceResponse.json(); // Ensure this matches the key returned
+    console.log('Generated Invoice URL:', invoiceUrl);
+
+    const emailResponse = await emailjs.send('service_7e6jx2j', 'template_winshbo', {
+      to_email: newestBooking.email,
+      subject: 'Booking Confirmation',
+      date: date,
+      book_id: newestBooking.book_id,
+      user_name: newestBooking.owner_name,
+      pet_name: newestBooking.pet_name,
+      room_name: newestBooking.room_name,
+      checkin_date: newestBooking.checkin_date,
+      checkout_date: newestBooking.checkout_date,
+      price: newestBooking.price,
+      subtotal: newestBooking.subtotal,
+      serviceTax: newestBooking.serviceTax,
+      salesTax: newestBooking.salesTax,
+      amount: newestBooking.totalPrice,
+      status: 'Paid',
+      invoice_url: invoiceUrl 
+    });
+
+    console.log('Email sent successfully to:', newestBooking.email);
+    console.log('Response status:', emailResponse.status);
+    console.log('Response text:', emailResponse.text);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+}
+
 });
