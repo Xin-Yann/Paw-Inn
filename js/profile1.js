@@ -28,6 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('Email').value = userData.email || '';
                     document.getElementById('Contact').value = userData.contact || '';
 
+                    if (userData.membershipId) {
+                        generateMemberBarcode(userData.membershipId);
+                    }
+
                 });
             } else {
                 console.log('User details document does not exist.');
@@ -99,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const contactPattern = /^\d{10,11}$/;
 
-        if (!name || !email || !contact ) {
+        if (!name || !email || !contact) {
             alert('Please fill out all required fields: name, email and contact.');
             return false;
         }
@@ -163,5 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
+    
+    function generateMemberBarcode(membershipId) {
+        JsBarcode("#barcode", membershipId, {
+            format: "CODE128",
+            displayValue: true,
+            fontSize: 20
+        });
+    }
 });

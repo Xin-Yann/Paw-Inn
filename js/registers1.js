@@ -9,6 +9,10 @@ function hashPassword(password) {
     return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
 }
 
+function generateMembershipId() {
+    return 'MID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+  }
+
 document.getElementById('signUpButton').addEventListener('click', async (event) => {
     event.preventDefault();
     try {
@@ -44,12 +48,15 @@ document.getElementById('signUpButton').addEventListener('click', async (event) 
 
         const userId = userCredential.user.uid;
 
+        const membershipId = generateMembershipId();
+
         const docRef = await addDoc(collection(db, 'users'), {
             userId: userId,
             name: name,
             email: email,
             contact: contact,
-            password: hashedPassword
+            password: hashedPassword,
+            membershipId: membershipId
         });
 
         window.location.href = "../html/home.html";

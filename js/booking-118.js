@@ -1,10 +1,28 @@
 import { getFirestore, collection, setDoc, doc, getDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDaPvOB_hQnvGhiWpF77JG1euFNgu5kC94",
+  authDomain: "pet-hotel-9116c.firebaseapp.com",
+  projectId: "pet-hotel-9116c",
+  storageBucket: "pet-hotel-9116c.appspot.com",
+  messagingSenderId: "550182128399",
+  appId: "1:550182128399:web:74b7ed2fd96cb2f8524c7a",
+  measurementId: "G-68HVJYMQ53"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  const db = getFirestore();
-  const auth = getAuth();
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const storage = getStorage(app);
 
   function getCurrentUserId() {
     const user = auth.currentUser;
@@ -279,6 +297,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  async function uploadVaccinationImage(file, userId) {
+    try {
+      const storageRef = ref(storage, `vaccination_images/${userId}/${file.name}`);
+      console.log('Storage reference:', storageRef.fullPath); // Debug path
+      await uploadBytes(storageRef, file);
+      const imageUrl = await getDownloadURL(storageRef);
+      return imageUrl;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      throw new Error('Failed to upload vaccination image');
+    }
+  }
+  
+
+
   // Inside the click event listener for the submit button
   document.getElementById("submit").addEventListener("click", async () => {
     try {
@@ -301,8 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const status = document.getElementById('status').value;
       const bookingId = await generateBookingID();
       const imageInput = document.getElementById('vaccination_image');
-      const imagePath = imageInput ? imageInput.value : '';
-      const imageName = imagePath.split(/[/\\]/).pop();
+      const imageFile = imageInput ? imageInput.files[0] : null;
       const nights = calculateNights(checkinDate, checkoutDate);
       const subtotal = document.getElementById('subtotal').textContent;
       const service = document.getElementById('service').textContent;
@@ -348,11 +380,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('food_error').textContent = 'Please select a food category.';
         isValid = false;
       }
-      if (!imageName) {
+      if (!imageFile) {
         document.getElementById('vaccination_error').textContent = 'Please upload a file.';
         isValid = false;
       } else {
-        const fileExtension = imageName.split('.').pop().toLowerCase();
+        const fileExtension = imageFile.name.split('.').pop().toLowerCase();
         const allowedExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
         if (!allowedExtensions.includes(fileExtension)) {
           document.getElementById('vaccination_error').textContent = 'Please upload a file with one of the following file types: PDF, PNG, JPG, JPEG.';
@@ -365,6 +397,11 @@ document.addEventListener('DOMContentLoaded', function () {
         window.alert("Please fill in all required fields.");
         return;
       }
+      let imageUrl = '';
+      if (imageFile) {
+        imageUrl = await uploadVaccinationImage(imageFile, userId);
+      }
+
 
       // Create or update a document within the "bookings" collection using the userId as the document ID
       const userDocRef = doc(db, 'book', userId);
@@ -392,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function () {
         contact: contact,
         category: category,
         food_category: foodCategory,
-        vaccination_image: imageName,
+        vaccination_image: imageUrl,
         price: roomPrice,
         status: status,
         nights: nights,

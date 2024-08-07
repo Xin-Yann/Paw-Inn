@@ -6,6 +6,10 @@ const db = getFirestore();
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
+function generateMembershipId() {
+  return 'MID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+}
+
 document.getElementById('signIn').addEventListener('click', (event) => {
   event.preventDefault();
   const email = document.getElementById('Email').value;
@@ -62,11 +66,14 @@ document.getElementById('googleSignIn').addEventListener('click', () => {
           if (!querySnapshot.empty) {
             console.log("User already registered with password. Skipping Firestore save.");
           } else {
+
+            const membershipId = generateMembershipId();
             // Save user details to Firestore
             await setDoc(userRef, {
               userId: user.uid,
               name: user.displayName,
-              email: user.email
+              email: user.email,
+              membershipId: membershipId
             });
             console.log("User data saved to Firestore");
           }

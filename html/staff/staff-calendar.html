@@ -15,6 +15,28 @@
     <link rel="stylesheet" href="/css/nav-4.css">
     <link rel="stylesheet" href="/css/staff/staff-nav3.css">
     <style>
+        /* Define CSS classes for room names */
+        .event-deluxe-room {
+            background-color: #FFD700;
+            border-color: #FFD700;
+        }
+
+        .event-suite-room {
+            background-color: #8A2BE2;
+            border-color: #8A2BE2;
+        }
+
+        .event-disabled {
+            background-color: #d3d3d3 !important;
+            border-color: #d3d3d3 !important;
+        }
+
+        .fc-daygrid-day.fc-day-past {
+            background-color: #f0f0f0;
+            /* Example grey color */
+            color: #a0a0a0;
+            /* Example grey text color */
+        }
 
     </style>
 </head>
@@ -122,7 +144,12 @@
             <i class='bx bx-menu'></i>
             <span class="text">Paws Inn</span>
         </div>
+    
         <div id='calendar' style="padding: 50px;"></div>
+        <div id="roomCountsToday" class=" container room-counts-today px-5">
+            <h3>Total Room Occupied For Today:</h3>
+            <ul id="roomCountsList" class="container pb-5"></ul>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -151,7 +178,8 @@
         crossorigin="anonymous"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
     <script type="module" src="/js/firebase-config.js"></script>
-    <script type="module" src="/js/staff/staff-calendar24.js"></script>
+    <script type="module" src="/js/staff/staff-calendar39.js"></script>
+    <script type="module" src="/js/staff/staff-home.js"></script>
 </body>
 
 </html>
