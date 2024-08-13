@@ -381,31 +381,57 @@
         </div>
         <h1 class="text-center py-4" style="color: #127369; font-weight: 900;">Checkout</h1>
         <div class="container-fluid pt-3 px-5 mx-5">
-            
+
             <div class="py-4" style="display: flex;justify-content: space-between;">
-                
+
 
                 <div class="cart-wrapper">
                     <div class="cart">
-                    
-                        <h5>Member Info</h5>
-                        <p id="member-info"></p>
+
+                        <h5 class="py-3">Member Info</h5>
+                        <div id="member-info" class="pb-3">
+                            <p id="points-deducted"></p>
+                            <p id="new-points-added"></p>
+                            <p id="new-points"></p>
+                        </div>
+                        <!-- Button to open the Redeem Points modal -->
+                        <button class="btn btn-primary mb-3" id="redeem-points-btn" data-toggle="modal"
+                            data-target="#redeemModal">Redeem Points</button>
+
+                        <!-- Redeem Points Modal -->
+                        <div class="modal fade" id="redeemModal" tabindex="-1" role="dialog"
+                            aria-labelledby="redeemModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="redeemModalLabel">Redeem Points</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="points-to-redeem">Enter Points to Redeem:</label>
+                                        <input type="number" id="points-to-redeem" class="form-control" min="0"
+                                            placeholder="Enter points">
+                                        <p id="modal-message"></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id="redeem-points">Redeem
+                                            Points</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <hr>
                         <h4 class="text-center pt-3"> Products</h4>
                         <div class="cart-items" id="cartItems">
                             <!-- Example of cart item -->
                             <div class="cart-item">
                                 <img src="" alt="Cart Item Image">
-                                <div class="cart-item-info">
-                                    <h4>Grass Plants</h4>
-                                    <p>Artificial potted plant, in/outdoor</p>
-                                    <p class="price">$6.36</p>
-                                    <div class="quantity">
-                                        <button>-</button>
-                                        <span>2</span>
-                                        <button>+</button>
-                                    </div>
-                                </div>
+                                <div class="cart-item-info"> </div>
                             </div>
 
                             <!-- Repeat for other cart items -->
@@ -414,15 +440,17 @@
                             <p>Subtotal: <span id="Subtotal">$29.29</span></p>
                             <p>Sales Tax (10%):<span id="salestax"> RM 0.00</span></p>
                             <p>Discount : <span id="discount"> RM 0.00</span></p>
-                            <h4 class="pb-4">Total Payment: <span id="totalprice">$17.56</span></h4>
-                            <button id="apply-discount" class="btn checkout mb-4" style="width: 100%;">Apply Staff Discount</button>
+                            <p>Points Discount: <span id="pointDiscount"> RM 0.00</span></p>
+                            <h4 class="pb-4">Total Payment: <span id="totalprice">RM 0.00</span></h4>
+                            <button id="apply-discount" class="btn checkout mb-4" style="width: 100%;">Apply Staff
+                                Discount</button>
                             <!-- <button id="checkout-button" class="checkout">Checkout</button> -->
                         </div>
                     </div>
                 </div>
 
                 <div id="cashPaymentDetails" style="flex: 0 0 502px;">
-                    
+
                     <div id="denomination-buttons" class="pb-5">
                         <button data-amount="100" class="btn">RM 100</button>
                         <button data-amount="50" class="btn">RM 50</button>
@@ -430,23 +458,51 @@
                         <button data-amount="10" class="btn">RM 10</button>
                     </div>
 
-                    <p>Cash Paid: 
+                    <p>Cash Paid:
                         <input type="number" id="cash-paid-input" placeholder="Enter cash amount">
                     </p>
 
                     <p>Change to be returned: <span id="change-amount">0</span></p>
-                    <button id="cash-payment" class="checkout">Process Cash Payment</button>
+                    <button id="cash-payment" class="checkout" data-toggle="modal"
+                        data-target="#membershipModal">Process Cash Payment</button>
+
+                    <div class="modal fade" id="membershipModal" tabindex="-1" role="dialog"
+                        aria-labelledby="membershipModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="receiptModalLabel">Receipt Confirmation</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Your payment was successful. Do you want to receive a receipt?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary " data-dismiss="modal" aria-label="Close" >No</button>
+                                    <button type="button" class="btn btn-primary" id="send-receipt">Yes, send
+                                        receipt</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <p id="change-message"></p>
                 </div>
-                
+
             </div>
         </div>
     </section>
 
-
-
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="module" src="/js/staff/staff-home.js"></script>
-    <script type="module" src="/js/staff/staff-checkout16.js "></script>
+    <script type="module" src="/js/staff/staff-checkout80.js "></script>
 </body>
 
 </html>

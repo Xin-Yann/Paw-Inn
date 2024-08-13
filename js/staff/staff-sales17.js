@@ -379,7 +379,7 @@ async function addToCart(productId, productBarcode, productName, productPrice, p
         const userId = getCurrentUserId();
         if (!userId) {
             window.alert('Please login to add products to your cart.');
-            window.location.href = "../html/login.html";
+            window.location.href = "../staff/staff-login.html";
             return;
         }
 
@@ -522,17 +522,17 @@ async function getCartData(user) {
 
 const cartContainer = document.getElementById('cartItems');
 
-let isStaff = false; // Flag to determine if the user is staff
-const discountRate = 0.10; // 10% staff discount
+// let isStaff = false; // Flag to determine if the user is staff
+// const discountRate = 0.10; // 10% staff discount
 
-// Function to apply the staff discount
-function applyDiscount() {
-    isStaff = true; // Set to true when discount is applied
-    displayCartItems(); // Refresh cart display with discount applied
-}
+// // Function to apply the staff discount
+// function applyDiscount() {
+//     isStaff = true; // Set to true when discount is applied
+//     displayCartItems(); // Refresh cart display with discount applied
+// }
 
-// Function to handle the "Apply Discount" button click
-document.getElementById('apply-discount').addEventListener('click', applyDiscount);
+// // Function to handle the "Apply Discount" button click
+// document.getElementById('apply-discount').addEventListener('click', applyDiscount);
 
 async function displayCartItems() {
     const userId = getCurrentUserId();
@@ -572,7 +572,7 @@ async function displayCartItems() {
                         <button class="btn btn-sm btn-secondary increase" data-product-name="${item.name}">+</button>
                     </div>
                 </div>
-                <p class="total-price-cell"></p>
+                <p class="total-price-cell pb-3"></p>
                 <button class="btn btn-danger delete" data-product-name="${item.name}">Delete</button>
             </div>
         `;
@@ -627,15 +627,14 @@ function calculateSalesTax(subtotal, taxRate) {
 
 // Function to update the display of the subtotal, tax, and total price with discount
 async function updateTotals(subtotal, taxRate) {
-    const discountedSubtotal = isStaff ? subtotal * (1 - discountRate) : subtotal;
-    const discountAmount = subtotal - discountedSubtotal;
-    const salesTax = calculateSalesTax(discountedSubtotal, taxRate);
-    const totalPrice = discountedSubtotal + salesTax;
+    // const discountedSubtotal = isStaff ? subtotal * (1 - discountRate) : subtotal;
+    // const discountAmount = subtotal - discountedSubtotal;
+    const salesTax = calculateSalesTax(subtotal, taxRate);
+    const totalPrice = subtotal + salesTax;
 
     // Update the HTML elements
-    document.getElementById('Subtotal').textContent = `RM ${discountedSubtotal.toFixed(2)}`;
+    document.getElementById('Subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
     document.getElementById('salestax').textContent = `RM ${salesTax.toFixed(2)}`;
-    document.getElementById('discount').textContent = `RM ${discountAmount.toFixed(2)}`;
     document.getElementById('totalprice').textContent = `RM ${totalPrice.toFixed(2)}`;
 }
 
@@ -778,40 +777,72 @@ async function fetchUsers() {
 
     verifyMemberId(userList);
 }
-async function verifyMemberId(memberId) {
+async function verifyMemberId(memberId, contact) {
     try {
         const usersCollection = collection(db, 'users');
-        const q = query(usersCollection, where('membershipId', '==', memberId));
-        const querySnapshot = await getDocs(q);
+        let querySnapshot;
 
-        if (querySnapshot.empty) {
-            return { valid: false }; // ID not found
-        } else {
-            const userData = querySnapshot.docs[0].data();
-            return { valid: true, username: userData.name }; // ID found, return username
+        // Check if membershipId is provided and query by membershipId
+        if (memberId) {
+            const queryById = query(usersCollection, where('membershipId', '==', memberId));
+            querySnapshot = await getDocs(queryById);
         }
+        
+        // If no match by membershipId or membershipId not provided, query by contact
+        if ((!querySnapshot || querySnapshot.empty) && contact) {
+            const queryByContact = query(usersCollection, where('contact', '==', contact));
+            querySnapshot = await getDocs(queryByContact);
+        }
+
+        // Check if a match was found
+        if (querySnapshot && !querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data();
+            return {
+                valid: true,
+                username: userData.name,
+                membershipId: userData.membershipId,
+                points: userData.points
+            };
+        }
+
+        // Return false if neither ID nor contact found
+        return { valid: false };
+
     } catch (error) {
         console.error('Error verifying member ID:', error);
         return { valid: false }; // In case of error
     }
 }
 
+
 document.getElementById('verify-form').addEventListener('click', async () => {
     const memberId = document.getElementById('member-id').value;
-    const { valid, username } = await verifyMemberId(memberId);
+    const contact = document.getElementById('contact').value;
+    
+    // Call the verifyMemberId function with the input values
+    const { valid, username, membershipId, points } = await verifyMemberId(memberId, contact);
 
     const resultElement = document.getElementById('result');
-
+    const memberName = document.getElementById('member_name');
+    const memberid = document.getElementById('member_id');
+    const memberPoints = document.getElementById('member_points');
+    
     if (valid) {
-        resultElement.textContent = `Username: ${username}`;
-        resultElement.style.color = 'green';
+        // Update the HTML with the retrieved member information
+        memberName.textContent = `Name: ${username}`;
+        memberid.textContent = `Membership ID: ${membershipId}`;
+        memberPoints.textContent = `Points: ${points}`;
+        
+        // Hide the modal and disable the form if the member is found
         document.getElementById('member').style.display = "none"; // Disable the button
         sessionStorage.setItem('memberName', username);
 
+        document.getElementById('result').style.display= "none";
         $('#membershipModal').modal('hide');
     } else {
-        resultElement.textContent = 'Member ID is invalid.';
-        resultElement.style.color = 'red';
+        // Display an error message if the member is not found
+        resultElement.textContent = 'Member ID or Contact is invalid.';
+        resultElement.style.color = 'red'; 
     }
 });
 

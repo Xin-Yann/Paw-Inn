@@ -410,6 +410,7 @@
                 <label for="food-type" class="type">Food Type:</label>
                 <select id="food-type" class="form-control">
                     <option value="dry food">dry food</option>
+                    <option value="wet food">wet food</option>
                     <option value="essentials">essentials</option>
                     <option value="toys">toys</option>
                     <option value="treats">treats</option>
@@ -421,8 +422,8 @@
 
                 <div class="cart-wrapper">
                     <div class="cart">
-                        <h2>Detail Items</h2>
-                        <button class="btn btn-primary" id="member" data-toggle="modal"
+                        <h5 class="pb-3">Member Details</h5>
+                        <button class="btn btn-primary mb-3" id="member" data-toggle="modal"
                             data-target="#membershipModal">Membership</button>
 
                         <div class="modal fade" id="membershipModal" tabindex="-1" role="dialog"
@@ -439,6 +440,11 @@
                                         <label for="memberIdInput">Membership ID:</label>
                                         <input type="text" id="member-id" class="form-control">
                                     </div>
+
+                                    <div class="modal-body">
+                                        <label for="memberIdInput">Contact:</label>
+                                        <input type="text" id="contact" class="form-control">
+                                    </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-dismiss="modal">Close</button>
@@ -447,31 +453,38 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <p id="member_id"></p>
+                        <p id="member_name"></p>
+                        <p id="member_points"></p>
                         <p id="result"></p>
+
+                        <hr>
+                        <h5>Product Items</h5>
                         <div class="cart-items" id="cartItems">
                             <!-- Example of cart item -->
-                            <div class="cart-item">
+                            <!-- <div class="cart-item">
                                 <img src="" alt="Cart Item Image">
                                 <div class="cart-item-info">
-                                    <h4>Grass Plants</h4>
-                                    <p>Artificial potted plant, in/outdoor</p>
-                                    <p class="price">$6.36</p>
+                                    <h4></h4>
+                                    <p></p>
+                                    <p class="price">0.00</p>
                                     <div class="quantity">
                                         <button>-</button>
                                         <span>2</span>
                                         <button>+</button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- Repeat for other cart items -->
                         </div>
                         <div class="totals" id="total">
-                            <p>Subtotal: <span id="Subtotal">$29.29</span></p>
+                            <p>Subtotal: <span id="Subtotal">RM 0.00</span></p>
                             <p>Sales Tax (10%):<span id="salestax"> RM 0.00</span></p>
                             <p>Discount : <span id="discount"> RM 0.00</span></p>
-                            <h4 class="pb-4">Total Payment: <span id="totalprice">$17.56</span></h4>
-                            <button id="apply-discount" class="btn checkout mb-4">Apply Staff Discount</button>
+                            <h4 class="pb-4">Total Payment: <span id="totalprice">RM 0.00</span></h4>
+                            <!-- <button id="apply-discount" class="btn checkout mb-4">Apply Staff Discount</button> -->
                             <a href="/html/staff/staff-checkout.html" id="checkout-button"
                                 class="btn checkout">Checkout</a>
                         </div>
