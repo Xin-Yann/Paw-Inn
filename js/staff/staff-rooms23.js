@@ -66,10 +66,28 @@ async function fetchDataAndDisplay() {
                     const roomImage = document.createElement('img');
                     roomImage.src = `/image/${mainRoomType}/${roomData[field]}`;
                     roomImage.alt = 'Room Image';
-                    roomImage.style.width = '375px';   
+                    roomImage.style.width = '375px';
                     roomImage.style.height = '201px';
                     roomImage.classList.add('table-image');
                     td.appendChild(roomImage);
+                } else if (field === 'room_quantity' && Array.isArray(roomData[field])) {
+                    // Extract the single object containing date-quantity pairs
+                    const quantityMap = roomData[field][0];
+                    if (quantityMap && typeof quantityMap === 'object') {
+                        // Generate a string of all date-quantity pairs with each on a new line
+                        const quantityText = Object.entries(quantityMap)
+                            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+                            .map(([date, quantity]) => `${date}: ${quantity}`)
+                            .join('\n'); // Join with a line break for each entry
+
+                        // Use line breaks in the displayed text
+                        const p = document.createElement('p'); // <pre> tag preserves line breaks
+                        p.textContent = quantityText;
+                        p.style.width = '150px';
+                        td.appendChild(p);
+                    } else {
+                        td.textContent = 'N/A';
+                    }
                 } else {
                     td.textContent = roomData[field] || 'N/A';
                 }
@@ -103,6 +121,8 @@ async function fetchDataAndDisplay() {
     }
 }
 
+
+
 function naturalSort(a, b) {
     return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 }
@@ -128,12 +148,12 @@ async function deleteRoom(roomId, mainRoomType) {
 }
 
 // Function to edit room page
-function editRoom(roomId,mainRoomType, roomType) {
+function editRoom(roomId, mainRoomType, roomType) {
     window.location.href = `/html/staff/staff-editroom.html?category=${mainRoomType}&id=${roomId}&type=${encodeURIComponent(roomType)}`;
 }
 
 document.getElementById('room-type').addEventListener('change', fetchDataAndDisplay);
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     fetchDataAndDisplay();
 });

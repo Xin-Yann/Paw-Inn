@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
 const db = getFirestore();
 
@@ -28,17 +28,61 @@ async function fetchAndDisplayProductDetails() {
             document.getElementById('product_category').value = productCategory;
             document.getElementById('product_type').value = productType;
             document.getElementById('product_id').value = productId;
-            document.getElementById('product_barcode').value = productData.product_barcode|| '';
+            document.getElementById('product_barcode').value = productData.product_barcode || '';
             document.getElementById('product_name').value = productData.product_name || '';
             document.getElementById('product_description').value = productData.product_description || '';
             document.getElementById('product_price').value = productData.product_price || '';
             document.getElementById('product_stock').value = productData.product_stock || '';
             document.getElementById('product_weight').value = productData.product_weight || '';
+
+            // Construct the image URL
+            const imageFileName = productData.product_image || ''; // Assuming `product_image` holds the file name
+            const imageUrl = `/image/products/${productCategory}/${productType}/${imageFileName}`;
+
+            let productImageElement = document.getElementById('productImage');
+
+            if (!productImageElement) {
+                productImageElement = document.createElement('img');
+                productImageElement.id = 'productImage';
+                productImageElement.style.height = 'auto';
+                productImageElement.style.display = 'block';
+                document.querySelector('.product-details').appendChild(productImageElement);
+            }
+
+            if (imageFileName) {
+                productImageElement.src = imageUrl;
+                productImageElement.style.display = 'block'; // Ensure the image is displayed
+            } else {
+                productImageElement.style.display = 'none'; // Hide the image if no file name is present
+            }
+
         } else {
             alert('No such document!');
         }
     } catch (error) {
         console.error('Error fetching product details:', error);
+    }
+}
+
+// Function to handle file input change and preview the image
+function handleFileInputChange(event) {
+    const file = event.target.files[0];
+    const productImageElement = document.getElementById('productImage');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (productImageElement) {
+                productImageElement.src = e.target.result;
+                productImageElement.style.display = 'block'; // Display the new image
+            }
+        };
+        reader.readAsDataURL(file);
+    } else {
+        // Hide the image if no file is selected
+        if (productImageElement) {
+            productImageElement.style.display = 'none';
+        }
     }
 }
 
@@ -55,7 +99,7 @@ async function saveProductDetails() {
         const productStock = parseInt(document.getElementById('product_stock').value);
         const productWeight = document.getElementById('product_weight').value;
 
-        const productDocRef = doc(db, 'products', productCategory, productType, productId);
+        const productDocRef = doc(db, 'product', productCategory, productType, productId);
 
         // Check if required fields are filled
         if (!productName || !productPrice || !productStock || !productWeight || !productBarcode) {
@@ -69,7 +113,7 @@ async function saveProductDetails() {
 
         if (imageFile) {
             imageName = imageFile.name; // Get the file name without uploading
-            document.getElementById('product_image').value = imageName;
+            document.getElementById('product_image').value = ''; // Clear file input
         } else {
             // Fetch the existing data to potentially get the existing image
             const currentSnapshot = await getDoc(productDocRef);
@@ -119,5 +163,6 @@ async function saveProductDetails() {
 }
 
 document.getElementById('edit').addEventListener('click', saveProductDetails);
+document.getElementById('product_image').addEventListener('change', handleFileInputChange);
 
 document.addEventListener('DOMContentLoaded', fetchAndDisplayProductDetails);

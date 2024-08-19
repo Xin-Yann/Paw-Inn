@@ -343,16 +343,17 @@
                 </a>
             </li>
             <li>
-                <a href="/html/staff/staff-transaction.html">
-                    <i class='bx bx-dollar'></i>
-                    <span class="link_name">Transactions</span>
-                </a>
-            </li>
-            <li>
-                <a href="/html/staff/staff-bookingHistory.html">
-                    <i class='bx bx-history'></i>
-                    <span class="link_name">Booking History</span>
-                </a>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-dollar'></i>
+                        <span class="link_name">Transactions</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="/html/staff/staff-bookingHistory.html">Booking Transactions</a></li>
+                    <li><a href="/html/staff/staff-orderTransaction.html">Order Transactions</a></li>
+                </ul>
             </li>
             <li>
                 <a href="/html/staff/staff-profile.html">
@@ -390,10 +391,15 @@
 
                         <h5 class="py-3">Member Info</h5>
                         <div id="member-info" class="pb-3">
-                            <p id="points-deducted"></p>
+                            <!-- <p id="points-deducted"></p>
                             <p id="new-points-added"></p>
-                            <p id="new-points"></p>
+                            <p id="new-points"></p> -->
+
                         </div>
+
+                        <p id="pointsAdded"></p>
+                        <p id="points-to-redeem"></p>
+
                         <!-- Button to open the Redeem Points modal -->
                         <button class="btn btn-primary mb-3" id="redeem-points-btn" data-toggle="modal"
                             data-target="#redeemModal">Redeem Points</button>
@@ -424,6 +430,8 @@
                                 </div>
                             </div>
                         </div>
+
+
 
                         <hr>
                         <h4 class="text-center pt-3"> Products</h4>
@@ -480,7 +488,8 @@
                                     <p>Your payment was successful. Do you want to receive a receipt?</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary " data-dismiss="modal" aria-label="Close" >No</button>
+                                    <button type="button" class="btn btn-secondary " data-dismiss="modal"
+                                        aria-label="Close">No</button>
                                     <button type="button" class="btn btn-primary" id="send-receipt">Yes, send
                                         receipt</button>
                                 </div>
@@ -502,7 +511,7 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="module" src="/js/staff/staff-home.js"></script>
-    <script type="module" src="/js/staff/staff-checkout80.js "></script>
+    <script type="module" src="/js/staff/staff-checkout62.js "></script>
 </body>
 
 </html>

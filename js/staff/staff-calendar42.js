@@ -49,7 +49,7 @@ async function fetchAllBookings() {
                     console.log('Payments Array:', paymentData.payments);
 
                     // Filter out the payments with status 'Paid'
-                    const paidBookings = paymentData.payments.filter(payment => payment.status === 'Paid');
+                    const paidBookings = paymentData.payments.filter(payment => (payment.status === 'Paid' || payment.status === 'Checked-In'));
                     console.log('Paid Bookings:', paidBookings);
 
                     // Add the filtered payments to the allBookings array

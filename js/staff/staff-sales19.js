@@ -472,28 +472,37 @@ async function saveProductToFirestore(userId, product) {
 let allProductStocks = []; // Global variable to store all product stocks
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Fetch and display all products initially
-    allProductStocks = await getProductStock();
-    displayProducts(allProductStocks);
+    try {
+        // Fetch and display all products initially
+        allProductStocks = await getProductStock();
+        console.log("Initial products:", allProductStocks);
+        displayProducts(allProductStocks);
 
-    const searchInput = document.getElementById('search-input');
+        const searchInput = document.getElementById('search-input');
 
-    if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            const searchTerm = searchInput.value.trim().toLowerCase();
-            console.log("Search term:", searchTerm);
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                console.log("Search term:", searchTerm);
 
-            const filteredProducts = allProductStocks.filter(product =>
-                product.productName.toLowerCase().includes(searchTerm)
-            );
-            console.log("Filtered products:", filteredProducts);
+                const filteredProducts = allProductStocks.filter(product => {
+                    const productName = (product.productName || '').toLowerCase();
+                    console.log("Product name:", productName); // Log product name for debugging
+                    return productName.includes(searchTerm);
+                });
 
-            displayProducts(filteredProducts);
-        });
-    } else {
-        console.error("Search input element not found.");
+                console.log("Filtered products:", filteredProducts);
+                displayProducts(filteredProducts);
+            });
+        } else {
+            console.error("Search input element not found.");
+        }
+    } catch (error) {
+        console.error("Error during DOMContentLoaded event:", error);
     }
 });
+
+
 
 
 async function getCartData(user) {
