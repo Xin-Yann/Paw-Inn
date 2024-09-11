@@ -111,6 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     const checkoutButtonVisible = bookingStatus !== 'Checked-Out';
                     const checkoutButtonDisabled = bookingStatus === 'Paid';
 
+                    if (isPastDate(checkoutDate) && status !== 'Checked-Out') {
+                        // Find the document snapshot for this payment and pass it to autoCheckoutBooking
+                        const docSnapshot = querySnapshotPayment.docs.find(doc => {
+                            const data = doc.data();
+                            return data.payments.some(p => p.book_id === bookingId);
+                        });
+                
+                        if (docSnapshot) {
+                            autoCheckoutBooking(docSnapshot, payment.book_id);
+                        } else {
+                            console.error(`Document for booking ID ${bookingId} not found.`);
+                        }
+                    }
                     const row = document.createElement('tr');
                     row.className = isPastCheckinDate || isPastCheckoutDate ? 'disabled' : '';
                     row.innerHTML = `
@@ -256,18 +269,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function autoCheckoutBooking(doc, bookingId) {
+    async function autoCheckoutBooking(docSnapshot, bookingId) {
         try {
-            const paymentRef = doc.ref;
-            const payments = doc.data().payments;
-
+            if (!docSnapshot.exists()) {
+                throw new Error("Document does not exist");
+            }
+    
+            const paymentRef = docSnapshot.ref;
+            const payments = docSnapshot.data().payments; // Access the payments array from the document data
+    
             const updatedPayments = payments.map(payment => {
                 if (payment.book_id === bookingId) {
                     return { ...payment, status: 'Checked-Out' };
                 }
                 return payment;
             });
-
+    
             await updateDoc(paymentRef, { payments: updatedPayments });
             window.alert(`Booking ${bookingId} automatically checked out.`);
             location.reload();
@@ -275,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error auto-checking out booking:', error);
         }
     }
+    
 
     document.getElementById('status').addEventListener('change', () => {
         fetchAndDisplayBookings();

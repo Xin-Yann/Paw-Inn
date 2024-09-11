@@ -486,9 +486,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.log("Search term:", searchTerm);
 
                 const filteredProducts = allProductStocks.filter(product => {
-                    const productName = (product.productName || '').toLowerCase();
+                    const productName = (product.product_name || '').toLowerCase();
                     console.log("Product name:", productName); // Log product name for debugging
-                    return productName.includes(searchTerm);
+                    const productBarcode = (product.product_barcode || '').toLowerCase();
+                    return productName.includes(searchTerm) || productBarcode.includes(searchTerm);
                 });
 
                 console.log("Filtered products:", filteredProducts);
@@ -501,9 +502,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Error during DOMContentLoaded event:", error);
     }
 });
-
-
-
 
 async function getCartData(user) {
     try {
@@ -823,7 +821,6 @@ async function verifyMemberId(memberId, contact) {
     }
 }
 
-
 document.getElementById('verify-form').addEventListener('click', async () => {
     const memberId = document.getElementById('member-id').value;
     const contact = document.getElementById('contact').value;
@@ -854,7 +851,6 @@ document.getElementById('verify-form').addEventListener('click', async () => {
         resultElement.style.color = 'red'; 
     }
 });
-
 
 fetchUsers();
 

@@ -7,6 +7,7 @@ const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log('User is logged in:', user.email);
+    sessionStorage.setItem('staffEmail', user.email);
     window.location.href = "../staff/staff-home.html";
   } else {
     console.log('No user is logged in.');

@@ -61,6 +61,8 @@ document.getElementById('signUpButton').addEventListener('click', async (event) 
 
         window.location.href = "../html/home.html";
 
+        sessionStorage.setItem('userEmail', userCredential.user.email);
+
         console.log('User created with email: ', userCredential.user.email);
         console.log('Document written with ID (used as user ID): ', docRef.id);
     } catch (error) {

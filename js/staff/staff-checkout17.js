@@ -210,10 +210,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return price * quantity;
     }
 
-    // Function to calculate sales tax
-    function calculateSalesTax(subtotal, salestax) {
-        return subtotal * salestax;
-    }
+    // // Function to calculate sales tax
+    // function calculateSalesTax(subtotal, salestax) {
+    //     return subtotal * salestax;
+    // }
 
     let isStaff = false; // Flag to determine if the user is staff
     const discountRate = 0.10; // 10% staff discount
@@ -233,18 +233,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // document.getElementById('member-info').textContent = memberName;
 
     // Function to update the display of the subtotal, tax, and total price with discount
-    async function updateTotals(subtotal, salestax) {
-
+    async function updateTotals(subtotal, salestaxRate) {
+        console.log('Update Totals Function Start');
+    
         const pointDiscountElement = document.getElementById('pointDiscount');
-        const pointsText = pointDiscountElement.textContent; // Get the text content
-        const pointsValue = parseFloat(pointsText.replace(/[^0-9.-]+/g, "")); // Remove non-numeric characters and convert to a number
-
+        console.log('Points Discount Element:', pointDiscountElement);
+    
+        const pointsText = pointDiscountElement.textContent;
+        console.log(`Points Text: ${pointsText}`);
+        const pointsValue = parseFloat(pointsText.replace(/[^0-9.-]+/g, "")) || 0;
+        console.log(`Points Value: ${pointsValue}`);
+    
+        // Calculate sales tax as a percentage of the subtotal
+        const salesTax = subtotal * salestaxRate;
+        console.log(`Calculated Sales Tax: ${salesTax}`);
+    
+        // Calculate discounted subtotal
         const discountedStaff = isStaff ? subtotal * (1 - discountRate) : subtotal;
-        const discount = subtotal - discountedStaff;
-        const salesTax = calculateSalesTax(subtotal, salestax);
-        const totalPrice = discountedStaff + salesTax - pointsValue;
-
-
+        console.log(`Discounted Subtotal: ${discountedStaff}`);
+    
+        // Calculate discount (if applicable)
+        const discount = discountedStaff - subtotal;
+        console.log(`Calculated Discount: ${discount}`);
+    
+        // Calculate total price
+        const totalPrice = discountedStaff + salesTax + pointsValue;
+        console.log(`Total Price Calculation: ${discountedStaff} + ${salesTax} + ${pointsValue} = ${totalPrice}`);
+    
         // Update the HTML elements
         document.getElementById('Subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
         document.getElementById('salestax').textContent = `RM ${salesTax.toFixed(2)}`;
@@ -396,14 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 pointDiscount: pointDiscount,
                 totalPrice: totalPrice,
                 change: changes, // Change to be returned
-                memberDetails: memberDetails ? {
-                    AddedPoints: memberDetails.AddedPoints || 0,
-                    RedeemedPoints: memberDetails.RedeemedPoints || 0,
-                    email: memberDetails.email || '',
-                    membershipId: memberDetails.membershipId || '',
-                    name: memberDetails.name || '',
-                    points: memberDetails.points || 0
-                } : null
+                memberDetails: memberDetails || null
             };
             console.log("Payment Data to be saved:", paymentData);
             // Set the document data
@@ -518,20 +526,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         changes,
                         membershipInfo.valid ? memberDetails : null // Pass member details if valid
                     );
-
+                    
                     if (membershipInfo.valid) {
                         // Make sure memberDetails exists
                         if (!memberDetails) {
                             console.error('Member details are not available.');
                             return;
                         }
-
+                    
                         // Calculate points to add
                         const pointsToAdd = await calculatePoints(totalPrice);
                         console.log(`Points to Add before update: ${pointsToAdd}`);
-
+                    
                         await updateMemberPoints(memberDetails.membershipId, pointsToAdd);
-
+                    
                         // Redeem points if applicable
                         if (!isNaN(pointsToRedeem) && pointsToRedeem > 0) {
                             const redemptionResult = await redeemPoints(memberDetails.membershipId, pointsToRedeem);
@@ -539,15 +547,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             console.log(`No points to redeem or invalid value.`);
                         }
-
-                        memberDetails.AddedPoints = pointsToAdd;
-                        memberDetails.RedeemedPoints = pointsToRedeem;
-
-                        console.log('Updated Member Details:', memberDetails);
+                    
+                        // Add points information to memberDetails
+                        const updatedMemberDetails = {
+                            ...memberDetails,
+                            AddedPoints: pointsToAdd,
+                            RedeemedPoints: pointsToRedeem,
+                        };
+                        // Save updated points information to payments in memberDetails
+                        await savePaymentDetails(
+                            transactionId,
+                            cartItems,
+                            cashPaid,
+                            subtotal,
+                            salesTax,
+                            discount,
+                            pointDiscount,
+                            totalPrice,
+                            changes,
+                            updatedMemberDetails // Include updated member details
+                        );
+                    
+                        console.log('Updated Member Details:', updatedMemberDetails);
                     } else {
                         console.error('Membership is not valid.');
                     }
-
 
 
                     // Deduct stock for each product
@@ -790,47 +814,67 @@ document.addEventListener('DOMContentLoaded', () => {
             const usersCollection = collection(db, 'users');
             const q = query(usersCollection, where('membershipId', '==', membershipId));
             const querySnapshot = await getDocs(q);
-
+    
             if (!querySnapshot.empty) {
                 const userDoc = querySnapshot.docs[0];
                 const userData = userDoc.data();
                 const currentPoints = userData.points || 0;
-
+    
                 const redemptionRate = 1000; // 1000 points = RM 1
                 const pointsDiscount = pointsToRedeem / redemptionRate;
-
+    
                 if (pointsToRedeem > currentPoints) {
                     console.error("Insufficient points.");
                     document.getElementById('modal-message').textContent = "Insufficient points.";
                     document.getElementById('modal-message').style.color = "red";
                     return;
                 }
-
+    
                 // Update user's points
                 const newDeductedPoints = currentPoints - pointsToRedeem;
                 const userRef = doc(db, 'users', userDoc.id);
                 await updateDoc(userRef, { points: newDeductedPoints });
-
+    
+                // Update UI
                 document.getElementById('modal-message').textContent = "Points redeemed successfully.";
                 document.getElementById('pointDiscount').textContent = `- RM ${pointsDiscount.toFixed(2)}`;
                 document.getElementById('points-to-redeem').textContent = `${pointsToRedeem}`;
-
+    
                 const memberInfoDiv = document.getElementById('member-info');
                 if (memberInfoDiv) {
                     memberInfoDiv.innerHTML = ''; // Clear existing content
-
+    
                     const pointsRedeemed = document.createElement('p');
                     pointsRedeemed.textContent = `Points Redeemed: ${pointsToRedeem}`;
                     memberInfoDiv.appendChild(pointsRedeemed);
-
+    
                     const balancePoints = document.createElement('p');
                     balancePoints.textContent = `Updated Points Balance: ${newDeductedPoints}`;
                     memberInfoDiv.appendChild(balancePoints);
                 }
+    
+                // Retrieve subtotal and sales tax from DOM
+                const subtotal = parseFloat(document.getElementById('Subtotal').textContent.replace(/[^0-9.-]+/g, ""));
+                const salestaxRate = 0.10; // Ensure correct sales tax rate
+                const salestax = parseFloat(document.getElementById('salestax').textContent.replace(/[^0-9.-]+/g, ""));
 
-                // Save the updated member info
-                checkMembership();
-
+                updateTotals(subtotal, salestaxRate);   
+    
+                // Calculate total price
+                // const pointDiscountElement = document.getElementById('pointDiscount');
+                // const pointsText = pointDiscountElement.textContent;
+                // const pointsValue = parseFloat(pointsText.replace(/[^0-9.-]+/g, "")) || 0;
+    
+                // const discountedStaff = isStaff ? subtotal * (1 - discountRate) : subtotal;
+                // const discount = subtotal - discountedStaff;
+                // const totalPrice = discountedStaff + salestax - pointsValue; // Use retrieved sales tax here
+    
+                // // Update the HTML elements
+                // document.getElementById('Subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
+                // document.getElementById('salestax').textContent = `RM ${salestax.toFixed(2)}`;
+                // document.getElementById('discount').textContent = `- RM ${discount.toFixed(2)}`;
+                // document.getElementById('totalprice').textContent = `RM ${totalPrice.toFixed(2)}`;
+    
                 console.log("Points redeemed and discount applied successfully.");
             } else {
                 console.error("User document not found.");
@@ -843,15 +887,25 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modal-message').style.color = "red";
         }
     }
+    
+    
 
     // Event listener for the "Redeem Points" button inside the modal
     document.getElementById('redeem-points').addEventListener('click', async () => {
         const pointsInput = document.getElementById('points-to-redeem');
-        const pointsToRedeem = parseInt(pointsInput.value, 10) || 0;
-
-        if (pointsToRedeem > 0) {
+        const pointsToRedeem = parseInt(pointsInput.value, 10);
+    
+        // Improved validation
+        if (isNaN(pointsToRedeem) || pointsToRedeem <= 0) {
+            console.error("Invalid points amount.");
+            document.getElementById('modal-message').textContent = "Please enter a valid number of points.";
+            document.getElementById('modal-message').style.color = "red";
+            return; // Exit if invalid input
+        }
+    
+        try {
             const membershipInfo = await checkMembership();
-
+    
             if (membershipInfo.valid) {
                 const { membershipId } = membershipInfo.memberDetails;
                 await redeemPoints(membershipId, pointsToRedeem);
@@ -861,13 +915,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('modal-message').textContent = "Invalid membership or no membership info available.";
                 document.getElementById('modal-message').style.color = "red";
             }
-        } else {
-            console.error("Invalid points amount.");
-            document.getElementById('modal-message').textContent = "Please enter a valid number of points.";
+        } catch (error) {
+            console.error("Error redeeming points:", error);
+            document.getElementById('modal-message').textContent = "An error occurred. Please try again.";
             document.getElementById('modal-message').style.color = "red";
         }
     });
-
+    
 
     // Function to check if user is a member
     async function calculatePoints(totalPrice) {

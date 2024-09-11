@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/profiles.css">
     <link rel="stylesheet" href="/css/staff/staff-products.css">
-    <script type="module" src="/js/firebase-config.js"></script>
     
+
 </head>
 
 <body>
@@ -111,10 +111,11 @@
                         <!--<img src="image/profile.jpg" alt="profileImg">-->
                     </div>
                     <div class="name-job">
-                        <div class="profile_name">Prem Shahi</div>
-                        <div class="job">Web Designer</div>
+                        <div class="profile_name" id="staff-id"></div>
+                        <div class="profile_name" id="Name"></div>
+                        <div class="job" id="Email"></div>
                     </div>
-                    <i class='bx bx-log-out'></i>
+                    <i class='bx bx-log-out' id="logOut"></i>
                 </div>
             </li>
         </ul>
@@ -129,15 +130,19 @@
             <div class="section-center" style="background-color: white;">
                 <div class="row">
                     <div class="profiledetails-form">
-                            <div class="form-group">
-                                <label for="name">Name:</label>
-                                <input class="form-control" type="text" id="Name" name="Name"><br>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input class="form-control" type="text" id="Email" name="Email"
-                                    style="background-color: #eaeaea; margin-left:20px;" disabled><br>
-                            </div>
+                        <div class="form-group">
+                            <label for="staff-id">Staff Id:</label>
+                            <input class="form-control" type="text" id="staff-id" name="staffId" style="background-color: #eaeaea; margin-left:8px" disabled><br>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input class="form-control" type="text" id="Name" name="Name"><br>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input class="form-control" type="text" id="Email" name="Email"
+                                style="background-color: #eaeaea; margin-left:20px;" disabled><br>
+                        </div>
                         <!-- <div class="row">
                                     <div class="form-group">
                                         <label for="point">Points:</label>
@@ -146,8 +151,10 @@
                                 </div> -->
                         <div class="form-group">
                             <label for="contact">Contact:</label>
-                            <input class="form-control" type="text" id="Contact" name="Contact" style="margin-left:8px"><br>
+                            <input class="form-control" type="text" id="Contact" name="Contact"
+                                style="margin-left:8px"><br>
                         </div>
+
 
                         <div class="form-btn">
                             <button type="button" id="save" class="save-btn">SAVE</button>
@@ -158,7 +165,10 @@
             </div>
         </div>
     </section>
-
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/staff/staff-profile1.js"></script>
+    <script type="module" src="/js/staff/staff-home.js"></script>
+    <script type="module" src="/js/staff/staff-logout.js"></script>
 </body>
 
 </html>

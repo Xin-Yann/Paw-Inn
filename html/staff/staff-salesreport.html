@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -11,33 +11,16 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
     <link rel="stylesheet" href="/css/staff/staff-nav3.css">
-    <link rel="stylesheet" href="/css/staff/staff-home.css">
-    <script type="module" src="/js/firebase-config.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
-        .btn {
-            padding: 55px 20px;
-            font-size: 25px;
-            cursor: pointer;
-            border: none;
-            background-color: #127369;
-            background-image: linear-gradient(#33b0a3, #fbfca2);
-            color: white;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            width: 480px;
-            height: 150px;
+        .title {
+            color: #127369;
+            font-weight: 900;
         }
-
-        .btn:hover {
-            background-color: #127369;
-            color: white;
-            background-image: linear-gradient(#127369, yellow);
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        }
-        
     </style>
+
 </head>
 
 <body>
@@ -152,40 +135,35 @@
             <i class='bx bx-menu'></i>
             <span class="text">Paws Inn</span>
         </div>
+        <!-- Navbar End -->
         <div class="container">
-            <div class="button-row">
-                <a href="/html/staff/staff-sales.html" class="btn">
-                    <i class='bx bx-cart'></i>
-                    <span class="link_name ml-3">New Sale</span>
-                </a>
-                <a href="/html/staff/staff-calendar.html" class="btn">
-                    <i class='bx bx-calendar'></i>
-                    <span class="link_name ml-3">Calendar</span>
-                </a>
-                <a href="/html/staff/staff-room.html" class="btn">
-                    <i class='bx bx-home'></i>
-                    <span class="link_name ml-3">Room</span>
-                </a>
-            </div>
-            <div class="button-row">
-                <a href="/html/staff/staff-productdog.html" class="btn">
-                    <i class='bx bx-collection'></i>
-                    <span class="link_name ml-3">Product</span>
-                </a>
-                <a href="/html/staff/staff-report.html" class="btn">
-                    <i class='bx bx-line-chart'></i>
-                    <span class="link_name ml-3">Report</span>
-                </a>
-                <a href="/html/staff/staff-bookingHistory.html" class="btn">
-                    <i class='bx bx-dollar'></i>
-                    <span class="link_name ml-3">Transactions</span>
-                </a>
+
+            <div class="container pb-5 pt-4">
+                <label for="type" class="type">Type:</label>
+                <select id="type" class="form-control">
+                    <option value="product">Product Sales Report</option>
+                    <option value="rooms">Rooms Sales Report</option>
+                </select>
+
+                <div class="py-5">
+                    <label for="year">Select Year:</label>
+                    <select id="year"></select>
+                </div>
+
+                <div id="report">
+                    <h1 class="title text-center py-5">Product Sales Report</h1>
+                    <canvas id="myChart" class="pb-5"></canvas>
+                </div>
             </div>
         </div>
     </section>
 
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="/js/staff/staff-salesreport1.js"></script>
     <script type="module" src="/js/staff/staff-home.js"></script>
     <script type="module" src="/js/staff/staff-logout.js"></script>
+
 </body>
 
 </html>

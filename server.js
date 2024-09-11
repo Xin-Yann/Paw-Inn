@@ -569,8 +569,8 @@ app.post('/generate-receipt', async (req, res) => {
       color: rgb(0, 0, 0),
     });
 
-    if (paymentData.redeemedPoints > 0) {
-      page.drawText(`Redeemed Points: ${paymentData.pointsRedeemed}`, {
+    if (paymentData.RedeemedPoints > 0) {
+      page.drawText(`Redeemed Points: ${paymentData.RedeemedPoints}`, {
         x: 355,
         y: currentY - 300,
         size: 12,
@@ -579,7 +579,7 @@ app.post('/generate-receipt', async (req, res) => {
       });
     }
 
-    page.drawText(`Earned Points: ${paymentData.pointsEarned}`, {
+    page.drawText(`Earned Points: ${paymentData.AddedPoints}`, {
       x: 375,
       y: currentY - 335,
       size: 12,
