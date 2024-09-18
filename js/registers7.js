@@ -11,7 +11,7 @@ function hashPassword(password) {
 
 function generateMembershipId() {
     return 'MID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-  }
+}
 
 document.getElementById('signUpButton').addEventListener('click', async (event) => {
     event.preventDefault();
@@ -30,14 +30,29 @@ document.getElementById('signUpButton').addEventListener('click', async (event) 
 
         const uppercase = /[A-Z]/;
         const lowercase = /[a-z]/;
+        const contactNo = /^(\d{3}[- ]?\d{3,4}[- ]?\d{4})$/;
+        const emailFormat= /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (password.length < 8 || !uppercase.test(password) || !lowercase.test(password)) {
             window.alert("Password must be at least 8 characters long and contain at least one uppercase and one lowercase character");
-            return; 
+            return;
+        }
+
+        if(!contactNo.test(contact)) {
+            window.alert("Please enter a valid contact number");
+            return;
         }
 
         if (!checkbox.checked) {
             window.alert('You must agree to the Privacy Policy & T&C.');
+            return;
+        }
+
+        if (email.endsWith('@staff.com')) {
+            window.alert('Invalid Email');
+            return;
+        } else if (!emailFormat.test(email)) {
+            window.alert('Invalid Email');
             return;
         }
 
@@ -50,7 +65,7 @@ document.getElementById('signUpButton').addEventListener('click', async (event) 
 
         const membershipId = generateMembershipId();
 
-        const docRef = await addDoc(collection(db, 'users'), {
+        const docRef = await addDoc(collection(db, 'users', userId), {
             userId: userId,
             name: name,
             email: email,

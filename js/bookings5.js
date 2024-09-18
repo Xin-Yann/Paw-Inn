@@ -76,13 +76,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const room = docSnap.data();
             const roomQuantities = room.room_quantity || [];
 
+            if (!Array.isArray(roomQuantities)) {
+              continue;
+            }
+
             // Check availability for the specific date
             for (const monthData of roomQuantities) {
-              for (const [roomDate, quantity] of Object.entries(monthData)) {
-                const availableDate = new Date(roomDate);
-                if (availableDate.toDateString() === new Date(date).toDateString() &&
-                  parseInt(quantity, 10) > 0) {
-                  return true; // Room is available
+              if (typeof monthData === 'object' && monthData !== null) {
+                for (const [roomDate, quantity] of Object.entries(monthData)) {
+                  const availableDate = new Date(roomDate);
+                  if (availableDate.toDateString() === new Date(date).toDateString() &&
+                    parseInt(quantity, 10) > 0) {
+                    return true; // Room is available
+                  }
                 }
               }
             }
@@ -240,16 +246,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var defaultCheckoutDate = new Date();
     defaultCheckoutDate.setDate(defaultCheckoutDate.getDate() + 2);
-    var yearDefault = defaultCheckoutDate.getFullYear();
-    var monthDefault = (defaultCheckoutDate.getMonth() + 1).toString().padStart(2, '0');
-    var dateDefault = defaultCheckoutDate.getDate().toString().padStart(2, '0');
-    var defaultCheckoutDateFormatted = `${yearDefault}-${monthDefault}-${dateDefault}`;
+    var year = defaultCheckoutDate.getFullYear();
+    var month = (defaultCheckoutDate.getMonth() + 1).toString().padStart(2, '0');
+    var date = defaultCheckoutDate.getDate().toString().padStart(2, '0');
+    var defaultCheckoutDateFormatted = `${year}-${month}-${date}`;
+
+    const CheckoutDate = new Date(dateTomorrowFormatted);
+    CheckoutDate.setFullYear(CheckoutDate.getFullYear() + 1);
+    const selectedCheckout = `${CheckoutDate.getFullYear()}-${(CheckoutDate.getMonth() + 1).toString().padStart(2, '0')}-${CheckoutDate.getDate().toString().padStart(2, '0')}`;
 
     checkoutElem.setAttribute("min", dateTomorrowFormatted);
+    checkoutElem.setAttribute("max", selectedCheckout);
     checkoutElem.value = defaultCheckoutDateFormatted;
 
     checkinElem.onchange = async function () {
-      checkoutElem.setAttribute("min", this.value);
+      // const selectedCheckedIn = new Date(checkinElem.value);
+      // checkoutElem.setAttribute("min", this.value);
+      // const checkoutMaxDate = new Date(selectedCheckedIn);
+      // checkoutMaxDate.setFullYear(checkoutMaxDate.getFullYear() + 1);
+      // const checkoutMaxFormatted = `${checkoutMaxDate.getFullYear()}-${(checkoutMaxDate.getMonth() + 1).toString().padStart(2, '0')}-${checkoutMaxDate.getDate().toString().padStart(2, '0')}`;
+      checkoutElem.setAttribute("max", selectedCheckout);
       await updateTotalPrice();
     }
 
@@ -284,12 +300,15 @@ document.addEventListener('DOMContentLoaded', function () {
       if (userId) {
         const usersCollectionRef = collection(db, 'users');
         const querySnapshot = await getDocs(query(usersCollectionRef, where('userId', '==', userId)));
+      
 
         querySnapshot.forEach((doc) => {
           const userData = doc.data();
           document.getElementById('owner_name').value = userData.name || '';
           document.getElementById('email').value = userData.email || '';
           document.getElementById('contact').value = userData.contact || '';
+
+          console.log('User data fetched:', userData);
         });
       }
     } catch (e) {
@@ -309,8 +328,6 @@ document.addEventListener('DOMContentLoaded', function () {
       throw new Error('Failed to upload vaccination image');
     }
   }
-  
-
 
   // Inside the click event listener for the submit button
   document.getElementById("submit").addEventListener("click", async () => {
@@ -343,6 +360,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Validate inputs
       let isValid = true;
+      const contactNo = /^(\d{3}[- ]?\d{3,4}[- ]?\d{4})$/;
+
+      if (!contactNo.test(contact)) {
+        window.alert("Please enter a valid contact number");
+        return;
+      }
 
       if (!roomName) {
         document.getElementById('name_error').textContent = 'Please select the room from the Dog, Cat, Rabbit, or Cage page.';
@@ -472,11 +495,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const roomCollectionRef = collection(docRef, collectionName);
         const roomQuerySnapshot = await getDocs(roomCollectionRef);
 
+
+
         roomQuerySnapshot.forEach(docSnap => {
           if (docSnap.exists()) {
             const room = docSnap.data();
             const roomName = room.room_name || 'Unknown';
             const roomQuantities = room.room_quantity || []; // Array of maps
+
+            if (!Array.isArray(roomQuantities)) {
+              return;
+            }
 
             // Process data for each month
             roomQuantities.forEach((monthData, monthIndex) => {
@@ -512,8 +541,10 @@ document.addEventListener('DOMContentLoaded', function () {
       initialDate: new Date().toISOString().split('T')[0],
       events: [], // No events to show
       validRange: {
-        start: new Date().getFullYear() + '-01-01', // Start of the year
-        end: new Date().getFullYear() + '-12-31'   // End of the year
+        start: '2024-01-01',
+        end: '2025-12-31'
+        // start: new Date().getFullYear() + '-01-01', // Start of the year
+        // end: new Date().getFullYear() + '-12-31'   // End of the year
       },
       dayCellDidMount: async function (info) {
         const cellDate = new Date(info.date);
@@ -532,9 +563,9 @@ document.addEventListener('DOMContentLoaded', function () {
             filterContainer.className = 'filter-controls';
             filterContainer.innerHTML = `
               <button data-category="dog">Dog</button>
-              <button data-category="cat">Cat</button>
-              <button data-category="rabbit">Rabbit</button>
-              <button data-category="cage">Cage</button>
+              <button data-category="cat" style="background-color: #A6B37D;">Cat</button>
+              <button data-category="rabbit" style="background-color: #967E76;">Rabbit</button>
+              <button data-category="cage" style="background-color: #596FB7;">Cage</button>
             `;
 
             cell.appendChild(filterContainer);

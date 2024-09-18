@@ -96,7 +96,7 @@ function naturalSort(a, b) {
 // Function to delete product
 async function deleteProduct(productId, productType) {
     try {
-        const productRef = doc(db, `products/dog/${productType}/${productId}`);
+        const productRef = doc(db, `product/dog/${productType}/${productId}`);
         await deleteDoc(productRef);
         alert('Product deleted successfully!');
         fetchDataAndDisplay();

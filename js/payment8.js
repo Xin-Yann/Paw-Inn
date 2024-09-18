@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchAndDisplayBooking(userId);
       const userEmail = sessionStorage.getItem('userEmail');
       if (userEmail) {
-          fetchAndDisplayPersonalDetails(userEmail);
+        fetchAndDisplayPersonalDetails(userEmail);
       } else {
-          console.log('No user email found in session storage.');
+        console.log('No user email found in session storage.');
       }
     } else {
       console.error('No authenticated user found.');
@@ -313,9 +313,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //           try {
   //             const response = await emailjs.send('service_7e6jx2j', 'template_l3gma7d', templateParams);
-  //             alert("Success! OTP sent.");
+  //             window.alert("Success! OTP sent.");
   //             updateButtonVisibility();
-  //             console.log('Success:', response);
+  //             window.console.log('Success:', response);
   //           } catch (error) {
   //             alert("Failed to send OTP.");
   //             console.error('Error:', error);
@@ -355,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //   }
 
   //   if (enteredOTP === generatedOTP) {
-  //     alert("OTP verified successfully!");
+  //     window.alert("OTP verified successfully!");
 
   //     // Disable or hide OTP section after successful verification
   //     document.getElementById("otp").disabled = true;
@@ -363,20 +363,30 @@ document.addEventListener("DOMContentLoaded", () => {
   //     document.getElementById("confirm-payment").disabled = false;
   //     // Optionally, you can show a success message or proceed with further actions
   //   } else {
-  //     alert("Invalid OTP. Please try again.");
+  //     window.alert("Invalid OTP. Please try again.");
   //   }
   // }
 
-  // document.addEventListener("DOMContentLoaded", function () {
-  //   document.getElementById("send-otp").addEventListener("click", function (e) {
-  //     e.preventDefault();
-  //     SendMailOtp();
-  //   });
+  // document.getElementById("send-otp").addEventListener("click", function (e) {
+  //   e.preventDefault();
+  //   SendMailOtp();
+  // });
 
-  //   document.getElementById("verify-otp").addEventListener("click", function (e) {
-  //     e.preventDefault();
-  //     verifyOTP();
-  //   });
+  // document.getElementById("verify-otp").addEventListener("click", function (e) {
+  //   e.preventDefault();
+  //   verifyOTP();
+  // });
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   // document.getElementById("send-otp").addEventListener("click", function (e) {
+  //   //   e.preventDefault();
+  //   //   SendMailOtp();
+  //   // });
+
+  //   // document.getElementById("verify-otp").addEventListener("click", function (e) {
+  //   //   e.preventDefault();
+  //   //   verifyOTP();
+  //   // });
   // });
 
   // Handle form submission for payment
@@ -446,51 +456,56 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
               const docSnap = await getDoc(paymentDocRef);
 
+              let paymentsArray = [];
+
               if (docSnap.exists()) {
                 const paymentData = docSnap.data();
-                let paymentsArray = paymentData.payments || [];
-                const totalPrice = newestBooking.totalPrice;
-
-                paymentsArray.push({
-                  paymentId: paymentId,
-                  userId: userId,
-                  amount: newestBooking.price,
-                  payment_date: new Date().toISOString(),
-                  book_id: newestBooking.book_id,
-                  book_date: newestBooking.book_date,
-                  room_name: newestBooking.room_name,
-                  checkin_date: newestBooking.checkin_date,
-                  checkout_date: newestBooking.checkout_date,
-                  owner_name: newestBooking.owner_name,
-                  pet_name: newestBooking.pet_name,
-                  email: newestBooking.email,
-                  contact: newestBooking.contact,
-                  category: newestBooking.category,
-                  food_category: newestBooking.food_category,
-                  vaccination_image: newestBooking.vaccination_image,
-                  nights: newestBooking.nights,
-                  serviceTax: newestBooking.serviceTax,
-                  salesTax: newestBooking.salesTax,
-                  price: newestBooking.price,
-                  subtotal: newestBooking.subtotal,
-                  totalPrice: newestBooking.totalPrice,
-                  status: 'Paid',
-                });
-                await setDoc(paymentDocRef, { payments: paymentsArray }, { merge: true });
-
-                // Send email notification
-                // await sendEmailNotificationOnSuccess(newestBooking);
-
-                // Calculate and update member points
-                const points = await calculatePoints(totalPrice);
-                await updatePoints(points);
-
-                // Update room quantity
-                const deductionResult = await updateRoomQuantity(newestBooking.category, newestBooking.room_name, newestBooking.checkin_date, newestBooking.checkout_date);
-                console.log(deductionResult);
-
-                console.log('Payment details successfully saved.');
+                paymentsArray = paymentData.payments || [];
+              } else {
+                console.log("Creating new payments document for the user");
               }
+              const totalPrice = newestBooking.totalPrice;
+
+              paymentsArray.push({
+                paymentId: paymentId,
+                userId: userId,
+                amount: newestBooking.price,
+                payment_date: new Date().toISOString(),
+                book_id: newestBooking.book_id,
+                book_date: newestBooking.book_date,
+                room_name: newestBooking.room_name,
+                checkin_date: newestBooking.checkin_date,
+                checkout_date: newestBooking.checkout_date,
+                owner_name: newestBooking.owner_name,
+                pet_name: newestBooking.pet_name,
+                email: newestBooking.email,
+                contact: newestBooking.contact,
+                category: newestBooking.category,
+                food_category: newestBooking.food_category,
+                vaccination_image: newestBooking.vaccination_image,
+                nights: newestBooking.nights,
+                serviceTax: newestBooking.serviceTax,
+                salesTax: newestBooking.salesTax,
+                price: newestBooking.price,
+                subtotal: newestBooking.subtotal,
+                totalPrice: newestBooking.totalPrice,
+                status: 'Paid',
+              });
+              await setDoc(paymentDocRef, { payments: paymentsArray }, { merge: true });
+
+              // Send email notification
+              // await sendEmailNotificationOnSuccess(newestBooking);
+
+              // Calculate and update member points
+              const points = await calculatePoints(totalPrice);
+              await updatePoints(points);
+
+              // Update room quantity
+              const deductionResult = await updateRoomQuantity(newestBooking.category, newestBooking.room_name, newestBooking.checkin_date, newestBooking.checkout_date);
+              console.log(deductionResult);
+
+              console.log('Payment details successfully saved.');
+
             } catch (error) {
               console.error('Error saving payment details:', error);
               throw new Error('Failed to save payment details');
@@ -513,169 +528,173 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function fetchAndDisplayPersonalDetails(email) {
-  try {
-    console.log(`Fetching details for email: ${email}`);
-    const q = query(collection(db, 'users'), where('email', '==', email));
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        const userData = doc.data();
-        console.log('User data fetched:', userData);
-        const pointsDisplay = document.getElementById('point');
-        if (pointsDisplay) {
-          const points = userData.points || 0;
-          pointsDisplay.textContent = `Point: ${points}`;
-          console.log(`User points: ${points}`);
-        } else {
-          console.error('Element with ID "point" not found.');
-        }
-      });
-    } else {
-      console.log('User details document does not exist.');
-    }
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-  }
-}
-
-async function calculatePoints(totalPrice) {
-  const pointsPerRM = 1;
-  const wholeRM = Math.floor(totalPrice);
-  const points = wholeRM * pointsPerRM;
-  return points;
-}
-
-async function updatePoints(points) {
-  try {
-    const user = auth.currentUser;
-    if (!user) {
-      console.error("No user is currently logged in.");
-      return;
-    }
-    const userEmail = user.email;
-    const usersCollection = collection(db, 'users');
-    const q = query(usersCollection, where("email", "==", userEmail));
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      const userDocRef = querySnapshot.docs[0].ref;
-      const userDocSnap = await getDoc(userDocRef);
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        const existingPoints = Number(userData.points) || 0;
-        const updatedPoints = existingPoints + Number(points);
-        await updateDoc(userDocRef, { points: updatedPoints });
-        window.alert(`Points updated successfully. New points: ${updatedPoints}`);
-        console.log(`Points updated successfully. New points: ${updatedPoints}`);
-        fetchAndDisplayPersonalDetails(userEmail); // Refresh the points display
+    try {
+      console.log(`Fetching details for email: ${email}`);
+      const q = query(collection(db, 'users'), where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          console.log('User data fetched:', userData);
+          const pointsDisplay = document.getElementById('point');
+          if (pointsDisplay) {
+            const points = userData.points || 0;
+            pointsDisplay.textContent = `Point: ${points}`;
+            console.log(`User points: ${points}`);
+          } else {
+            console.error('Element with ID "point" not found.');
+          }
+        });
       } else {
-        console.log('User document does not exist.');
+        console.log('User details document does not exist.');
       }
-    } else {
-      console.log('No user document found with the specified email.');
+    } catch (error) {
+      console.error('Error fetching user details:', error);
     }
-  } catch (error) {
-    console.error('Error updating points:', error);
   }
-}
 
-function printAmount(elementId, message) {
-  document.getElementById(elementId).textContent = message;
-}
-
-async function redeemPoints() {
-  try {
-    const pointsText = document.getElementById('point').textContent;
-    let points = parseFloat(pointsText.replace(/[^0-9.]/g, "").trim());
-    if (points <= 0) {
-      console.error('No points available for redemption.');
-      return;
-    }
-    const redeemedDiscount = points / 1000;
-    printAmount("point_amount", `-RM${redeemedDiscount.toFixed(2)}`);
-    const totalPriceText = document.getElementById('subtotal').textContent;
-    const totalPrice = parseFloat(totalPriceText.replace(/[^0-9.]/g, "").trim());
-    // const pointsToDeduct = redeemedDiscount * 1000;
-    const updatedTotalPrice = totalPrice - redeemedDiscount;
-    printAmount("totalprice", `-RM${updatedTotalPrice.toFixed(2)}`);
-    const user = auth.currentUser;
-    const email = user ? user.email : null;
-    
-    if (email) {
-      const pointsToDeduct = redeemedDiscount * 1000;
-      await updateUserPointsByEmail(email, pointsToDeduct);
-    }
-    await fetchAndDisplayPersonalDetails(email);
-  } catch (error) {
-    console.error('Error redeeming points:', error);
+  async function calculatePoints(totalPrice) {
+    const pointsPerRM = 1;
+    const wholeRM = Math.floor(totalPrice);
+    const points = wholeRM * pointsPerRM;
+    return points;
   }
-}
 
-async function updateUserPointsByEmail(email, pointsToDeduct) {
-  const q = query(collection(db, 'users'), where('email', '==', email));
-  try {
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-      const userDoc = querySnapshot.docs[0];
-      const userRef = userDoc.ref;
-      const userData = userDoc.data();
-      const currentPoints = userData.points || 0;
-      const updatedPoints = Math.max(0, currentPoints - pointsToDeduct);
-      await updateDoc(userRef, { points: updatedPoints });
-      console.log(`User points updated successfully. New points: ${updatedPoints}`);
-      fetchAndDisplayPersonalDetails(email); // Refresh the points display
-    } else {
-      console.error('User document does not exist for the given email.');
+  async function updatePoints(points) {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("No user is currently logged in.");
+        return;
+      }
+      const userEmail = user.email;
+      const usersCollection = collection(db, 'users');
+      const q = query(usersCollection, where("email", "==", userEmail));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const userDocRef = querySnapshot.docs[0].ref;
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          const existingPoints = Number(userData.points) || 0;
+          const updatedPoints = existingPoints + Number(points);
+          await updateDoc(userDocRef, { points: updatedPoints });
+          window.alert(`Points updated successfully. New points: ${updatedPoints}`);
+          console.log(`Points updated successfully. New points: ${updatedPoints}`);
+          fetchAndDisplayPersonalDetails(userEmail); // Refresh the points display
+        } else {
+          console.log('User document does not exist.');
+        }
+      } else {
+        console.log('No user document found with the specified email.');
+      }
+    } catch (error) {
+      console.error('Error updating points:', error);
     }
-  } catch (error) {
-    console.error('Error updating user points by email:', error);
   }
-}
 
-document.getElementById('redeem').addEventListener('click', redeemPoints);
+  function printAmount(elementId, message) {
+    document.getElementById(elementId).textContent = message;
+  }
 
-  // async function sendEmailNotificationOnSuccess(newestBooking) {
-  //   try {
-  //     const date = new Date().toISOString();
+  async function redeemPoints() {
+    try {
+      const pointsText = document.getElementById('point').textContent;
+      let points = parseFloat(pointsText.replace(/[^0-9.]/g, "").trim());
+      if (points <= 0) {
+        console.error('No points available for redemption.');
+        return;
+      }
+      const redeemedDiscount = points / 100;
+      printAmount("point_amount", `-RM${redeemedDiscount.toFixed(2)}`);
+      const totalPriceText = document.getElementById('subtotal').textContent;
+      const totalPrice = parseFloat(totalPriceText.replace(/[^0-9.]/g, "").trim());
+      // const pointsToDeduct = redeemedDiscount * 1000;
+      const updatedTotalPrice = totalPrice - redeemedDiscount;
+      printAmount("totalprice", `RM${updatedTotalPrice.toFixed(2)}`);
+      const user = auth.currentUser;
+      const email = user ? user.email : null;
 
-  //     // Generate invoice and get the URL
-  //     const invoiceResponse = await fetch('/generate-invoice', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({ newestBooking })
-  //     });
+      if (email) {
+        const pointsToDeduct = redeemedDiscount * 1000;
+        await updateUserPointsByEmail(email, pointsToDeduct);
+      }
+      await fetchAndDisplayPersonalDetails(email);
+    } catch (error) {
+      console.error('Error redeeming points:', error);
+    }
+  }
 
-  //     if (!invoiceResponse.ok) throw new Error('Failed to generate invoice');
+  async function updateUserPointsByEmail(email, pointsToDeduct) {
+    const q = query(collection(db, 'users'), where('email', '==', email));
+    try {
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userRef = userDoc.ref;
+        const userData = userDoc.data();
+        const currentPoints = userData.points || 0;
+        const updatedPoints = Math.max(0, currentPoints - pointsToDeduct);
+        await updateDoc(userRef, { points: updatedPoints });
+        console.log(`User points updated successfully. New points: ${updatedPoints}`);
+        fetchAndDisplayPersonalDetails(email); // Refresh the points display
+      } else {
+        console.error('User document does not exist for the given email.');
+      }
+    } catch (error) {
+      console.error('Error updating user points by email:', error);
+    }
+  }
 
-  //     const { invoiceUrl } = await invoiceResponse.json(); // Ensure this matches the key returned
-  //     console.log('Generated Invoice URL:', invoiceUrl);
+  document.getElementById('redeem').addEventListener('click', (event) => {
+    event.preventDefault(); // Prevents the form submission
+    redeemPoints(); // Call the redeemPoints function
+  });
 
-  //     const emailResponse = await emailjs.send('service_7e6jx2j', 'template_winshbo', {
-  //       to_email: newestBooking.email,
-  //       subject: 'Booking Confirmation',
-  //       date: date,
-  //       book_id: newestBooking.book_id,
-  //       user_name: newestBooking.owner_name,
-  //       pet_name: newestBooking.pet_name,
-  //       room_name: newestBooking.room_name,
-  //       checkin_date: newestBooking.checkin_date,
-  //       checkout_date: newestBooking.checkout_date,
-  //       price: newestBooking.price,
-  //       subtotal: newestBooking.subtotal,
-  //       serviceTax: newestBooking.serviceTax,
-  //       salesTax: newestBooking.salesTax,
-  //       amount: newestBooking.totalPrice,
-  //       status: 'Paid',
-  //       invoice_url: invoiceUrl 
-  //     });
 
-  //     console.log('Email sent successfully to:', newestBooking.email);
-  //     console.log('Response status:', emailResponse.status);
-  //     console.log('Response text:', emailResponse.text);
-  //   } catch (error) {
-  //     console.error('Error sending email:', error);
-  //   }
-  // }
+  async function sendEmailNotificationOnSuccess(newestBooking) {
+    try {
+      const date = new Date().toISOString();
+
+      // Generate invoice and get the URL
+      const invoiceResponse = await fetch('/generate-invoice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ newestBooking })
+      });
+
+      if (!invoiceResponse.ok) throw new Error('Failed to generate invoice');
+
+      const { invoiceUrl } = await invoiceResponse.json(); // Ensure this matches the key returned
+      console.log('Generated Invoice URL:', invoiceUrl);
+
+      const emailResponse = await emailjs.send('service_7e6jx2j', 'template_winshbo', {
+        to_email: newestBooking.email,
+        subject: 'Booking Confirmation',
+        date: date,
+        book_id: newestBooking.book_id,
+        user_name: newestBooking.owner_name,
+        pet_name: newestBooking.pet_name,
+        room_name: newestBooking.room_name,
+        checkin_date: newestBooking.checkin_date,
+        checkout_date: newestBooking.checkout_date,
+        price: newestBooking.price,
+        subtotal: newestBooking.subtotal,
+        serviceTax: newestBooking.serviceTax,
+        salesTax: newestBooking.salesTax,
+        amount: newestBooking.totalPrice,
+        status: 'Paid',
+        invoice_url: invoiceUrl
+      });
+
+      console.log('Email sent successfully to:', newestBooking.email);
+      console.log('Response status:', emailResponse.status);
+      console.log('Response text:', emailResponse.text);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
 
 });

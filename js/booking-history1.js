@@ -95,7 +95,7 @@ async function fetchAndDisplayBookings(userId) {
                     const buttonDisabled = isPastCheckinDate || isPastCheckoutDate;
                     const buttonsHidden = bookingStatus === 'Cancelled';
                     const checkinButtonVisible = bookingStatus !== 'Checked-In' && !buttonsHidden;
-                    const cancelButtonVisible = bookingStatus !== 'Cancelled';
+                    const cancelButtonVisible = bookingStatus !== 'Cancelled' && !(isPastCheckinDate && isPastCheckoutDate);
 
 
                     const row = document.createElement('tr');
@@ -108,8 +108,9 @@ async function fetchAndDisplayBookings(userId) {
                    
                         ${buttonsHidden ? '' : `
                             <td class="text-center">
-                                 ${buttonDisabled ? '' : checkinButtonVisible ? `<button onclick="checkinBooking('${bookingId}')" class="checkin-button" >Check In</button>` : ''} &nbsp;&nbsp;
-                            ${buttonDisabled ? '' : cancelButtonVisible ? `<button onclick="cancelBooking('${bookingId}')" class="cancel-button" >Cancel Booking</button>` : ''}
+                                ${buttonDisabled ? '' : checkinButtonVisible ? `<button onclick="checkinBooking('${bookingId}')" class="checkin-button" >Check In</button>` : ''} &nbsp;&nbsp;
+                                ${((bookingStatus === 'Checked-In' || bookingStatus === 'Checked-Out') || !cancelButtonVisible) ? '' :
+                                `<button onclick="cancelBooking('${bookingId}')" class="cancel-button" ${buttonDisabled ? 'disabled' : ''}>Cancel Booking</button>`}
                             </td>
                         `}               
                     `;

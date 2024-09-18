@@ -79,6 +79,9 @@ async function initCalendar() {
         const roomClass = getRoomClass(booking.room_name);
         const checkoutDate = new Date(booking.checkout_date).setHours(0, 0, 0, 0);
 
+        const eventEndDate = new Date(checkoutDate);
+        eventEndDate.setDate(eventEndDate.getDate() + 2);
+
         // Disable events where the checkout date has passed
         const eventClasses = checkoutDate < today ? `event-disabled ${roomClass}` : roomClass;
 
@@ -86,8 +89,9 @@ async function initCalendar() {
             id: booking.book_id,
             title: booking.room_name,
             start: new Date(booking.checkin_date).toISOString().split('T')[0],
-            end: new Date(booking.checkout_date).toISOString().split('T')[0],
+            end: new Date(eventEndDate).toISOString().split('T')[0],
             className: eventClasses,
+            allDay: true,
             extendedProps: {
                 bookId: booking.book_id,
                 roomName: booking.room_name,
@@ -115,7 +119,7 @@ async function initCalendar() {
             start: new Date().getFullYear() + '-01-01',
             end: new Date().getFullYear() + '-12-31'
         },
-        eventClick: function(info) {
+        eventClick: function (info) {
             const event = info.event;
             const eventEndDate = new Date(event.extendedProps.checkoutDate).setHours(0, 0, 0, 0);
 
@@ -214,6 +218,6 @@ async function initCalendar() {
     calendar.render();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initCalendar();
 });

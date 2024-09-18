@@ -6,7 +6,7 @@ const db = getFirestore();
 // Function to fetch data and display it
 async function fetchDataAndDisplay() {
     try {
-        const roomCategories = [{ category: 'cat', collectionName: 'cat rooms' }];
+        const roomCategories = [{ category: 'cage', collectionName: 'cage rooms' }];
 
         for (const { category, collectionName } of roomCategories) {
             // Create a reference to the collection
@@ -24,17 +24,42 @@ async function fetchDataAndDisplay() {
                 // Determine the overall availability status
                 let isAvailable = false;
                 let isSellingFast = false;
-                roomData.room_quantity.forEach(quantityMap => {
-                    for (const quantity of Object.values(quantityMap)) {
-                        const parsedQuantity = parseInt(quantity);
-                        if (parsedQuantity > 0) {
-                            isAvailable = true;
-                        }
-                        if (parsedQuantity > 0 && parsedQuantity < 5) {
-                            isSellingFast = true;
-                        }
-                    }
-                });
+                
+                // roomData.room_quantity.forEach(quantityMap => {
+                //     for (const quantity of Object.values(quantityMap)) {
+                //         const parsedQuantity = parseInt(quantity);
+                //         if (parsedQuantity > 0) {
+                //             isAvailable = true;
+                //         }
+                //         if (parsedQuantity > 0 && parsedQuantity < 5) {
+                //             isSellingFast = true;
+                //         }
+                //     }
+                // });
+
+                if (Array.isArray(roomData.room_quantity)) {
+
+                    roomData.room_quantity.forEach((quantityObj, index) => {
+                        Object.entries(quantityObj).forEach(([date, quantity]) => {
+                            const parsedQuantity = parseInt(quantity, 10);
+                            console.log("Date:", date, "Quantity:", parsedQuantity);
+                            if (!isNaN(parsedQuantity)) {
+                                if (parsedQuantity > 0) {
+                                    isAvailable = true;
+                                }
+                                if (parsedQuantity > 0 && parsedQuantity < 5) {
+                                    isSellingFast = true;
+                                }
+                            }
+                        });
+
+                    });
+
+                    console.log("room_quantity is an object:", roomData.room_quantity);
+                } else {
+                    console.warn("room_quantity is not an object:", roomData.room_quantity);
+                }
+
                 let statusMessage = "None";
                 if (isAvailable) {
                     statusMessage = isSellingFast ? "Selling Fast" : "Available";

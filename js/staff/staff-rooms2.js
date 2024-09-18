@@ -75,8 +75,15 @@ async function fetchDataAndDisplay() {
                     const quantityMap = roomData[field][0];
                     if (quantityMap && typeof quantityMap === 'object') {
                         // Generate a string of all date-quantity pairs with each on a new line
-                        const quantityText = Object.entries(quantityMap)
-                            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+                        const today = new Date();
+
+                        const filteredMap = Object.fromEntries(
+                            Object.entries(quantityMap)
+                            .filter(([key, value]) => new Date(key) >= today)
+                        );
+
+                        const quantityText = Object.entries(filteredMap)
+                            .sort((a, b) => new Date(a[0]) - new Date(b[0]))
                             .map(([date, quantity]) => `${date}: ${quantity}`)
                             .join('\n'); // Join with a line break for each entry
 

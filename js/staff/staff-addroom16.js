@@ -11,10 +11,10 @@ document.getElementById("add").addEventListener("click", async () => {
         const roomName = document.getElementById('room_name').value;
         const roomDescription = document.getElementById('room_description').value;
         const roomPrice = document.getElementById('room_price').value;
-        const roomQuantity = document.getElementById('room_quantity').value;
+        const roomQuantity = parseInt(document.getElementById('room_quantity').value, 10);
         const roomSize = document.getElementById('room_size').value;
 
-        if (!roomId || !roomName || !roomPrice || !roomQuantity|| !roomSize) {
+        if (!roomId || !roomName || !roomPrice || !roomQuantity || !roomSize) {
             alert('Please fill out all required fields: category, type, ID, name, price, quantity, size.');
             return;
         }
@@ -52,6 +52,42 @@ document.getElementById("add").addEventListener("click", async () => {
         // Extract only the file name
         const imageName = imagePath.split('\\').pop().split('/').pop();
 
+        const today = new Date();
+        const endDate = new Date();
+        endDate.setFullYear(today.getFullYear() + 2);
+        const date = generateDate(today, endDate);
+        let roomQuantitybyMonth = [];
+        let index = -1;
+        let currentMonth = "";
+
+        date.forEach(date => {
+            const [year, month] = date.split('-');
+            const monthIndex = `${year}-${month}`;
+
+            if (monthIndex !== currentMonth) {
+                currentMonth = monthIndex;
+                index++;
+                roomQuantitybyMonth[index] = {};
+            }
+
+            roomQuantitybyMonth[index][date]= roomQuantity;
+        
+
+            // if (!roomQuantitybyMonth[monthIndex]) {
+            //     roomQuantitybyMonth[monthIndex] = {};
+            // }
+            // roomQuantitybyMonth[monthIndex][date] = roomQuantity;
+        });
+
+        console.log(roomQuantitybyMonth);
+
+
+        // const ascRoomQuantitybyMonth ={};
+        // for(let i=1;i<=12;i++){
+        //     const months = i.toString().padStart(2, '0');
+        //     ascRoomQuantitybyMonth[months] = roomQuantitybyMonth[months];
+        // }
+
         // Set the document in Firestore
         await setDoc(roomRef, {
             room_id: roomId,
@@ -59,7 +95,7 @@ document.getElementById("add").addEventListener("click", async () => {
             room_name: roomName,
             room_description: roomDescription,
             room_price: roomPrice,
-            room_quantity: roomQuantity,
+            room_quantity: roomQuantitybyMonth,
             room_size: roomSize,
         });
 
@@ -108,4 +144,18 @@ function addOption(type) {
     option.text = type;
     option.value = type;
     typeSelect.add(option);
+}
+
+function formattedDate(date) {
+    return date.toISOString().split('T')[0];
+}
+
+function generateDate(startDate, endDate) {
+    const dateArray = [];
+    let currentDate = new Date(startDate); // Start from startDate;
+    while (currentDate <= endDate) {
+        dateArray.push(formattedDate(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dateArray;
 }

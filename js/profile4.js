@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to fetch and display personal details
-    async function fetchAndDisplayPersonalDetails(email) {
+    async function fetchAndDisplayPersonalDetails(userId) {
         try {
-            console.log(`Fetching details for email: ${email}`);
+            console.log(`Fetching details for email: ${userId}`);
 
-            const q = query(collection(db, 'users'), where('email', '==', email));
-            const querySnapshot = await getDocs(q);
+            const usersCollectionRef = collection(db, 'users');
+            const querySnapshot = await getDocs(query(usersCollectionRef, where('userId', '==', userId)));
 
             if (!querySnapshot.empty) {
                 querySnapshot.forEach((doc) => {
@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('Name').value = userData.name || '';
                     document.getElementById('Email').value = userData.email || '';
                     document.getElementById('Contact').value = userData.contact || '';
+                    document.getElementById('Points').value = userData.points || '';
 
                     if (userData.membershipId) {
                         generateMemberBarcode(userData.membershipId);
@@ -41,58 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const userId = getCurrentUserId();
-            const userEmail = sessionStorage.getItem('userEmail');
-            if (userEmail) {
-                fetchAndDisplayPersonalDetails(userEmail);
+    auth.onAuthStateChanged(async (user) => {
+        try {
+            if (user) {
+                const userId = getCurrentUserId();
+                if (!userId) {
+                    console.error("Invalid userId:", userId);
+                    return;
+                }
+                fetchAndDisplayPersonalDetails(userId);
+                console.log("User authenticated. User ID:", userId);
             } else {
-                console.log('No user email found in session storage.');
+                console.log("User is not authenticated.");
             }
-            // updateCartItemCount(userId);
-
-        } else {
-            console.log('No user is authenticated. Redirecting to login page.');
-            window.location.href = "/html/login.html";
+        } catch (error) {
+            console.error("Error in authentication state change:", error);
         }
     });
-
-    const cart = document.getElementById('cart');
-    if (cart) {
-        cart.addEventListener('click', handleCartClick);
-    }
-
-    // function handleCartClick() {
-    //     if (auth.currentUser) {
-    //         window.location.href = "../html/cart.html";
-    //     } else {
-    //         window.alert('Please Login to view your cart.');
-    //         window.location.href = "../html/login.html";
-    //     }
-    // }
-
-    // // Function to update the cart item count in the UI
-    // async function updateCartItemCount(userId) {
-    //     try {
-    //         if (userId) {
-    //             const userCartDocRef = doc(collection(db, 'carts'), userId);
-    //             const userCartDocSnap = await getDoc(userCartDocRef);
-
-    //             if (userCartDocSnap.exists()) {
-    //                 const cartItems = userCartDocSnap.data().cart || [];
-    //                 const cartItemCount = document.getElementById('cartItemCount');
-    //                 let totalCount = 0;
-    //                 cartItems.forEach(item => {
-    //                     totalCount += item.quantity;
-    //                 });
-    //                 cartItemCount.textContent = totalCount;
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error("Error updating cart item count:", error);
-    //     }
-    // }
 
     function validateProfileDetails() {
         const name = document.getElementById('Name').value;
@@ -101,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const namePattern = /^[A-Za-z\s]+$/;
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const contactPattern = /^\d{10,11}$/;
+        const contactPattern = /^(\d{3}[- ]?\d{3,4}[- ]?\d{4})$/;
 
         if (!name || !email || !contact) {
             alert('Please fill out all required fields: name, email and contact.');
@@ -142,7 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const updatedData = {
                         name: document.getElementById('Name').value,
                         email: document.getElementById('Email').value,
-                        contact: document.getElementById('Contact').value
+                        contact: document.getElementById('Contact').value,
+                        points: document.getElementById('Points').value
                     };
 
                     await updateDoc(docRef, updatedData);
