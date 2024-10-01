@@ -55,24 +55,68 @@ async function saveProductDetails() {
 
         const roomDocRef = doc(db, 'rooms', roomCategory, roomType, roomId);
 
+        const price = /^\d+(\.\d{1,2})?$/;
+        const quantityAndSize = /^\d+$/;
+
+        if (!price.test(roomPrice)) {
+            alert('Invalid Price. Please enter a valid number with up to two decimal places.');
+            return;
+        } 
+
+        if (!quantityAndSize.test(roomQuantity)) {
+            alert('Invalid Quantity. Please enter a valid number.');
+            return;
+        }  
+        
+        if (!quantityAndSize.test(roomSize)) {
+            alert('Invalid Size. Please enter a valid number.');
+            return;
+        }
+
         // Check if required fields are filled
-        if (!roomName || !roomPrice || !roomQuantity|| !roomSize || !roomDescription) {
+        if (!roomName || !roomPrice || !roomQuantity || !roomSize || !roomDescription) {
             alert('Please fill out all required fields: name, price, quantity, size.');
             return;
         }
 
-        // Check if the file input actually has a file
+        const roomSnapshot = await getDoc(roomDocRef);
+        if (!roomSnapshot.exists()) {
+            alert('Room not found!');
+            return;
+        }
+
+        const currentRoomData = roomSnapshot.data();
+       
+        const today = new Date();
+        const endDate = new Date();
+        endDate.setFullYear(today.getFullYear() + 2);
+        const date = generateDate(today, endDate);
+        let roomQuantitybyMonth = [];
+        let index = -1;
+        let currentMonth = "";
+
+        date.forEach(date => {
+            const [year, month] = date.split('-');
+            const monthIndex = `${year}-${month}`;
+
+            if (monthIndex !== currentMonth) {
+                currentMonth = monthIndex;
+                index++;
+                roomQuantitybyMonth[index] = {};
+            }
+
+            roomQuantitybyMonth[index][date]= roomQuantity;
+        
+        });
+
+        // Handle the image upload
         const imageFile = document.getElementById('room_image').files[0];
         let imageName;
 
         if (imageFile) {
-            imageName = imageFile.name; // Get the file name without uploading
-            document.getElementById('room_image').value = imageName;
+            imageName = imageFile.name;
         } else {
-            // Fetch the existing data to potentially get the existing image
-            const currentSnapshot = await getDoc(roomDocRef);
-            const currentData = currentSnapshot.exists() ? currentSnapshot.data() : {};
-            imageName = currentData.room_image; // Retain the existing image name if no new file is uploaded
+            imageName = currentRoomData.room_image; // Retain existing image name if no new file is uploaded
         }
 
         const updatedData = {
@@ -80,18 +124,34 @@ async function saveProductDetails() {
             room_name: roomName,
             room_description: roomDescription,
             room_price: roomPrice,
-            room_quantity: roomQuantity,
+            room_quantity: roomQuantitybyMonth, // Save the updated quantity
             room_size: roomSize,
         };
 
         await updateDoc(roomDocRef, updatedData);
         alert('Room updated successfully!');
-        
-        
+
+        window.location.href = "../staff/staff-room.html";
+
     } catch (error) {
         console.error('Error saving product details:', error);
         alert('Error saving product details: ' + error.message);
     }
+}
+
+
+function formattedDate(date) {
+    return date.toISOString().split('T')[0];
+}
+
+function generateDate(startDate, endDate) {
+    const dateArray = [];
+    let currentDate = new Date(startDate); // Start from startDate;
+    while (currentDate <= endDate) {
+        dateArray.push(formattedDate(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dateArray;
 }
 
 document.getElementById('edit').addEventListener('click', saveProductDetails);

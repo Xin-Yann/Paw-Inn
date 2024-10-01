@@ -46,11 +46,27 @@ async function fetchAndDisplayBookings(userId) {
                 return payment.status === status;
             });
 
+            const currentMonth = new Date().getMonth(); // e.g., September is 8 (0-indexed)
+            const currentYear = new Date().getFullYear(); // e.g., 2024
+
+            // Filter bookings by the current month and year
+            paymentsArray.filter(payment => {
+                const bookingDate = new Date(payment.book_date);
+                return bookingDate.getMonth() === currentMonth && bookingDate.getFullYear() === currentYear;
+            });
+
             // Sort the filtered payments
             paymentFilter.sort((a, b) => {
                 const idA = parseInt(a.book_id.replace(/^\D+/g, ''), 10); // Extract number part and parse to integer
                 const idB = parseInt(b.book_id.replace(/^\D+/g, ''), 10); // Extract number part and parse to integer
                 return idB - idA; // For numeric comparison
+            });
+
+            // Sort to move disabled rows to the bottom
+            paymentFilter.sort((a, b) => {
+                const isDisabledA = isPastDate(a.checkin_date) || isPastDate(a.checkout_date);
+                const isDisabledB = isPastDate(b.checkin_date) || isPastDate(b.checkout_date);
+                return isDisabledA - isDisabledB; // non-disabled first
             });
 
             const statusContainer = document.getElementById('statusContainer');
@@ -95,7 +111,7 @@ async function fetchAndDisplayBookings(userId) {
                     const buttonDisabled = isPastCheckinDate || isPastCheckoutDate;
                     const buttonsHidden = bookingStatus === 'Cancelled';
                     const checkinButtonVisible = bookingStatus !== 'Checked-In' && !buttonsHidden;
-                    const cancelButtonVisible = bookingStatus !== 'Cancelled' && !(isPastCheckinDate && isPastCheckoutDate);
+                    const cancelButtonVisible = bookingStatus !== 'Cancelled' && !isPastCheckinDate;
 
 
                     const row = document.createElement('tr');

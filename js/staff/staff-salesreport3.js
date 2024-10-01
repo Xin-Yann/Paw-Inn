@@ -330,10 +330,10 @@ document.addEventListener('DOMContentLoaded', function () {
     selectYear = document.getElementById('year');
 
     const currentYear = new Date().getFullYear();
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
         const option = document.createElement('option');
-        option.value = currentYear - i;
-        option.text = currentYear - i;
+        option.value = currentYear + i;
+        option.text = currentYear + i;
         selectYear.appendChild(option);
     }
 

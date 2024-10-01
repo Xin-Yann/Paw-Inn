@@ -14,6 +14,24 @@ document.getElementById("add").addEventListener("click", async () => {
         const roomQuantity = parseInt(document.getElementById('room_quantity').value, 10);
         const roomSize = document.getElementById('room_size').value;
 
+        const price = /^\d+(\.\d{1,2})?$/;
+        const quantityAndSize = /^\d+$/;
+
+        if (!price.test(roomPrice)) {
+            alert('Invalid Price. Please enter a valid number with up to two decimal places.');
+            return;
+        } 
+
+        if (!quantityAndSize.test(roomQuantity)) {
+            alert('Invalid Quantity. Please enter a valid number.');
+            return;
+        }  
+        
+        if (!quantityAndSize.test(roomSize)) {
+            alert('Invalid Size. Please enter a valid number.');
+            return;
+        }
+
         if (!roomId || !roomName || !roomPrice || !roomQuantity || !roomSize) {
             alert('Please fill out all required fields: category, type, ID, name, price, quantity, size.');
             return;
@@ -143,6 +161,7 @@ function addOption(type) {
     var option = document.createElement("option");
     option.text = type;
     option.value = type;
+    option.selected = true;
     typeSelect.add(option);
 }
 

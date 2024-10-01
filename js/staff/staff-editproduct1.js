@@ -56,6 +56,7 @@ async function fetchAndDisplayProductDetails() {
                 productImageElement.style.display = 'none'; // Hide the image if no file name is present
             }
 
+
         } else {
             alert('No such document!');
         }
@@ -71,7 +72,7 @@ function handleFileInputChange(event) {
 
     if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             if (productImageElement) {
                 productImageElement.src = e.target.result;
                 productImageElement.style.display = 'block'; // Display the new image
@@ -101,9 +102,32 @@ async function saveProductDetails() {
 
         const productDocRef = doc(db, 'product', productCategory, productType, productId);
 
+        const price = /^\d+(\.\d{1,2})?$/;
+        const stockAndBarcode = /^\d+$/;
+
         // Check if required fields are filled
         if (!productName || !productPrice || !productStock || !productWeight || !productBarcode) {
             alert('Please fill out all required fields: name, price, stock, weight.');
+            return;
+        }
+
+        if (!price.test(productPrice)) {
+            alert('Invalid Price. Please enter a valid number with up to two decimal places.');
+            return;
+        }
+
+        if (!stockAndBarcode.test(productStock)) {
+            alert('Invalid Stock. Please enter a valid number.');
+            return;
+        }
+
+        if (!stockAndBarcode.test(productBarcode)) {
+            alert('Invalid Barcode. Please enter a valid number.');
+            return;
+        }
+
+        if (!stockAndBarcode.test(productWeight)) {
+            alert('Invalid Weight. Please enter a valid number.');
             return;
         }
 
@@ -133,26 +157,26 @@ async function saveProductDetails() {
 
         await updateDoc(productDocRef, updatedData);
         alert('Product updated successfully!');
-        
+
         // Redirect to the appropriate category page
         switch (productCategory) {
             case 'dog':
-                window.location.href = encodeURI('/html/staff/staff-productdog.html');
+                window.location.href = encodeURI('../staff/staff-productdog.html');
                 break;
             case 'cat':
-                window.location.href = encodeURI('/html/staff/staff-productcat.html');
+                window.location.href = encodeURI('../staff/staff-productcat.html');
                 break;
             case 'hamster&rabbits':
-                window.location.href = encodeURI('/html/staff/staff-producthamster&rabbits.html');
+                window.location.href = encodeURI('../staff/staff-producthamster&rabbits.html');
                 break;
             case 'birds':
-                window.location.href = encodeURI('/html/staff/staff-productbirds.html');
+                window.location.href = encodeURI('../staff/staff-productbirds.html');
                 break;
             case 'fish&aquatics':
-                window.location.href = encodeURI('/html/staff/staff-productfish&aquatics.html');
+                window.location.href = encodeURI('../staff/staff-productfish&aquatics.html');
                 break;
             default:
-                window.location.href = '/html/staff/staff-home.html';
+                window.location.href = '../staff/staff-home.html';
                 break;
         }
 

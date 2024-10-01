@@ -14,6 +14,29 @@ document.getElementById("add").addEventListener("click", async () => {
         const productStock = document.getElementById('product_stock').value;
         const productWeight = document.getElementById('product_weight').value;
 
+        const price = /^\d+(\.\d{1,2})?$/;
+        const stockAndBarcode = /^\d+$/;
+
+        if (!price.test(productPrice)) {
+            alert('Invalid Price. Please enter a valid number with up to two decimal places.');
+            return;
+        } 
+
+        if (!stockAndBarcode.test(productStock)) {
+            alert('Invalid Stock. Please enter a valid number.');
+            return;
+        }
+
+        if (!stockAndBarcode.test(productBarcode)) {
+            alert('Invalid Barcode. Please enter a valid number.');
+            return;
+        }
+
+        if (!stockAndBarcode.test(productWeight)) {
+            alert('Invalid Weight. Please enter a valid number.');
+            return;
+        }
+
         if (!productId || !productName || !productPrice || !productStock || !productWeight || !productBarcode) {
             alert('Please fill out all required fields: category, type, ID, name, price, stock, weight, barcode.');
             return;

@@ -86,7 +86,6 @@ async function fetchDataAndDisplay() {
                 }
 
 
-
                 let statusMessage = "None";
                 if (isAvailable) {
                     statusMessage = isSellingFast ? "Selling Fast" : "Available";

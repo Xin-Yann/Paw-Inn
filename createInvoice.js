@@ -180,8 +180,24 @@ async function createInvoicePDF(newestBooking) {
         color: rgb(0, 0, 0),
     });
 
+    page.drawText(`Redeemed Points: ${newestBooking.pointsRedeemed}`, {
+        x: 75,
+        y: height - 460,
+        size: 12,
+        font,
+        color: rgb(0, 0, 0),
+    });
+
+    page.drawText(`Earned Points: ${newestBooking.newPoints}`, {    
+        x: 75,
+        y: height - 490,
+        size: 12,
+        font,
+        color: rgb(0, 0, 0),
+    });
+
     page.drawText(`Subtotal: RM ${newestBooking.price}`, {
-        x: 430,
+        x: 420,
         y: height - 460,
         size: 12,
         font,
@@ -189,7 +205,7 @@ async function createInvoicePDF(newestBooking) {
     });
 
     page.drawText(`Service Tax (SST 6%): RM ${newestBooking.serviceTax}`, {
-        x: 355,
+        x: 345,
         y: height - 490,
         size: 12,
         font,
@@ -197,7 +213,7 @@ async function createInvoicePDF(newestBooking) {
     });
 
     page.drawText(`Sales Tax (10%): RM ${newestBooking.salesTax}`, {
-        x: 386,
+        x: 376,
         y: height - 520,
         size: 12,
         font,
@@ -205,7 +221,7 @@ async function createInvoicePDF(newestBooking) {
     });
 
     page.drawText(`Total Price: RM ${newestBooking.totalPrice}`, {
-        x: 406,
+        x: 397,
         y: height - 555,
         size: 14,
         font,
@@ -269,6 +285,8 @@ async function createInvoicePDF(newestBooking) {
         serviceTax: '10',
         salesTax: '10',
         totalPrice: '600',
+        pointsRedeemed: '60', 
+        newPoints: '100'
     };
 
     const pdfBase64 = await createInvoicePDF(newestBooking);

@@ -108,7 +108,13 @@ async function deleteProduct(productId, productType) {
 
 // Function to edit product page
 function editProduct(productId, productType) {
-    window.location.href = `/html/staff/staff-editproduct.html?category=fish&aquatics&id=${productId}&type=${encodeURIComponent(productType)}`;
+    const category = 'fish&aquatics';
+    const encodedCategory = encodeURIComponent(category);
+    const encodedType = encodeURIComponent(productType);
+    const url = `/html/staff/staff-editproduct.html?category=${encodedCategory}&id=${productId}&type=${encodedType}`;
+    
+    console.log('Redirect URL:', url); // Debugging: log the generated URL
+    window.location.href = url;
 }
 
 document.getElementById('food-type').addEventListener('change', fetchDataAndDisplay);

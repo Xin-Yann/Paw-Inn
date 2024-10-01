@@ -49,6 +49,7 @@ async function fetchDataAndDisplay() {
                 // Determine the overall availability status
                 let isAvailable = false;
                 let isSellingFast = false;
+                let totalAvailableRooms = 0;
 
                 // roomData.room_quantity.forEach(quantityMap => {
                 //     for (const quantity of Object.values(quantityMap)) {
@@ -70,6 +71,7 @@ async function fetchDataAndDisplay() {
                             console.log("Date:", date, "Quantity:", parsedQuantity);
                             if (!isNaN(parsedQuantity)) {
                                 if (parsedQuantity > 0) {
+                                    totalAvailableRooms += parsedQuantity; 
                                     isAvailable = true;
                                 }
                                 if (parsedQuantity > 0 && parsedQuantity < 5) {
@@ -85,10 +87,10 @@ async function fetchDataAndDisplay() {
                     console.warn("room_quantity is not an object:", roomData.room_quantity);
                 }
 
-
-
                 let statusMessage = "None";
-                if (isAvailable) {
+                if (totalAvailableRooms === 0) { // Check if total available rooms is zero
+                    statusMessage = "Fully Booked";
+                } else if (isAvailable) {
                     statusMessage = isSellingFast ? "Selling Fast" : "Available";
                 }
 

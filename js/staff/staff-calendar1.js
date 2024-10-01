@@ -136,23 +136,35 @@ async function initCalendar() {
         const roomCountsToday = events.reduce((acc, event) => {
             const eventStartDate = new Date(event.start).setHours(0, 0, 0, 0);
             const eventEndDate = new Date(event.end).setHours(0, 0, 0, 0);
-
+    
             if (today >= eventStartDate && today < eventEndDate) {
                 acc[event.title] = (acc[event.title] || 0) + 1;
             }
             return acc;
         }, {});
-
+    
+        const roomCountsDiv = document.getElementById('roomCountsToday');
         const roomCountsList = document.getElementById('roomCountsList');
-        roomCountsList.innerHTML = '';
-
-        for (const [roomName, count] of Object.entries(roomCountsToday)) {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${roomName}: ${count}`;
-            listItem.classList.add('pt-3');
-            roomCountsList.appendChild(listItem);
+        roomCountsList.innerHTML = ''; // Clear any existing list items
+    
+        // Check if no rooms are occupied
+        if (Object.keys(roomCountsToday).length === 0) {
+            // Change the entire div content to "No room occupied"
+            roomCountsDiv.innerHTML = '<h3>No room occupied</h3>';
+        } else {
+            // Reset the heading if rooms are occupied
+            roomCountsDiv.querySelector('h3').textContent = 'Total Room Occupied For Today:';
+    
+            // Display room counts
+            for (const [roomName, count] of Object.entries(roomCountsToday)) {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${roomName}: ${count}`;
+                listItem.classList.add('pt-3');
+                roomCountsList.appendChild(listItem);
+            }
         }
     }
+    
 
     function getRoomClass(roomName) {
         switch (roomName.toLowerCase()) {

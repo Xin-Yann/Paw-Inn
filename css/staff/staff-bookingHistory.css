@@ -80,3 +80,12 @@ th {
     color: #fff;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
 }
+
+.disabled {
+    background-color: #f0f0f0;
+    /* Light gray background for disabled rows */
+    color: #a0a0a0;
+    /* Gray text color for disabled rows */
+    pointer-events: none;
+    /* Prevent any mouse interactions */
+}

@@ -601,6 +601,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <strong>Room Name:</strong> ${room.roomName}<br>
             <strong>Quantity:</strong> ${room.quantity}
           </li>
+          <br>
         `;
       });
       modalContent += '</ul>';

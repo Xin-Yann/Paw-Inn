@@ -1,4 +1,4 @@
-import { getFirestore, collection, query, getDoc, getDocs, where, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, collection, query, getDoc, getDocs, where, orderBy, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 const db = getFirestore();
@@ -48,12 +48,12 @@ async function fetchAndDisplayBookStatus(userId) {
             if (pastDate.length > 0) {
                 console.log(`You have ${pastDate.length} past checked in date bookings.`);
                 const confirmDelete = window.confirm(
-                    `You have ${pastDate.length} past checked in date bookings. Do you want to delete them?`
+                    `You have ${pastDate.length} past checked in date bookings. The bookings will be deleted.`
                 );
 
                 if (confirmDelete) {
                     // Proceed with deletion if user confirms
-                    bookArray = bookArray.filter(book => new Date(book.checkin_date) >= now);
+                    bookArray = bookArray.filter(book => new Date(book.checkin_date) >= today);
 
                     // Update Firestore with filtered bookings
                     await updateDoc(bookDocRef, { bookings: bookArray });

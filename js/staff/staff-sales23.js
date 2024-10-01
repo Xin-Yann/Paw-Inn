@@ -18,7 +18,7 @@ auth.onAuthStateChanged(async (user) => {
                 return;
             }
             await displayCartItems();
-            await displayLimitedStockMessage(userId);
+            // await displayLimitedStockMessage(userId);
             console.log("User authenticated. User ID:", userId);
         } else {
             console.log("No user is authenticated.");
@@ -645,38 +645,59 @@ async function updateTotals(subtotal, taxRate) {
     document.getElementById('totalprice').textContent = `RM ${totalPrice.toFixed(2)}`;
 }
 
-async function displayLimitedStockMessage(userId) {
-    try {
-        const cartItems = await getCartData(userId);
+// async function displayLimitedStockMessage(userId) {
+//     try {
+//         const cartItems = await getCartData(userId);
 
-        if (!cartItems || cartItems.length === 0) {
-            console.log("Cart is empty or undefined.");
-            return;
-        }
+//         if (!cartItems || cartItems.length === 0) {
+//             console.log("Cart is empty or undefined.");
+//             return;
+//         }
 
-        const productStocks = await getProductStock();
+//         const productStocks = await getProductStock();
 
-        for (const cartItem of cartItems) {
-            const productStock = productStocks.find(stock => stock.product_name === cartItem.name);
-            const availableStock = productStock ? productStock.product_stock - productStock.userAddedQuantity : 0;
+//         for (const cartItem of cartItems) {
+//             const productStock = productStocks.find(stock => stock.product_name === cartItem.name);
+//             // Assuming product_stock represents the total stock available
+//             const availableStock = productStock ? productStock.product_stock : 0;
 
-            if (availableStock < cartItem.quantity) {
-                if (availableStock === 0) {
-                    await deleteItemFromFirestore(userId, cartItem.name);
-                    window.alert(`${cartItem.name} removed from cart due to ${availableStock} stock left.`);
-                    location.reload();
-                } else {
-                    await calculateTotalPrice(userId, cartItem.name, availableStock, availableStock);
-                    const message = `Stock for ${cartItem.name} for now only ${availableStock} are left.`;
-                    window.alert(message);
-                    location.reload();
-                }
-            }
-        }
-    } catch (error) {
-        console.error("Error displaying limited stock message:", error);
-    }
-}
+//             // Check if the requested quantity exceeds the available stock
+//             if (cartItem.quantity > availableStock) {
+//                 if (availableStock === 0) {
+//                     await deleteItemFromFirestore(userId, cartItem.name);
+//                     window.alert(`${cartItem.name} removed from cart due to ${availableStock} stock left.`);
+//                     location.reload();
+//                 } else {
+//                     await calculateTotalPrice(userId, cartItem.name, availableStock, availableStock);
+//                     const message = `Stock for ${cartItem.name} is now only ${availableStock} left.`;
+//                     window.alert(message);
+//                     location.reload();
+//                 }
+//             }
+//         }
+//     } catch (error) {
+//         console.error("Error displaying limited stock message:", error);
+//     }
+// }
+
+// async function deleteItemFromFirestore(userId, productName) {
+//     try {
+//         const cartRef = collection(db, 'carts');
+//         const userCartDocRef = doc(cartRef, userId);
+//         const cartSnapshot = await getDoc(userCartDocRef);
+//         if (cartSnapshot.exists()) {
+//             const cartData = cartSnapshot.data();
+//             const updatedCart = cartData.cart.filter(item => item.name !== productName);
+//             await setDoc(userCartDocRef, { cart: updatedCart });
+//             console.log(`${productName} removed from Firestore successfully!`);
+//             displayCartItems();
+//         } else {
+//             console.log(`User's cart document does not exist.`);
+//         }
+//     } catch (error) {
+//         console.error("Error deleting item from Firestore:", error);
+//     }
+// }
 
 async function incrementQuantity(event) {
     event.preventDefault();
@@ -789,16 +810,23 @@ async function verifyMemberId(memberId, contact) {
         const usersCollection = collection(db, 'users');
         let querySnapshot;
 
-        // Check if membershipId is provided and query by membershipId
-        if (memberId) {
+        // Check if membershipId is provided and is a valid length
+        if (memberId && typeof memberId === 'string' && memberId.length <= 1500) {
             const queryById = query(usersCollection, where('membershipId', '==', memberId));
             querySnapshot = await getDocs(queryById);
+        } else {
+            console.log('Invalid or No membershipId provided:', memberId);
         }
         
         // If no match by membershipId or membershipId not provided, query by contact
         if ((!querySnapshot || querySnapshot.empty) && contact) {
-            const queryByContact = query(usersCollection, where('contact', '==', contact));
-            querySnapshot = await getDocs(queryByContact);
+            // Check if contact is a valid string
+            if (typeof contact === 'string' && contact.length <= 1500) {
+                const queryByContact = query(usersCollection, where('contact', '==', contact));
+                querySnapshot = await getDocs(queryByContact);
+            } else {
+                console.log('Invalid or No contact provided:', contact);
+            }
         }
 
         // Check if a match was found
@@ -820,6 +848,7 @@ async function verifyMemberId(memberId, contact) {
         return { valid: false }; // In case of error
     }
 }
+
 
 document.getElementById('verify-form').addEventListener('click', async () => {
     const memberId = document.getElementById('member-id').value;
