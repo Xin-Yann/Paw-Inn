@@ -2,9 +2,7 @@ import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gsta
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
 
-// Initialize Firebase Storage
 const storage = getStorage();
-
 const db = getFirestore();
 const auth = getAuth();
 
@@ -157,7 +155,6 @@ async function initCalendar() {
             }
         }
     }
-
 
     function getRoomClass(roomName) {
         switch (roomName.toLowerCase()) {

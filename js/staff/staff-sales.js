@@ -25,7 +25,6 @@ auth.onAuthStateChanged(async (user) => {
                 return;
             }
             await displayCartItems();
-            // await displayLimitedStockMessage(userId);
             console.log("User authenticated. User ID:", userId);
         } else {
             console.log("No user is authenticated.");
@@ -121,7 +120,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-
 function createCategoryTabs() {
     const tabList = document.getElementById('tab-list');
     tabList.innerHTML = ''; 
@@ -164,7 +162,6 @@ function setActiveTab(selectedCategory) {
     });
 }
 
-
 function createButton(text, onClickHandler) {
     const button = document.createElement('button');
     button.textContent = text;
@@ -172,7 +169,6 @@ function createButton(text, onClickHandler) {
     button.classList.add('btn', 'btn-cart');
     return button;
 }
-
 
 function displayProducts(products, selectedCategory = null, selectedFoodType = null) {
     const productList = document.getElementById('product-container');
@@ -238,7 +234,6 @@ function displayProducts(products, selectedCategory = null, selectedFoodType = n
     });
 }
 
-
 async function addToCart(productId, productBarcode, productName, productPrice, productStock, productImage, type, category) {
     try {
 
@@ -296,7 +291,6 @@ async function addToCart(productId, productBarcode, productName, productPrice, p
         console.error("Error adding product to cart:", error);
     }
 }
-
 
 async function saveProductToFirestore(userId, product) {
     const userCartDocRef = doc(collection(db, 'carts'), userId);
@@ -391,18 +385,12 @@ async function displayCartItems() {
         const totalPriceCell = cartItemDiv.querySelector('.total-price-cell');
         calculateTotalPrice(item).then(itemTotalPrice => {
             totalPriceCell.textContent = `RM ${itemTotalPrice.toFixed(2)}`;
-
             subtotal += itemTotalPrice;
-
-            // Example tax rate: 7%
             const taxRate = 0.10;
-
-            // Update totals with or without discount
             updateTotals(subtotal, taxRate);
         });
     }
 
-    // Event listeners for cart interactions
     const quantityInputs = document.querySelectorAll('.quantity');
     quantityInputs.forEach(input => {
         input.addEventListener('change', updateCartItemQuantity);
@@ -423,6 +411,7 @@ async function displayCartItems() {
         button.addEventListener('click', deleteCartItem);
     });
 }
+
 async function calculateTotalPrice(item) {
     const price = parseFloat(item.price) || 0;
     const quantity = parseInt(item.quantity) || 0;
@@ -577,7 +566,6 @@ async function verifyMemberId(memberId, contact) {
         return { valid: false }; 
     }
 }
-
 
 document.getElementById('verify-form').addEventListener('click', async () => {
     const memberId = document.getElementById('member-id').value;

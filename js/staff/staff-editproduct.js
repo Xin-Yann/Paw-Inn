@@ -2,7 +2,6 @@ import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/fi
 
 const db = getFirestore();
 
-// Function to get query parameter by name
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -184,5 +183,4 @@ async function saveProductDetails() {
 
 document.getElementById('edit').addEventListener('click', saveProductDetails);
 document.getElementById('product_image').addEventListener('change', handleFileInputChange);
-
 document.addEventListener('DOMContentLoaded', fetchAndDisplayProductDetails);

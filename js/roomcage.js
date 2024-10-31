@@ -1,37 +1,9 @@
 import { getFirestore, collection, getDocs, query, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
-// Initialize Firestore
 const db = getFirestore();
-const auth = getAuth();
-
-function getCurrentUserId() {
-    const user = auth.currentUser;
-    return user ? user.uid : null;
-}
-
-auth.onAuthStateChanged(async (user) => {
-    try {
-        if (user) {
-            const userId = getCurrentUserId();
-            if (!userId) {
-                console.error("Invalid userId:", userId);
-                return;
-            }
-            console.log("User authenticated. User ID:", userId);
-        } else {
-            console.log("User is not authenticated.");
-        }
-    } catch (error) {
-        console.error("Error in authentication state change:", error);
-    }
-});
-
-
-// Function to fetch room data and display 
 async function fetchDataAndDisplay() {
     try {
-        const roomCategories = [{ category: 'dog', collectionName: 'dog rooms' }];
+        const roomCategories = [{ category: 'cage', collectionName: 'cage rooms' }];
 
         for (const { category, collectionName } of roomCategories) {
             const dogRoomsCollectionRef = collection(db, 'rooms', category, collectionName);
@@ -47,7 +19,6 @@ async function fetchDataAndDisplay() {
 
                 let isAvailable = false;
                 let isSellingFast = false;
-                let totalAvailableRooms = 0;
 
                 if (Array.isArray(roomData.room_quantity)) {
 
@@ -57,7 +28,6 @@ async function fetchDataAndDisplay() {
                             console.log("Date:", date, "Quantity:", parsedQuantity);
                             if (!isNaN(parsedQuantity)) {
                                 if (parsedQuantity > 0) {
-                                    totalAvailableRooms += parsedQuantity; 
                                     isAvailable = true;
                                 }
                                 if (parsedQuantity > 0 && parsedQuantity < 5) {
@@ -74,9 +44,7 @@ async function fetchDataAndDisplay() {
                 }
 
                 let statusMessage = "None";
-                if (totalAvailableRooms === 0) {
-                    statusMessage = "Fully Booked";
-                } else if (isAvailable) {
+                if (isAvailable) {
                     statusMessage = isSellingFast ? "Selling Fast" : "Available";
                 }
 
@@ -86,7 +54,7 @@ async function fetchDataAndDisplay() {
 
                 const roomHTML = `
                     <div class="rooms-container" room-id="${roomData.room_id}" room-name="${roomData.room_name}" room-category="${category}" room-price="${roomData.room_price}" room-image="${roomData.room_image}" room-description="${roomData.room_description}" room-size="${roomData.room_size}" room-status="${statusMessage}">
-                        <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer;">
+                        <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer; height:280px;">
                         <div class="card-body">
                             <h4 class="card-title pt-3">${roomData.room_name}</h4>
                             <p class="card-desc" style="height:25px">${roomData.room_description}</p>
@@ -101,8 +69,6 @@ async function fetchDataAndDisplay() {
             }
         }
 
-
-        // Add event listeners to images and cards
         document.querySelectorAll('.rooms-container').forEach(container => {
             container.addEventListener('click', () => {
                 const roomData = {
@@ -136,16 +102,9 @@ async function fetchDataAndDisplay() {
 
         });
 
-        // Add event listeners for the "Book Now" buttons
         document.querySelectorAll('.book-now').forEach(button => {
             button.addEventListener('click', async (event) => {
-                event.stopPropagation();
-                const userId = getCurrentUserId();
-                if (!userId) {
-                    window.alert(`Please login to make booking.`);
-                    window.location.href = "/html/login.html";
-                    return;
-                }
+                event.stopPropagation(); 
                 const roomId = button.getAttribute('room-id');
                 const container = button.closest('.rooms-container');
                 const roomData = {
@@ -162,7 +121,6 @@ async function fetchDataAndDisplay() {
                 if (roomData.quantity === "Fully Booked" || roomData.quantity == "None") {
                     window.alert(`No slots available for ${roomData.name}.`);
                 } else {
-                    // Store selected room data in sessionStorage
                     sessionStorage.setItem('selectedRoomName', roomData.name);
                     sessionStorage.setItem('selectedRoomCategory', roomData.category);
                     sessionStorage.setItem('selectedRoomPrice', roomData.price);
@@ -233,15 +191,7 @@ async function showModal(roomData) {
     bookNowButton.setAttribute('room-price', roomData.price);
     bookNowButton.setAttribute('room-status', roomData.quantity);
 
-
-    // Add event listener for redirecting to the booking page
     bookNowButton.addEventListener('click', () => {
-        const userId = getCurrentUserId();
-        if (!userId) {
-            window.alert(`Please login to make booking.`);
-            window.location.href = "/html/login.html";
-            return;
-        }
         if (roomData.quantity == "Fully Booked" || roomData.quantity == "None") {
             window.alert(`No slots available for ${roomData.name}.`);
         } else {
@@ -256,11 +206,10 @@ async function showModal(roomData) {
 
     modalBody.appendChild(bookNowButton);
 
-    // Show the modal
     const modal = new bootstrap.Modal(document.getElementById('room-details-modal'));
     modal.show();
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    fetchDataAndDisplay(); // Ensure this is called after DOM is fully loaded
+    fetchDataAndDisplay(); 
 });

@@ -1,8 +1,7 @@
-import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc,  } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
 const db = getFirestore();
 
-// Function to get query parameter by name
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -105,7 +104,6 @@ async function saveProductDetails() {
             roomQuantitybyMonth[index][date]= roomQuantity;
         
         });
-
        
         const imageFile = document.getElementById('room_image').files[0];
         let imageName;
@@ -135,7 +133,6 @@ async function saveProductDetails() {
         alert('Error saving product details: ' + error.message);
     }
 }
-
 
 function formattedDate(date) {
     return date.toISOString().split('T')[0];

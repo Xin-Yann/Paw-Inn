@@ -3,8 +3,6 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-aut
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDaPvOB_hQnvGhiWpF77JG1euFNgu5kC94",
   authDomain: "pet-hotel-9116c.firebaseapp.com",
@@ -15,7 +13,6 @@ const firebaseConfig = {
   measurementId: "G-68HVJYMQ53"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -38,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
         fetchUserDataFromFirestore(userId);
-        // await fetchUserPayments(userId);
         await initCalendar(userId);
         console.log("User authenticated. User ID:", userId);
       } else {
@@ -128,18 +124,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     return dayDiff;
   }
-
-  // function calculateTotalPrice(nights, roomPrice) {
-  //   return nights * roomPrice;
-  // }
-
-  // function calculateServiceTax(amount, taxRate = 6) {
-  //   return amount * (taxRate / 100);
-  // }
-
-  // function calculateSalesTax(amount, taxRate = 10) {
-  //   return amount * (taxRate / 100);
-  // }
 
   function calculateTotalCost(nights, roomPrice, serviceTaxRate = 6, salesTaxRate = 10) {
     const basePrice = nights * roomPrice;
@@ -267,11 +251,6 @@ document.addEventListener('DOMContentLoaded', function () {
     checkoutElem.value = defaultCheckoutDateFormatted;
 
     checkinElem.onchange = async function () {
-      // const selectedCheckedIn = new Date(checkinElem.value);
-      // checkoutElem.setAttribute("min", this.value);
-      // const checkoutMaxDate = new Date(selectedCheckedIn);
-      // checkoutMaxDate.setFullYear(checkoutMaxDate.getFullYear() + 1);
-      // const checkoutMaxFormatted = `${checkoutMaxDate.getFullYear()}-${(checkoutMaxDate.getMonth() + 1).toString().padStart(2, '0')}-${checkoutMaxDate.getDate().toString().padStart(2, '0')}`;
       checkoutElem.setAttribute("max", selectedCheckout);
       await updateTotalPrice();
     }
@@ -527,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       initialDate: new Date().toISOString().split('T')[0],
-      events: [], // No events to show
+      events: [], 
       validRange: {
         start: '2024-01-01',
         end: '2025-12-31'
@@ -595,7 +574,6 @@ document.addEventListener('DOMContentLoaded', function () {
       modalTitle.textContent = `Room Details`;
       modalBody.innerHTML = modalContent;
 
-      // Show the modal
       const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
       eventModal.show();
     }

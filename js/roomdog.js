@@ -1,7 +1,6 @@
 import { getFirestore, collection, getDocs, query, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
-// Initialize Firestore
 const db = getFirestore();
 const auth = getAuth();
 
@@ -27,13 +26,11 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-// Function to fetch data and display it
 async function fetchDataAndDisplay() {
     try {
-        const roomCategories = [{ category: 'rabbit', collectionName: 'rabbit rooms' }];
+        const roomCategories = [{ category: 'dog', collectionName: 'dog rooms' }];
 
         for (const { category, collectionName } of roomCategories) {
-            // Create a reference to the collection
             const dogRoomsCollectionRef = collection(db, 'rooms', category, collectionName);
 
             const dogRoomsQuerySnapshot = await getDocs(query(dogRoomsCollectionRef));
@@ -45,17 +42,19 @@ async function fetchDataAndDisplay() {
                 const roomData = doc.data();
                 console.log("Fetching image for room:", roomData.room_name, "Image path:", roomData.room_image);
 
-                // Determine the overall availability status
                 let isAvailable = false;
                 let isSellingFast = false;
+                let totalAvailableRooms = 0;
+
                 if (Array.isArray(roomData.room_quantity)) {
 
                     roomData.room_quantity.forEach((quantityObj, index) => {
                         Object.entries(quantityObj).forEach(([date, quantity]) => {
                             const parsedQuantity = parseInt(quantity, 10);
-                            console.log("Date:", date, "Quantity:", parsedQuantity);
+                            // console.log("Date:", date, "Quantity:", parsedQuantity);
                             if (!isNaN(parsedQuantity)) {
                                 if (parsedQuantity > 0) {
+                                    totalAvailableRooms += parsedQuantity; 
                                     isAvailable = true;
                                 }
                                 if (parsedQuantity > 0 && parsedQuantity < 5) {
@@ -72,7 +71,9 @@ async function fetchDataAndDisplay() {
                 }
 
                 let statusMessage = "None";
-                if (isAvailable) {
+                if (totalAvailableRooms === 0) {
+                    statusMessage = "Fully Booked";
+                } else if (isAvailable) {
                     statusMessage = isSellingFast ? "Selling Fast" : "Available";
                 }
 
@@ -81,24 +82,22 @@ async function fetchDataAndDisplay() {
                 }
 
                 const roomHTML = `
-            <div class="rooms-container" room-id="${roomData.room_id}" room-name="${roomData.room_name}" room-category="${category}" room-price="${roomData.room_price}" room-image="${roomData.room_image}" room-description="${roomData.room_description}" room-size="${roomData.room_size}" room-status="${statusMessage}">
-                <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer; height:280px">
-                <div class="card-body">
-                    <h4 class="card-title pt-3">${roomData.room_name}</h4>
-                    <p class="card-desc" style="height:25px">${roomData.room_description}</p>
-                    <p class="pt-3"><b>Room Size:</b> ${roomData.room_size} sqft</p>
-                    <p >Available Status: ${statusMessage}</p>
-                    <h5 class="product-price py-3">RM${roomData.room_price}</h5>
-                    <button class="btn btn-primary book-now" room-id="${roomData.room_id}" id="book-now">Book Now</button>
-                </div>
-            </div>
-        `;
+                    <div class="rooms-container" room-id="${roomData.room_id}" room-name="${roomData.room_name}" room-category="${category}" room-price="${roomData.room_price}" room-image="${roomData.room_image}" room-description="${roomData.room_description}" room-size="${roomData.room_size}" room-status="${statusMessage}">
+                        <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer;">
+                        <div class="card-body">
+                            <h4 class="card-title pt-3">${roomData.room_name}</h4>
+                            <p class="card-desc" style="height:25px">${roomData.room_description}</p>
+                            <p class="pt-3"><b>Room Size:</b> ${roomData.room_size} sqft</p>
+                            <p >Available Status: ${statusMessage}</p>
+                            <h5 class="product-price py-3">RM${roomData.room_price}</h5>
+                            <button class="btn btn-primary book-now" room-id="${roomData.room_id}" id="book-now">Book Now</button>
+                        </div>
+                    </div>
+                `;
                 roomContainer.innerHTML += roomHTML;
             }
         }
 
-
-        // Add event listeners to images and cards
         document.querySelectorAll('.rooms-container').forEach(container => {
             container.addEventListener('click', () => {
                 const roomData = {
@@ -132,10 +131,15 @@ async function fetchDataAndDisplay() {
 
         });
 
-        // Add event listeners for the "Book Now" buttons
         document.querySelectorAll('.book-now').forEach(button => {
             button.addEventListener('click', async (event) => {
-                event.stopPropagation(); // Prevent triggering the container click event
+                event.stopPropagation();
+                const userId = getCurrentUserId();
+                if (!userId) {
+                    window.alert(`Please login to make booking.`);
+                    window.location.href = "/html/login.html";
+                    return;
+                }
                 const roomId = button.getAttribute('room-id');
                 const container = button.closest('.rooms-container');
                 const roomData = {
@@ -152,7 +156,7 @@ async function fetchDataAndDisplay() {
                 if (roomData.quantity === "Fully Booked" || roomData.quantity == "None") {
                     window.alert(`No slots available for ${roomData.name}.`);
                 } else {
-                    // Store selected room data in sessionStorage
+
                     sessionStorage.setItem('selectedRoomName', roomData.name);
                     sessionStorage.setItem('selectedRoomCategory', roomData.category);
                     sessionStorage.setItem('selectedRoomPrice', roomData.price);
@@ -223,12 +227,10 @@ async function showModal(roomData) {
     bookNowButton.setAttribute('room-price', roomData.price);
     bookNowButton.setAttribute('room-status', roomData.quantity);
 
-
-    // Add event listener for redirecting to the booking page
     bookNowButton.addEventListener('click', () => {
-         const userId = getCurrentUserId();
+        const userId = getCurrentUserId();
         if (!userId) {
-            window.alert(`Please login to add products to your cart.`);
+            window.alert(`Please login to make booking.`);
             window.location.href = "/html/login.html";
             return;
         }
@@ -246,11 +248,10 @@ async function showModal(roomData) {
 
     modalBody.appendChild(bookNowButton);
 
-    // Show the modal
     const modal = new bootstrap.Modal(document.getElementById('room-details-modal'));
     modal.show();
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    fetchDataAndDisplay(); // Ensure this is called after DOM is fully loaded
+    fetchDataAndDisplay(); 
 });

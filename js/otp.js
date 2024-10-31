@@ -1,9 +1,5 @@
 import { getFirestore, doc, getDoc, setDoc, updateDoc, query, collection, getDocs, where } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
-
-// Initialize Firebase Storage
-const storage = getStorage();
 
 const db = getFirestore();
 const auth = getAuth();
@@ -13,7 +9,7 @@ const elements = stripe.elements();
 document.addEventListener("DOMContentLoaded", () => {
 
   (function () {
-    emailjs.init("9R5K8FyRub386RIu8"); // Replace with your EmailJS user ID
+    emailjs.init("9R5K8FyRub386RIu8");
   })();
 
 
@@ -47,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
         const bookings = userData.bookings || [];
-        // const newestBooking = bookings[bookings.length - 1];
 
         let booking;
         if (book_id) {
@@ -155,7 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
   async function generatePaymentID() {
     const paymentCounterDocRef = doc(db, 'metadata', 'paymentCounter');
     try {
@@ -165,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
         newPaymentID = paymentCounterDoc.data().lastPaymentID + 1;
       }
       await setDoc(paymentCounterDocRef, { lastPaymentID: newPaymentID });
-      return `P${newPaymentID.toString().padStart(2, '0')}`; // Example format: P01
+      return `P${newPaymentID.toString().padStart(2, '0')}`;
     } catch (e) {
       console.error('Failed to generate payment ID: ', e);
       throw new Error('Failed to generate payment ID');
@@ -200,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const newOTP = generateOTP();
-      const otpExpirationTime = currentTime + (5 * 60 * 1000); 
+      const otpExpirationTime = currentTime + (5 * 60 * 1000);
 
       sessionStorage.setItem("generatedOTP", newOTP);
       sessionStorage.setItem("otpGenerationTime", currentTime.toString());
@@ -211,10 +205,13 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.setItem('resendAttempts', resendAttempts.toString());
 
       const userEmail = sessionStorage.getItem('userEmail');
+      const userName = sessionStorage.getItem('userName');
       if (userEmail) {
         emailjs.send('service_7e6jx2j', 'template_l3gma7d', {
+          from_name: userName,
           to_email: userEmail,
           otp: newOTP,
+          expiration_time: new Date(otpExpirationTime).toLocaleString()
         }).then((response) => {
           console.log("OTP sent successfully", response.status, response.text);
           alert('A new OTP has been sent to your email.');
@@ -249,8 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, cooldownPeriod);
   });
 
-
-
   function cancelPayment() {
     alert('Your payment has been canceled due to exceeding OTP resend limits.');
     sessionStorage.removeItem('generatedOTP');
@@ -261,7 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.location.href = '../html/payment.html';
   }
-
 
   async function verifyOTP() {
     const enteredOTP = document.getElementById("otp").value.trim();
@@ -277,18 +271,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (currentTime > otpExpirationTime) {
       window.alert("OTP has expired. Please request a new OTP.");
-      throw new Error("OTP has expired. Please request a new OTP."); 
+      throw new Error("OTP has expired. Please request a new OTP.");
     }
 
     if (enteredOTP.length === 0) {
       window.alert("Please enter an OTP.");
-      throw new Error("Please enter an OTP."); 
+      throw new Error("Please enter an OTP.");
     } else if (enteredOTP.length !== 6) {
       window.alert("Input must be exactly 6 characters.");
-      throw new Error("Input must be exactly 6 characters."); 
+      throw new Error("Input must be exactly 6 characters.");
     } else if (enteredOTP !== generatedOTP) {
       window.alert("Invalid OTP. Please try again.");
-      throw new Error("Invalid OTP. Please try again."); 
+      throw new Error("Invalid OTP. Please try again.");
     }
 
   }
@@ -425,7 +419,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (e) {
       console.error('Error confirming payment:', e);
-      // alert('Error confirming payment. Please try again.');
     }
 
   });
@@ -485,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
           await updateDoc(userDocRef, { points: updatedPoints });
           window.alert(`Points updated successfully. New points: ${updatedPoints}`);
           console.log(`Points updated successfully. New points: ${updatedPoints}`);
-          fetchAndDisplayPersonalDetails(userEmail); // Refresh the points display
+          fetchAndDisplayPersonalDetails(userEmail);
           return updatedPoints;
         } else {
           console.log('User document does not exist.');
@@ -502,7 +495,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const date = new Date().toISOString();
 
-      // Generate invoice and get the URL
       const invoiceResponse = await fetch('/generate-invoice', {
         method: 'POST',
         headers: {
@@ -513,7 +505,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!invoiceResponse.ok) throw new Error('Failed to generate invoice');
 
-      const { invoiceUrl } = await invoiceResponse.json(); // Ensure this matches the key returned
+      const { invoiceUrl } = await invoiceResponse.json();
       console.log('Generated Invoice URL:', invoiceUrl);
 
       const emailResponse = await emailjs.send('service_7e6jx2j', 'template_winshbo', {

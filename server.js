@@ -43,8 +43,7 @@ app.post('/generate-invoice', async (req, res) => {
     const { width, height } = page.getSize();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-    // Generate PDF content
-    page.drawText('INVOICE', {
+    page.drawText('RECEIPT', {
       x: 270,
       y: height - 50,
       size: 20,

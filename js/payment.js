@@ -1,8 +1,7 @@
-import { getFirestore, doc, getDoc, setDoc, updateDoc, query, collection, getDocs, where } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, query, collection, getDocs, where } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
 
-// Initialize Firebase Storage
 const storage = getStorage();
 
 const db = getFirestore();
@@ -13,7 +12,7 @@ const elements = stripe.elements();
 document.addEventListener("DOMContentLoaded", () => {
 
   (function () {
-    emailjs.init("9R5K8FyRub386RIu8"); // Replace with your EmailJS user ID
+    emailjs.init("9R5K8FyRub386RIu8"); 
   })();
 
 
@@ -190,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let resendAttempts = sessionStorage.getItem('resendAttempts');
       if (!resendAttempts) {
-        sessionStorage.setItem('resendAttempts', '1'); // First attempt
+        sessionStorage.setItem('resendAttempts', '1'); 
       }
 
       const userId = getCurrentUserId();
@@ -219,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.setItem("otpExpirationTime", otpExpirationTime.toString());
             sessionStorage.setItem("bookingId", bookingId); 
             sessionStorage.setItem("redeemedPoints", redeemedPoints.toString());
+            sessionStorage.setItem("userName", userName);
 
             const templateParams = {
               from_name: userName,
@@ -232,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
               const response = await emailjs.send('service_7e6jx2j', 'template_l3gma7d', templateParams);
               window.alert("Success! OTP sent.");
-              // updateButtonVisibility();
               window.console.log('Success:', response);
               window.location.href = `../html/otp.html`;
             } catch (error) {
@@ -250,227 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Error fetching user data:", error);
     }
   }
-
-  // document.getElementById("confirm-payment").disabled = true;
-
-  // async function SendMailOtp() {
-  //   try {
-  //     const isCardValid = await validateCardDetails();
-  //     if (!isCardValid) {
-  //       return;
-  //     }
-
-  //     const userId = getCurrentUserId();
-  //     const usersCollectionRef = collection(db, 'users');
-  //     const userQuery = query(usersCollectionRef, where('userId', '==', userId));
-  //     const querySnapshot = await getDocs(userQuery);
-
-  //     if (!querySnapshot.empty) {
-  //       for (const doc of querySnapshot.docs) {
-  //         const userData = doc.data();
-  //         const userEmail = userData.email;
-  //         const userName = userData.name;
-
-  //         console.log('User Email:', userEmail);
-
-  //         if (userEmail && userEmail.trim() !== '') {
-  //           const otp = generateOTP();
-  //           const otpGenerationTime = Date.now(); // Current time in milliseconds
-  //           const otpExpirationTime = otpGenerationTime + 10 * 60 * 1000; // 10 minutes from now
-  //           sessionStorage.setItem("generatedOTP", otp.trim());
-  //           sessionStorage.setItem("otpGenerationTime", otpGenerationTime.toString());
-  //           sessionStorage.setItem("otpExpirationTime", otpExpirationTime.toString());
-
-  //           const templateParams = {
-  //             from_name: userName,
-  //             to_email: userEmail,
-  //             otp: otp,
-  //             expiration_time: new Date(otpExpirationTime).toLocaleString() // Formatted expiration time
-  //           };
-
-  //           console.log('Sending email with params:', templateParams);
-
-  //           try {
-  //             const response = await emailjs.send('service_7e6jx2j', 'template_l3gma7d', templateParams);
-  //             window.alert("Success! OTP sent.");
-  //             updateButtonVisibility();
-  //             window.console.log('Success:', response);
-  //           } catch (error) {
-  //             alert("Failed to send OTP.");
-  //             console.error('Error:', error);
-  //           }
-  //         } else {
-  //           console.log('Invalid email address:', userEmail);
-  //         }
-  //       }
-  //     } else {
-  //       console.log("No such user found!");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error fetching user data:", error);
-  //   }
-  // }
-
-  // document.getElementById("send-otp").addEventListener("click", function (e) {
-  //   e.preventDefault();
-  //   SendMailOtp();
-  // });
-
-
-
-
-  // document.addEventListener("DOMContentLoaded", function () {
-  //   // document.getElementById("send-otp").addEventListener("click", function (e) {
-  //   //   e.preventDefault();
-  //   //   SendMailOtp();
-  //   // });
-
-  //   // document.getElementById("verify-otp").addEventListener("click", function (e) {
-  //   //   e.preventDefault();
-  //   //   verifyOTP();
-  //   // });
-  // });
-
-
-
-
-  // Handle form submission for payment
-  // const form = document.getElementById('payment-form');
-  // form.addEventListener('submit', async (event) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     const userId = getCurrentUserId();
-  //     if (!userId) {
-  //       console.error("Invalid userId:", userId);
-  //       return;
-  //     }
-
-  //     const userDocRef = doc(db, 'book', userId);
-  //     const docSnap = await getDoc(userDocRef);
-
-  //     if (docSnap.exists()) {
-  //       const userData = docSnap.data();
-  //       const bookingsArray = userData.bookings || [];
-  //       const newestBooking = bookingsArray[bookingsArray.length - 1];
-
-  //       if (!newestBooking) {
-  //         console.error("No bookings found for user ID:", userId);
-  //         return;
-  //       }
-
-  //       const paymentId = await generatePaymentID();
-
-  //       const response = await fetch('/create-payment-intent', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ amount: newestBooking.price, currency: 'myr' }),
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch client secret from server');
-  //       }
-
-  //       const { clientSecret } = await response.json();
-
-  //       const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-  //         payment_method: {
-  //           card: cardNumberElement,
-  //           billing_details: {
-  //             name: document.getElementById('cardHolder').value,
-  //           },
-  //         }
-  //       });
-
-  //       if (error) {
-  //         console.error('Error confirming payment:', error);
-  //         alert('Error confirming payment: ' + error.message);
-  //       } else {
-  //         console.log('Newest booking:', newestBooking);
-  //         console.log('Category:', newestBooking.category);
-
-  //         if (paymentIntent.status === 'succeeded') {
-  //           const remainingBookings = bookingsArray.slice(0, -1);
-
-  //           await setDoc(userDocRef, { bookings: remainingBookings }, { merge: true });
-
-  //           const paymentDocRef = doc(db, 'payments', userId);
-
-  //           try {
-  //             const docSnap = await getDoc(paymentDocRef);
-
-  //             let paymentsArray = [];
-
-  //             if (docSnap.exists()) {
-  //               const paymentData = docSnap.data();
-  //               paymentsArray = paymentData.payments || [];
-  //             } else {
-  //               console.log("Creating new payments document for the user");
-  //             }
-  //             const totalPrice = newestBooking.totalPrice;
-
-  //             paymentsArray.push({
-  //               paymentId: paymentId,
-  //               userId: userId,
-  //               amount: newestBooking.price,
-  //               payment_date: new Date().toISOString(),
-  //               book_id: newestBooking.book_id,
-  //               book_date: newestBooking.book_date,
-  //               room_name: newestBooking.room_name,
-  //               checkin_date: newestBooking.checkin_date,
-  //               checkout_date: newestBooking.checkout_date,
-  //               owner_name: newestBooking.owner_name,
-  //               pet_name: newestBooking.pet_name,
-  //               email: newestBooking.email,
-  //               contact: newestBooking.contact,
-  //               category: newestBooking.category,
-  //               food_category: newestBooking.food_category,
-  //               vaccination_image: newestBooking.vaccination_image,
-  //               nights: newestBooking.nights,
-  //               serviceTax: newestBooking.serviceTax,
-  //               salesTax: newestBooking.salesTax,
-  //               price: newestBooking.price,
-  //               subtotal: newestBooking.subtotal,
-  //               totalPrice: newestBooking.totalPrice,
-  //               status: 'Paid',
-  //             });
-  //             await setDoc(paymentDocRef, { payments: paymentsArray }, { merge: true });
-
-  //             // Send email notification
-  //             await sendEmailNotificationOnSuccess(newestBooking);
-
-  //             // Calculate and update member points
-  //             const points = await calculatePoints(totalPrice);
-  //             await updatePoints(points);
-
-  //             // Update room quantity
-  //             const deductionResult = await updateRoomQuantity(newestBooking.category, newestBooking.room_name, newestBooking.checkin_date, newestBooking.checkout_date);
-  //             console.log(deductionResult);
-
-  //             console.log('Payment details successfully saved.');
-
-  //           } catch (error) {
-  //             console.error('Error saving payment details:', error);
-  //             throw new Error('Failed to save payment details');
-  //           }
-
-  //           alert('Payment confirmed for the latest booking.');
-  //           window.location.href = "../html/bookingHistory.html";
-  //         } else {
-  //           console.error("No bookings found for user ID:", userId);
-  //         }
-
-  //       }
-  //     } else {
-  //       console.error("No bookings found for user ID:", userId);
-  //     }
-  //   } catch (e) {
-  //     console.error('Error confirming payment:', e);
-  //     alert('Error confirming payment. Please try again.');
-  //   }
-  // });
 
   async function fetchAndDisplayPersonalDetails(email) {
     try {
@@ -498,46 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // async function calculatePoints(totalPrice) {
-  //   const pointsPerRM = 1;
-  //   const wholeRM = Math.floor(totalPrice);
-  //   const points = wholeRM * pointsPerRM;
-  //   return points;
-  // }
-
-  // async function updatePoints(points) {
-  //   try {
-  //     const user = auth.currentUser;
-  //     if (!user) {
-  //       console.error("No user is currently logged in.");
-  //       return;
-  //     }
-  //     const userEmail = user.email;
-  //     const usersCollection = collection(db, 'users');
-  //     const q = query(usersCollection, where("email", "==", userEmail));
-  //     const querySnapshot = await getDocs(q);
-  //     if (!querySnapshot.empty) {
-  //       const userDocRef = querySnapshot.docs[0].ref;
-  //       const userDocSnap = await getDoc(userDocRef);
-  //       if (userDocSnap.exists()) {
-  //         const userData = userDocSnap.data();
-  //         const existingPoints = Number(userData.points) || 0;
-  //         const updatedPoints = existingPoints + Number(points);
-  //         await updateDoc(userDocRef, { points: updatedPoints });
-  //         window.alert(`Points updated successfully. New points: ${updatedPoints}`);
-  //         console.log(`Points updated successfully. New points: ${updatedPoints}`);
-  //         fetchAndDisplayPersonalDetails(userEmail); // Refresh the points display
-  //       } else {
-  //         console.log('User document does not exist.');
-  //       }
-  //     } else {
-  //       console.log('No user document found with the specified email.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating points:', error);
-  //   }
-  // }
-
   function printAmount(elementId, message) {
     document.getElementById(elementId).textContent = message;
   }
@@ -554,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
       printAmount("point_amount", `-RM${redeemedDiscount.toFixed(2)}`);
       const totalPriceText = document.getElementById('totalprice').textContent;
       const totalPrice = parseFloat(totalPriceText.replace(/[^0-9.]/g, "").trim());
-      // const pointsToDeduct = redeemedDiscount * 1000;
       const updatedTotalPrice = totalPrice - redeemedDiscount;
       printAmount("totalprice", `${updatedTotalPrice.toFixed(2)}`);
       console.log(`Total price: ${totalPrice}`);
@@ -583,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const updatedPoints = Math.max(0, currentPoints - pointsToDeduct);
         await updateDoc(userRef, { points: updatedPoints });
         console.log(`User points updated successfully. New points: ${updatedPoints}`);
-        fetchAndDisplayPersonalDetails(email); // Refresh the points display
+        fetchAndDisplayPersonalDetails(email);
       } else {
         console.error('User document does not exist for the given email.');
       }
@@ -593,8 +330,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.getElementById('redeem').addEventListener('click', (event) => {
-    event.preventDefault(); // Prevents the form submission
-    redeemPoints(); // Call the redeemPoints function
+    event.preventDefault(); 
+    redeemPoints(); 
   });
 
 

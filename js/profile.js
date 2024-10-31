@@ -1,5 +1,5 @@
 import { getFirestore, collection, getDocs, getDoc, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -135,11 +135,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    function generateMemberBarcode(membershipId) {
-        JsBarcode("#barcode", membershipId, {
-            format: "CODE128",
-            displayValue: true,
-            fontSize: 20
-        });
-    }
+    // function generateMemberBarcode(membershipId) {
+    //     JsBarcode("#barcode", membershipId, {
+    //         format: "CODE128",
+    //         displayValue: true,
+    //         fontSize: 20
+    //     });
+    // }
 });

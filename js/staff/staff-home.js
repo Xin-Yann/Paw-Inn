@@ -1,4 +1,4 @@
-import { getFirestore, collection, getDocs, getDoc, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 const db = getFirestore();
@@ -9,7 +9,6 @@ function getCurrentUserId() {
     return user ? user.uid : null;
 }
 
-// Function to fetch and display personal details
 async function fetchAndDisplayPersonalDetails(email) {
     try {
         console.log(`Fetching details for email: ${email}`);
@@ -22,10 +21,27 @@ async function fetchAndDisplayPersonalDetails(email) {
                 const staffData = doc.data();
                 console.log('User data fetched:', staffData);
 
-                document.getElementById('name').textContent = staffData.name || '';
-                document.getElementById('email').textContent = staffData.email || '';
-                document.getElementById('staff-id').textContent = staffData.staffId || '';
+                const nameElement = document.getElementById('Name');
+                const emailElement = document.getElementById('Email');
+                const staffIdElement = document.getElementById('staff-id');
 
+                if (nameElement) {
+                    nameElement.textContent = staffData.name || '';
+                } else {
+                    console.error("Element with ID 'name' not found");
+                }
+
+                if (emailElement) {
+                    emailElement.textContent = staffData.email || '';
+                } else {
+                    console.error("Element with ID 'email' not found");
+                }
+
+                if (staffIdElement) {
+                    staffIdElement.textContent = staffData.staffId || '';
+                } else {
+                    console.error("Element with ID 'staff-id' not found");
+                }
             });
         } else {
             console.log('User details document does not exist.');
@@ -44,7 +60,6 @@ onAuthStateChanged(auth, (user) => {
         } else {
             console.log('No staff email found in session storage.');
         }
-        // updateCartItemCount(userId);
 
     } else {
         console.log('No user is authenticated. Redirecting to login page.');

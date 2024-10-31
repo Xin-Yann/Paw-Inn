@@ -109,7 +109,6 @@ document.getElementById("add").addEventListener("click", async () => {
     }
 });
 
-// Add an event listener to the room category select element
 document.getElementById("room_category").addEventListener("change", function () {
     updateOptions();
 });
@@ -152,7 +151,7 @@ function formattedDate(date) {
 
 function generateDate(startDate, endDate) {
     const dateArray = [];
-    let currentDate = new Date(startDate); // Start from startDate;
+    let currentDate = new Date(startDate); 
     while (currentDate <= endDate) {
         dateArray.push(formattedDate(currentDate));
         currentDate.setDate(currentDate.getDate() + 1);

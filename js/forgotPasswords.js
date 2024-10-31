@@ -1,7 +1,6 @@
 import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-// Initialize Firebase
 const auth = getAuth();
 const db = getFirestore();
 

@@ -1,7 +1,6 @@
 import { getFirestore, collection, query, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
 
-// Initialize Firebase Storage
 const storage = getStorage();
 const db = getFirestore();
 
@@ -284,31 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error checking in booking:', error);
         }
     }
-
-    // async function autoCheckoutBooking(docSnapshot, bookingId) {
-    //     try {
-    //         if (!docSnapshot.exists()) {
-    //             throw new Error("Document does not exist");
-    //         }
-
-    //         const paymentRef = docSnapshot.ref;
-    //         const payments = docSnapshot.data().payments; // Access the payments array from the document data
-
-    //         const updatedPayments = payments.map(payment => {
-    //             if (payment.book_id === bookingId) {
-    //                 return { ...payment, status: 'Checked-Out' };
-    //             }
-    //             return payment;
-    //         });
-
-    //         await updateDoc(paymentRef, { payments: updatedPayments });
-    //         window.alert(`Booking ${bookingId} automatically checked out.`);
-    //         location.reload();
-    //     } catch (error) {
-    //         console.error('Error auto-checking out booking:', error);
-    //     }
-    // }
-
 
     document.getElementById('status').addEventListener('change', () => {
         fetchAndDisplayBookings();

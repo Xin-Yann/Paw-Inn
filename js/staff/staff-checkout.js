@@ -8,7 +8,6 @@ const auth = getAuth();
     emailjs.init("w5NmY3KN7iiOu69jP");
 })();
 
-// document.addEventListener('DOMContentLoaded', () => {
 function getCurrentUserId() {
     const user = auth.currentUser;
     return user ? user.uid : null;
@@ -31,70 +30,6 @@ auth.onAuthStateChanged(async (user) => {
         console.error("Error in authentication state change:", error);
     }
 });
-
-// async function getProductStock() {
-//     try {
-//         const foodType = document.getElementById('food-type').value;
-
-//         const activeCategoryElement = document.querySelector('#food-category .nav-link.active');
-//         const foodCategory = activeCategoryElement ? activeCategoryElement.getAttribute('value') : null;
-
-//         console.log('Food Category:', foodCategory);
-//         console.log('Food Type:', foodType);
-
-//         if (!foodCategory || !foodType) {
-//             const categories = {
-//                 cat: ['dry food', 'wet food', 'toys', 'essentials', 'treats'],
-//                 dog: ['dry food', 'wet food', 'toys', 'essentials', 'treats'],
-//                 birds: ['dry food', 'toys', 'essentials', 'treats'],
-//                 'fish&aquatics': ['dry food', 'essentials'],
-//                 'hamster&rabbits': ['dry food', 'toys', 'essentials', 'treats']
-//             };
-
-//             const productStocks = [];
-
-//             for (const [category, subcategories] of Object.entries(categories)) {
-//                 for (const subcategory of subcategories) {
-//                     const collectionRef = collection(db, 'product', category, subcategory);
-//                     const snapshot = await getDocs(collectionRef);
-
-//                     snapshot.forEach(doc => {
-//                         const productData = doc.data();
-//                         const productId = productData.product_id;
-//                         const productImage = productData.product_image;
-//                         const productBarcode = productData.product_barcode;
-//                         const productName = productData.product_name;
-//                         const productStock = productData.product_stock || 0;
-//                         const productPrice = productData.product_price || 0;
-//                         const type = subcategory;
-//                         productStocks.push({ productId, productBarcode, productName, productStock, productImage, productPrice, category, type });
-//                     });
-//                 }
-//             }
-
-//             return productStocks;
-
-//         } else {
-//             const categoryCollectionRef = collection(db, 'product', foodCategory, foodType);
-//             const querySnapshot = await getDocs(categoryCollectionRef);
-
-//             if (querySnapshot.empty) {
-//                 console.log('No documents found.');
-//                 return []; 
-//             }
-
-//             let documents = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-//             documents.sort((a, b) => naturalSort(a.product_id, b.product_id));
-
-//             console.log('Fetched Documents:', documents); 
-//             return documents;
-//         }
-
-//     } catch (error) {
-//         console.error('Error fetching documents: ', error);
-//         return []; 
-//     }
-// }
 
 async function getCartData(user) {
     try {
@@ -171,27 +106,6 @@ async function displayCartItems() {
             updateTotals(subtotal, salestax);
         });
     }
-
-    // // Event listeners for cart interactions
-    // const quantityInputs = document.querySelectorAll('.quantity');
-    // quantityInputs.forEach(input => {
-    //     input.addEventListener('change', updateCartItemQuantity);
-    // });
-
-    // const increaseButtons = document.querySelectorAll('.increase');
-    // increaseButtons.forEach(button => {
-    //     button.addEventListener('click', incrementQuantity);
-    // });
-
-    // const decreaseButtons = document.querySelectorAll('.decrease');
-    // decreaseButtons.forEach(button => {
-    //     button.addEventListener('click', decrementQuantity);
-    // });
-
-    // const deleteButtons = document.querySelectorAll('.delete');
-    // deleteButtons.forEach(button => {
-    //     button.addEventListener('click', deleteCartItem);
-    // });
 }
 
 async function calculateTotalPrice(item) {
@@ -200,17 +114,12 @@ async function calculateTotalPrice(item) {
     return price * quantity;
 }
 
-// // Function to calculate sales tax
-// function calculateSalesTax(subtotal, salestax) {
-//     return subtotal * salestax;
-// }
-
-let isStaff = false; 
+let isStaff = false;
 const discountRate = 0.10;
 
 function applyDiscount() {
-    isStaff = true; 
-    displayCartItems(); 
+    isStaff = true;
+    displayCartItems();
 
 }
 
@@ -246,75 +155,6 @@ async function updateTotals(subtotal, salestaxRate) {
     document.getElementById('totalprice').textContent = `RM ${totalPrice.toFixed(2)}`;
 }
 
-// async function incrementQuantity(event) {
-//     event.preventDefault();
-
-//     const productName = this.getAttribute('data-product-name');
-//     const input = this.parentElement.querySelector('.quantity-input');
-//     let currentQuantity = parseInt(input.value, 10);
-//     let newQuantity = currentQuantity + 1;
-
-//     const productStocks = await getProductStock();
-//     const productStock = productStocks.find(stock => stock.product_name === productName);
-
-//     if (!productStock) {
-//         console.error(`Product stock not found for ${productName}.`);
-//         return;
-//     }
-
-//     const availableStock = productStock.product_stock;
-//     if (newQuantity > availableStock) {
-//         window.alert(`Cannot increase quantity. Only ${availableStock} left in stock.`);
-//         return;
-//     }
-
-//     input.value = newQuantity;
-
-//     // Update cart in Firestore
-//     await updateCartItemQuantity(productName, newQuantity);
-//     displayCartItems();
-// }
-
-// async function decrementQuantity(event) {
-//     event.preventDefault();
-
-//     const productName = this.getAttribute('data-product-name');
-//     const input = this.parentElement.querySelector('.quantity-input');
-//     let currentQuantity = parseInt(input.value, 10);
-
-//     if (currentQuantity <= 1) {
-//         window.alert('Quantity cannot be less than 1.');
-//         return;
-//     }
-
-//     let newQuantity = currentQuantity - 1;
-//     input.value = newQuantity;
-
-//     // Update cart in Firestore
-//     await updateCartItemQuantity(productName, newQuantity);
-//     displayCartItems();
-// }
-
-// async function updateCartItemQuantity(productName, newQuantity) {
-//     const userId = getCurrentUserId();
-//     const userCartDocRef = doc(collection(db, 'carts'), userId);
-
-//     try {
-//         const userCartDocSnap = await getDoc(userCartDocRef);
-//         let cartItems = userCartDocSnap.exists() ? userCartDocSnap.data().cart || [] : [];
-
-//         const productIndex = cartItems.findIndex(item => item.name === productName);
-//         if (productIndex > -1) {
-//             cartItems[productIndex].quantity = newQuantity;
-//             await setDoc(userCartDocRef, { cart: cartItems }, { merge: true });
-//         } else {
-//             console.error("Product not found in cart.");
-//         }
-//     } catch (error) {
-//         console.error("Error updating cart item quantity:", error);
-//     }
-// }
-
 async function generateTransactionID() {
     const transactionCounterDocRef = doc(db, 'metadata', 'transactionCounter');
     try {
@@ -330,7 +170,6 @@ async function generateTransactionID() {
         throw new Error('Failed to generate transaction ID');
     }
 }
-
 
 async function handleCashPayment() {
     const totalPriceElement = document.getElementById('totalprice');
@@ -367,54 +206,6 @@ denominationButtons.forEach(button => {
     });
 });
 
-//MEMBERSHIP FUNCTIONS
-
-// async function fetchUsers() {
-//     const usersCollection = collection(db, 'users');
-//     const userSnapshot = await getDocs(usersCollection);
-//     const userList = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-//     verifyMember(userList);
-// }
-
-// async function verifyMember(memberId) {
-//     try {
-//         // Check if name is provided and is a string
-//         if (!memberId || typeof memberId !== 'string') {
-//             console.log('No name provided or name is not a valid string');
-//             return { valid: false }; // No name provided or invalid type
-//         }
-
-//         // Trim the name and check length
-//         const trimmedName = memberId.trim();
-
-//         if (trimmedName.length === 0) {
-//             console.error('memberId is empty');
-//             return { valid: false }; // Name is empty
-//         }
-
-//         if (trimmedName.length > 100) { // Adjust max length as needed
-//             console.error('Name is too long:', trimmedName.length);
-//             return { valid: false }; // Name too long
-//         }
-
-//         const usersCollection = collection(db, 'users');
-//         const q = query(usersCollection, where('membershipId', '==', trimmedName));
-//         const querySnapshot = await getDocs(q);
-
-//         if (querySnapshot.empty) {
-//             return { valid: false }; // ID not found
-//         } else {
-//             const userData = querySnapshot.docs[0].data();
-//             return { valid: true, Id: userData.memberId }; // ID found, return username
-//         }
-
-//     } catch (error) {
-//         console.error('Error verifying member name:', error);
-//         return { valid: false }; // In case of error
-//     }
-// }
-
 async function checkMembership(pointsToAdd, pointsToRedeem) {
     const memberInfoDiv = document.getElementById('member-info');
     const memberId = sessionStorage.getItem('membershipId');
@@ -429,7 +220,7 @@ async function checkMembership(pointsToAdd, pointsToRedeem) {
 
     console.log("User is a member.");
     const usersCollection = collection(db, 'users');
-    const q = query(usersCollection, where('membershipId', '==', memberId)); 
+    const q = query(usersCollection, where('membershipId', '==', memberId));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
@@ -446,7 +237,7 @@ async function checkMembership(pointsToAdd, pointsToRedeem) {
     } else if (!isNaN(pointsToRedeem) && pointsToRedeem > 0) {
         newPoints = currentPoints - pointsToRedeem;
     } else {
-        newPoints = currentPoints; 
+        newPoints = currentPoints;
     }
 
     console.log(`User points updated successfully. New points: ${newPoints}`);
@@ -476,7 +267,7 @@ async function checkMembership(pointsToAdd, pointsToRedeem) {
     const redeemButton = document.createElement('button');
     redeemButton.id = 'redeem-points';
     redeemButton.textContent = 'Redeem Points';
-    redeemButton.style.display = 'block'; 
+    redeemButton.style.display = 'block';
 
     redeemButton.onclick = async function () {
         try {
@@ -511,92 +302,6 @@ async function checkMembership(pointsToAdd, pointsToRedeem) {
     return { valid: true, memberDetails: userData };
 }
 
-
-
-// Function to check membership and update member details
-// async function checkMembership(pointsToAdd, pointsToRedeem) {
-//     const memberInfoDiv = document.getElementById('member-info');
-//     const memberId = sessionStorage.getItem('membershipId');
-//     let memberDetails = null;
-
-//     if (!memberId) {
-//         console.log("User is not a member.");
-//         document.getElementById('memberInfo').style.display = 'none';
-//         return { valid: false }; // Ensure a return value here
-//     }
-
-//     if (memberId) {
-//         console.log("User is a member.");
-//         const usersCollection = collection(db, 'users');
-//         const q = query(usersCollection, where('memebershipId', '==', memberId));
-//         const querySnapshot = await getDocs(q);
-
-//         if (querySnapshot.empty) {
-//         } else {
-//             const userData = querySnapshot.docs[0].data();
-//             const currentPoints = userData.points || 0;
-
-//             let newpoints;
-
-//             if (!isNaN(pointsToAdd) && pointsToAdd > 0) {
-//                 newpoints = currentPoints + pointsToAdd;
-//                 console.log(` ${newpoints = currentPoints + pointsToAdd}`);
-//             } else if (!isNaN(pointsToRedeem) && pointsToRedeem > 0) {
-//                 newpoints = currentPoints - pointsToRedeem;
-//             } else {
-//                 // If neither condition is valid, just keep the current points
-//                 newpoints = currentPoints;
-//             }
-
-//             console.log(`User points updated successfully. New points: ${newpoints}`);
-
-//             memberDetails = {
-//                 membershipId: userData.membershipId,
-//                 name: userData.name,
-//                 email: userData.email,
-//                 points: newpoints,
-//                 AddedPoints: pointsToAdd || 0, // To be calculated
-//                 RedeemedPoints: pointsToRedeem || 0,
-//             };
-
-//             // console.log('Updated Member Details:', updatedMemberDetails);
-
-
-//             if (memberInfoDiv) {
-//                 memberInfoDiv.innerHTML = ''; // Clear existing content
-
-//                 const memberId = document.createElement('p');
-//                 memberId.textContent = `Member Id: ${userData.membershipId}`;
-//                 memberInfoDiv.appendChild(memberId);
-
-//                 const memberName = document.createElement('p');
-//                 memberName.textContent = `Name: ${userData.name}`;
-//                 memberInfoDiv.appendChild(memberName);
-
-//                 const memberEmail = document.createElement('p');
-//                 memberEmail.textContent = `Email: ${userData.email}`;
-//                 memberInfoDiv.appendChild(memberEmail);
-
-//                 const memberPoints = document.createElement('p');
-//                 memberPoints.id = 'member_points';
-//                 memberPoints.textContent = `Points: ${currentPoints}`;
-//                 memberInfoDiv.appendChild(memberPoints);
-
-//             }
-
-//             console.log("Member details:", memberDetails);
-
-//             return { valid: true, memberDetails: memberDetails };
-//         }
-//     } else {
-//         console.log("User is not a member.");
-//         if (memberInfoDiv) {
-//             memberInfoDiv.style.display = 'none';
-//         }
-//         return { valid: false };
-//     }
-// }
-
 async function updateMemberPoints(membershipId, pointsToAdd) {
     try {
         pointsToAdd = Number(pointsToAdd);
@@ -608,7 +313,7 @@ async function updateMemberPoints(membershipId, pointsToAdd) {
         const usersCollection = collection(db, 'users');
         const q = query(usersCollection, where('membershipId', '==', membershipId));
         console.log(`Query created to find user with membershipId: ${membershipId}`);
-        const querySnapshot = await getDocs(q); 
+        const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
@@ -618,7 +323,7 @@ async function updateMemberPoints(membershipId, pointsToAdd) {
 
             console.log(`Current Points: ${existingPoints}, Points to Add: ${pointsToAdd}, New Points: ${newPoints}`);
 
-            const userRef = doc(db, 'users', userDoc.id); 
+            const userRef = doc(db, 'users', userDoc.id);
             console.log(`User reference created for document ID: ${userDoc.id}`);
 
             await updateDoc(userRef, { points: newPoints });
@@ -626,7 +331,7 @@ async function updateMemberPoints(membershipId, pointsToAdd) {
 
             const memberInfoDiv = document.getElementById('member-info');
             if (memberInfoDiv) {
-                memberInfoDiv.innerHTML = ''; 
+                memberInfoDiv.innerHTML = '';
 
                 const pointsAdded = document.createElement('p');
                 pointsAdded.textContent = `Points Added: ${pointsToAdd}`;
@@ -677,7 +382,7 @@ async function redeemPoints(membershipId, pointsToRedeem) {
                 return;
             }
 
-            const redemptionRate = 1000; 
+            const redemptionRate = 1000;
             const pointsDiscount = currentPoints / redemptionRate;
 
             const userRef = doc(db, 'users', userDoc.id);
@@ -690,7 +395,7 @@ async function redeemPoints(membershipId, pointsToRedeem) {
 
             const memberInfoDiv = document.getElementById('member-info');
             if (memberInfoDiv) {
-                memberInfoDiv.innerHTML = ''; 
+                memberInfoDiv.innerHTML = '';
 
                 const pointsRedeemed = document.createElement('p');
                 pointsRedeemed.textContent = `Points Redeemed: ${pointsToRedeem}`;
@@ -703,7 +408,7 @@ async function redeemPoints(membershipId, pointsToRedeem) {
             }
 
             const subtotal = parseFloat(document.getElementById('Subtotal').textContent.replace(/[^0-9.-]+/g, ""));
-            const salestaxRate = 0.10; 
+            const salestaxRate = 0.10;
             const salestax = parseFloat(document.getElementById('salestax').textContent.replace(/[^0-9.-]+/g, ""));
 
             updateTotals(subtotal, salestaxRate);
@@ -770,7 +475,7 @@ async function calculatePoints(totalPrice) {
 
 
 function displayMessage(message, color) {
-    const messageDiv = document.getElementById('messageDiv'); 
+    const messageDiv = document.getElementById('messageDiv');
     messageDiv.textContent = message;
     messageDiv.style.color = color;
 }
@@ -781,7 +486,7 @@ document.getElementById('cash-payment').addEventListener('click', async () => {
         const changes = parseFloat(changeElement.textContent.replace('RM ', ''));
 
         const pointsToRedeemElement = document.getElementById('pointsRedeemed');
-        let pointsToRedeem = 0; 
+        let pointsToRedeem = 0;
 
         if (pointsToRedeemElement) {
             const textContent = pointsToRedeemElement.textContent.replace('Points Redeemed: ', '');
@@ -813,7 +518,7 @@ document.getElementById('cash-payment').addEventListener('click', async () => {
         if (!isNaN(cashPaid) && change >= 0) {
 
             const membershipInfo = await checkMembership();
-            console.log('Membership Info:', membershipInfo); 
+            console.log('Membership Info:', membershipInfo);
 
             const memberDetails = membershipInfo && membershipInfo.memberDetails;
 
@@ -839,7 +544,7 @@ document.getElementById('cash-payment').addEventListener('click', async () => {
                         console.log(`Points Redeemed Result: ${JSON.stringify(redemptionResult)}`);
 
                         if (redemptionResult && redemptionResult.success) {
-                            pointsToAdd = await calculatePoints(totalPrice); 
+                            pointsToAdd = await calculatePoints(totalPrice);
                             await updateMemberPoints(memberDetails.membershipId, pointsToAdd);
                             console.log(`Updated Member Points after Redemption: ${pointsToAdd}`);
                         } else {
@@ -882,13 +587,37 @@ document.getElementById('cash-payment').addEventListener('click', async () => {
                         pointDiscount,
                         totalPrice,
                         changes,
-                        updatedMemberDetails 
+                        updatedMemberDetails
                     );
 
                     console.log('Updated Member Details:', updatedMemberDetails);
 
                 } else {
-                    console.error('Membership is not valid.');
+                    console.log("Proceeding without membership points or details for a non-member.");
+                    const transactionId = await generateTransactionID();
+                    for (let item of cartItems) {
+                        await updateProductStock(item.id, item.quantity, item.category, item.type);
+                    }
+
+                    await clearCart(userId);
+                    sessionStorage.removeItem('memberName');
+                    sessionStorage.removeItem('membershipId');
+                    console.log(`No points to redeem or invalid value.`);
+
+                    await savePaymentDetails(
+                        transactionId,
+                        cartItems,
+                        cashPaid,
+                        subtotal,
+                        salesTax,
+                        discount,
+                        pointDiscount,
+                        totalPrice,
+                        changes,
+                        null
+                    );
+                    window.alert("Payment Successfully.");
+                    window.location.href = "../staff/staff-sales.html";
                 }
 
             } else {
@@ -1005,6 +734,7 @@ async function updateProductStock(id, quantity, category, type) {
     }
 }
 
+//Send Email Function
 async function sendEmailNotificationOnSuccess(paymentData) {
     try {
 
@@ -1061,91 +791,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 displayCartItems();
-
-
-// Initialize the modal control
-// document.getElementById('redeem-points').addEventListener('click', () => {
-//     document.getElementById('modal-message').textContent = ''; // Clear previous messages
-//     checkMembership();
-// });
-
-// Function to redeem points and save redeemed points
-// async function redeemPoints(membershipId, pointsToRedeem) {
-//     try {
-//         pointsToRedeem = Number(pointsToRedeem);
-//         const usersCollection = collection(db, 'users');
-//         const q = query(usersCollection, where('membershipId', '==', membershipId));
-//         const querySnapshot = await getDocs(q);
-
-//         if (!querySnapshot.empty) {
-//             const userDoc = querySnapshot.docs[0];
-//             const userData = userDoc.data();
-//             const currentPoints = userData.points || 0;
-
-//             const redemptionRate = 1000; // 1000 points = RM 1
-//             const pointsDiscount = pointsToRedeem / redemptionRate;
-
-//             if (pointsToRedeem > currentPoints) {
-//                 console.error("Insufficient points.");
-//                 document.getElementById('modal-message').textContent = "Insufficient points.";
-//                 document.getElementById('modal-message').style.color = "red";
-//                 return;
-//             }
-
-//             // Update user's points
-//             const newDeductedPoints = currentPoints - pointsToRedeem;
-//             const userRef = doc(db, 'users', userDoc.id);
-//             await updateDoc(userRef, { points: newDeductedPoints });
-
-//             // Update UI
-//             document.getElementById('modal-messag e').textContent = "Points redeemed successfully.";
-//             document.getElementById('pointDiscount').textContent = `- RM ${pointsDiscount.toFixed(2)}`;
-//             document.getElementById('points-to-redeem').textContent = `${pointsToRedeem}`;
-
-//             const memberInfoDiv = document.getElementById('member-info');
-//             if (memberInfoDiv) {
-//                 memberInfoDiv.innerHTML = ''; // Clear existing content
-
-//                 const pointsRedeemed = document.createElement('p');
-//                 pointsRedeemed.textContent = `Points Redeemed: ${pointsToRedeem}`;
-//                 memberInfoDiv.appendChild(pointsRedeemed);
-
-//                 const balancePoints = document.createElement('p');
-//                 balancePoints.textContent = `Updated Points Balance: ${newDeductedPoints}`;
-//                 memberInfoDiv.appendChild(balancePoints);
-//             }
-
-//             // Retrieve subtotal and sales tax from DOM
-//             const subtotal = parseFloat(document.getElementById('Subtotal').textContent.replace(/[^0-9.-]+/g, ""));
-//             const salestaxRate = 0.10; // Ensure correct sales tax rate
-//             const salestax = parseFloat(document.getElementById('salestax').textContent.replace(/[^0-9.-]+/g, ""));
-
-//             updateTotals(subtotal, salestaxRate);
-
-//             // Calculate total price
-//             // const pointDiscountElement = document.getElementById('pointDiscount');
-//             // const pointsText = pointDiscountElement.textContent;
-//             // const pointsValue = parseFloat(pointsText.replace(/[^0-9.-]+/g, "")) || 0;
-
-//             // const discountedStaff = isStaff ? subtotal * (1 - discountRate) : subtotal;
-//             // const discount = subtotal - discountedStaff;
-//             // const totalPrice = discountedStaff + salestax - pointsValue; // Use retrieved sales tax here
-
-//             // // Update the HTML elements
-//             // document.getElementById('Subtotal').textContent = `RM ${subtotal.toFixed(2)}`;
-//             // document.getElementById('salestax').textContent = `RM ${salestax.toFixed(2)}`;
-//             // document.getElementById('discount').textContent = `- RM ${discount.toFixed(2)}`;
-//             // document.getElementById('totalprice').textContent = `RM ${totalPrice.toFixed(2)}`;
-
-//             console.log("Points redeemed and discount applied successfully.");
-//         } else {
-//             console.error("User document not found.");
-//             document.getElementById('modal-message').textContent = "User document not found.";
-//             document.getElementById('modal-message').style.color = "red";
-//         }
-//     } catch (error) {
-//         console.error("Error redeeming points:", error);
-//         document.getElementById('modal-message').textContent = "Error redeeming points. Please try again.";
-//         document.getElementById('modal-message').style.color = "red";
-//     }
-// }

@@ -1,8 +1,5 @@
-import { getFirestore, collection, query, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
-import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
+import { getFirestore, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-// Initialize Firebase Storage
-const storage = getStorage();
 const db = getFirestore();
 
 
@@ -128,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error fetching orders:", error);
         }
     }
-
 
     selectMonth.addEventListener('change', () => {
         fetchAndDisplayOrder();
