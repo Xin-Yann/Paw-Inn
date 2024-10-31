@@ -26,3 +26,6 @@ textarea {
     border: #a5ecfa !important;
     color: #127369 !important;
 }
+.error-message {
+    color: red;
+}

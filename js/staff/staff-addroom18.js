@@ -10,13 +10,19 @@ document.getElementById("add").addEventListener("click", async () => {
 
         const roomName = document.getElementById('room_name').value;
         const roomDescription = document.getElementById('room_description').value;
-        const roomPrice = document.getElementById('room_price').value;
+        const roomPrice = parseFloat(document.getElementById('room_price').value);
         const roomQuantity = parseInt(document.getElementById('room_quantity').value, 10);
-        const roomSize = document.getElementById('room_size').value;
+        const roomSize = parseInt(document.getElementById('room_size').value);
+        const imagePath = document.getElementById('room_image').value;
 
         const price = /^\d+(\.\d{1,2})?$/;
         const quantityAndSize = /^\d+$/;
 
+        if (!roomId || !roomName || !roomPrice || !roomQuantity || !roomSize || !imagePath) {
+            alert('Please fill out all required fields: category, type, ID, name, price, quantity, size and image.');
+            return;
+        }
+        
         if (!price.test(roomPrice)) {
             alert('Invalid Price. Please enter a valid number with up to two decimal places.');
             return;
@@ -32,11 +38,6 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        if (!roomId || !roomName || !roomPrice || !roomQuantity || !roomSize) {
-            alert('Please fill out all required fields: category, type, ID, name, price, quantity, size.');
-            return;
-        }
-
         if (category === "Select category") {
             alert('Please select a category.');
             return;
@@ -47,7 +48,6 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        // Check if the room ID already exists
         const roomRef = doc(collection(db, 'rooms', category, type), roomId);
         const roomSnapshot = await getDoc(roomRef);
 
@@ -56,7 +56,6 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        // Check if the room name already exists
         const roomsQuery = query(collection(db, 'rooms', category, type), where("room_name", "==", roomName));
         const querySnapshot = await getDocs(roomsQuery);
 
@@ -65,9 +64,6 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        // Get the full path of the image
-        const imagePath = document.getElementById('room_image').value;
-        // Extract only the file name
         const imageName = imagePath.split('\\').pop().split('/').pop();
 
         const today = new Date();
@@ -89,24 +85,10 @@ document.getElementById("add").addEventListener("click", async () => {
             }
 
             roomQuantitybyMonth[index][date]= roomQuantity;
-        
-
-            // if (!roomQuantitybyMonth[monthIndex]) {
-            //     roomQuantitybyMonth[monthIndex] = {};
-            // }
-            // roomQuantitybyMonth[monthIndex][date] = roomQuantity;
         });
 
         console.log(roomQuantitybyMonth);
-
-
-        // const ascRoomQuantitybyMonth ={};
-        // for(let i=1;i<=12;i++){
-        //     const months = i.toString().padStart(2, '0');
-        //     ascRoomQuantitybyMonth[months] = roomQuantitybyMonth[months];
-        // }
-
-        // Set the document in Firestore
+        
         await setDoc(roomRef, {
             room_id: roomId,
             room_image: imageName,
@@ -139,7 +121,6 @@ function updateOptions() {
 
     typeSelect.innerHTML = '<option disabled selected>Select type</option>';
 
-    // Add type options based on the selected category
     switch (selectedCategory) {
         case "dog":
             addOption("dog rooms");

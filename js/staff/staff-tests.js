@@ -204,7 +204,6 @@ function displayProducts(products) {
     }
 
     products.forEach(product => {
-        console.log('Displaying Product:', product); // Debugging
         const productDiv = createProductDiv(product, document.getElementById('food-type').value, document.querySelector('#food-category .nav-link.active')?.getAttribute('value'));
         productContainer.appendChild(productDiv);
     });
@@ -427,7 +426,7 @@ async function addToCart(productId, productBarcode, productName, productPrice, p
         await saveProductToFirestore(userId, product);
 
         window.alert(`${productName} has been added to your cart!`);
-        location.reload();
+        await displayCartItems();
     } catch (error) {
         console.error("Error adding product to cart:", error);
     }
@@ -475,7 +474,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Fetch and display all products initially
         allProductStocks = await getProductStock();
-        console.log("Initial products:", allProductStocks);
+        console.log("Initial products:", allProductStocks);  // Debugging: Ensure products are loaded
         displayProducts(allProductStocks);
 
         const searchInput = document.getElementById('search-input');
@@ -483,16 +482,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (searchInput) {
             searchInput.addEventListener('input', () => {
                 const searchTerm = searchInput.value.trim().toLowerCase();
-                console.log("Search term:", searchTerm);
+                console.log("Search term:", searchTerm); // Debugging search term
 
+                // Filter products based on name or barcode
                 const filteredProducts = allProductStocks.filter(product => {
-                    const productName = (product.product_name || '').toLowerCase();
-                    console.log("Product name:", productName); // Log product name for debugging
-                    const productBarcode = (product.product_barcode || '').toLowerCase();
+                    const productName = (product.productName || '').toLowerCase(); // Using correct property name
+                    const productBarcode = (product.productBarcode || '').toLowerCase();
+                    
+                    console.log("Checking product:", productName, productBarcode); // Debugging product names and barcodes
+                    
                     return productName.includes(searchTerm) || productBarcode.includes(searchTerm);
                 });
 
-                console.log("Filtered products:", filteredProducts);
+                console.log("Filtered products:", filteredProducts);  // Debugging filtered products
                 displayProducts(filteredProducts);
             });
         } else {
@@ -819,15 +821,15 @@ async function verifyMemberId(memberId, contact) {
         }
         
         // If no match by membershipId or membershipId not provided, query by contact
-        if ((!querySnapshot || querySnapshot.empty) && contact) {
-            // Check if contact is a valid string
-            if (typeof contact === 'string' && contact.length <= 1500) {
-                const queryByContact = query(usersCollection, where('contact', '==', contact));
-                querySnapshot = await getDocs(queryByContact);
-            } else {
-                console.log('Invalid or No contact provided:', contact);
-            }
-        }
+        // if ((!querySnapshot || querySnapshot.empty) && contact) {
+        //     // Check if contact is a valid string
+        //     if (typeof contact === 'string' && contact.length <= 1500) {
+        //         const queryByContact = query(usersCollection, where('contact', '==', contact));
+        //         querySnapshot = await getDocs(queryByContact);
+        //     } else {
+        //         console.log('Invalid or No contact provided:', contact);
+        //     }
+        // }
 
         // Check if a match was found
         if (querySnapshot && !querySnapshot.empty) {
@@ -852,10 +854,11 @@ async function verifyMemberId(memberId, contact) {
 
 document.getElementById('verify-form').addEventListener('click', async () => {
     const memberId = document.getElementById('member-id').value;
-    const contact = document.getElementById('contact').value;
+    // const contact = document.getElementById('contact').value;
     
     // Call the verifyMemberId function with the input values
-    const { valid, username, membershipId, points } = await verifyMemberId(memberId, contact);
+    const { valid, username, membershipId, points } = await verifyMemberId(memberId);
+    // const { valid, username, membershipId, points } = await verifyMemberId(memberId, contact);
 
     const resultElement = document.getElementById('result');
     const memberName = document.getElementById('member_name');
@@ -870,16 +873,60 @@ document.getElementById('verify-form').addEventListener('click', async () => {
         
         // Hide the modal and disable the form if the member is found
         document.getElementById('member').style.display = "none"; // Disable the button
+        document.getElementById('delete-member-detail').style.display = "block"; 
         sessionStorage.setItem('memberName', username);
+        sessionStorage.setItem('membershipId', membershipId);
 
         document.getElementById('result').style.display= "none";
         $('#membershipModal').modal('hide');
     } else {
         // Display an error message if the member is not found
-        resultElement.textContent = 'Member ID or Contact is invalid.';
+        resultElement.textContent = 'Member ID is invalid. Please try again.';
         resultElement.style.color = 'red'; 
     }
 });
+
+document.getElementById('delete-member-detail').addEventListener('click', () => {
+    // Clear the displayed member details
+    document.getElementById('member_id').textContent = '';
+    document.getElementById('member_name').textContent = '';
+    document.getElementById('member_points').textContent = '';
+    document.getElementById('result').textContent = '';
+
+    // Clear the session storage if needed
+    sessionStorage.removeItem('memberName');
+
+    // Show the verify button again
+    document.getElementById('member').style.display = "inline-block";
+    document.getElementById('delete-member-detail').style.display = "none"; // Hide the delete button
+});
+
+async function loadMemberDetails() {
+    const memberId = sessionStorage.getItem('membershipId');
+
+    if (memberId) {
+        // Call the verifyMemberId function with the retrieved memberId
+        // const { valid, username, membershipId, points } = await verifyMemberId(memberId, contact);
+        const { valid, username, membershipId, points } = await verifyMemberId(memberId);
+
+        // If valid, display the member details
+        if (valid) {
+            document.getElementById('member_name').textContent = `Name: ${username}`;
+            document.getElementById('member_id').textContent = `Membership ID: ${membershipId}`;
+            document.getElementById('member_points').textContent = `Points: ${points}`;
+
+            // Hide the verify button and show the delete button
+            document.getElementById('member').style.display = "none"; // Hide the verify button
+            document.getElementById('delete-member-detail').style.display = "block"; // Show the delete button
+        } else {
+            // Handle invalid case if necessary
+            console.log('Member not found in auto-check.');
+        }
+    }
+}
+
+// Call the function to load member details when the page loads
+window.onload = loadMemberDetails;
 
 fetchUsers();
 

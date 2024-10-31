@@ -26,18 +26,18 @@ window.payBooking = function (bookingId) {
 async function fetchAndDisplayBookStatus(userId) {
     try {
         const bookDocRef = doc(db, 'book', userId);
-        console.log('Fetching document from:', bookDocRef.path); // Log the path
+        console.log('Fetching document from:', bookDocRef.path);
         const docSnap = await getDoc(bookDocRef);
 
         let bookArray = [];
 
 
         if (docSnap.exists()) {
-            console.log('Document data:', docSnap.data()); // Log the data
+            console.log('Document data:', docSnap.data());
             const bookData = docSnap.data();
             bookArray = bookData.bookings || [];
 
-            bookArray = await deleteBooking(bookArray,bookDocRef);
+            bookArray = await deleteBooking(bookArray, bookDocRef);
 
             const today = new Date();
             const pastDate = bookArray.filter(booking => {
@@ -52,10 +52,8 @@ async function fetchAndDisplayBookStatus(userId) {
                 );
 
                 if (confirmDelete) {
-                    // Proceed with deletion if user confirms
                     bookArray = bookArray.filter(book => new Date(book.checkin_date) >= today);
 
-                    // Update Firestore with filtered bookings
                     await updateDoc(bookDocRef, { bookings: bookArray });
                 } else {
                     console.log('User chose not to delete past bookings.');
@@ -65,11 +63,11 @@ async function fetchAndDisplayBookStatus(userId) {
             bookArray.sort((a, b) => {
                 const idA = a.book_id && typeof a.book_id === 'string'
                     ? parseInt(a.book_id.replace(/^\D+/g, ''), 10)
-                    : 0; // Default to 0 if undefined or not a string
+                    : 0;
                 const idB = b.book_id && typeof b.book_id === 'string'
                     ? parseInt(b.book_id.replace(/^\D+/g, ''), 10)
-                    : 0; // Default to 0 if undefined or not a string
-                return idB - idA; // Numeric comparison
+                    : 0;
+                return idB - idA;
             });
 
             const statusContainer = document.getElementById('statusContainer');
@@ -131,7 +129,7 @@ async function fetchAndDisplayBookStatus(userId) {
     }
 }
 
-async function fetchRoomQuantity() {
+async function fetchRoomQuantity(year = new Date().getFullYear()) {
     try {
         const roomCategories = [
             { category: 'cat', collectionName: 'cat rooms' },
@@ -147,17 +145,31 @@ async function fetchRoomQuantity() {
             const roomCollectionRef = collection(docRef, collectionName);
             const roomQuerySnapshot = await getDocs(roomCollectionRef);
 
-
-
             roomQuerySnapshot.forEach(docSnap => {
                 if (docSnap.exists()) {
                     const room = docSnap.data();
                     const roomName = room.room_name || 'Unknown';
-                    const roomQuantities = room.room_quantity || []; // Array of maps
+                    const roomQuantities = room.room_quantity || [];
 
                     if (!Array.isArray(roomQuantities)) {
                         return;
                     }
+
+                    // Process data for each month
+                    roomQuantities.forEach((monthData, monthIndex) => {
+                        for (const [date, quantity] of Object.entries(monthData)) {
+                            const roomDate = new Date(date);
+                            if (roomDate.getFullYear() === year) {
+                                roomData.push({
+                                    category,
+                                    roomName,
+                                    date: date,
+                                    quantity: parseInt(quantity, 10),
+                                    month: roomDate.getMonth(),
+                                });
+                            }
+                        }
+                    });
                 }
             });
         }
@@ -171,22 +183,41 @@ async function fetchRoomQuantity() {
 }
 
 
-async function deleteBooking(bookings,bookDocRef) {
+async function deleteBooking(bookings, bookDocRef) {
     const deleteBook = [];
 
     for (const booking of bookings) {
-        const roomQuantity = await fetchRoomQuantity(booking.room_quantity);
+        const { checkin_date, checkout_date, room_name } = booking;
+        const checkinDate = new Date(checkin_date);
+        const checkoutDate = new Date(checkout_date);
 
-        if (roomQuantity === 0) {
+        const checkinRoomQuantity = await fetchRoomQuantity(checkinDate.getFullYear());
+        const checkoutRoomQuantity = await fetchRoomQuantity(checkoutDate.getFullYear());
+        const checkinRoomAvailable = checkinRoomQuantity.find(room =>
+            room.roomName === room_name && new Date(room.date).toDateString() === checkinDate.toDateString()
+        );
+        const checkoutRoomAvailable = checkoutRoomQuantity.find(room =>
+            room.roomName === room_name && new Date(room.date).toDateString() === checkoutDate.toDateString()
+        );
+
+        const isRoomUnavailable = (!checkinRoomAvailable || checkinRoomAvailable.quantity === 0) ||
+                                  (!checkoutRoomAvailable || checkoutRoomAvailable.quantity === 0);
+
+        if (isRoomUnavailable) {
             deleteBook.push(booking);
         }
-    }  
+    }
 
     if (deleteBook.length > 0) {
-        window.confirm('Deleting bookings with no room found:', bookingsToDelete);
-        const updateBooking = bookings.filter(book=>!deleteBook.includes(book.book_id));
-        await updateDoc(bookDocRef, {bookings:updateBooking});
-        return updateBooking;
+        const confirmDelete = window.confirm(
+            `Deleting bookings with no room found for ${deleteBook.map(b => b.book_id).join(', ')}`
+        );
+
+        if (confirmDelete) {
+            const updatedBookings = bookings.filter(book => !deleteBook.includes(book));
+            await updateDoc(bookDocRef, { bookings: updatedBookings });
+            return updatedBookings;
+        }
     }
 
     return bookings;

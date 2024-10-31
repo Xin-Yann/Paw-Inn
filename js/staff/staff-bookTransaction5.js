@@ -8,8 +8,12 @@ const db = getFirestore();
 document.addEventListener('DOMContentLoaded', () => {
 
     function isPastDate(dateString) {
-        const date = new Date(dateString); ``
-        return date < new Date();
+        const date = new Date(dateString);
+        const today = new Date();
+        
+        today.setHours(0, 0, 0, 0);
+        
+        return date < today;
     }
 
     const currentMonth = new Date().getMonth();
@@ -18,22 +22,26 @@ document.addEventListener('DOMContentLoaded', () => {
     selectMonth.value = currentMonth;
     console.log('Current month:', currentMonth);
 
+    const currentYear = new Date().getFullYear();
+    const selectYear = document.getElementById('selectedYear');
+
+    selectYear.value = currentYear;
+    console.log('Current year:', currentYear);
+
     async function fetchAndDisplayBookings() {
         try {
             const statusSelect = document.getElementById('status');
-            const status = statusSelect.value || 'Checked-In'; // Default to 'Checked-In'
+            const status = statusSelect.value || 'Checked-In';
 
             const paymentCollectionRef = collection(db, 'payments');
             const querySnapshotPayment = await getDocs(paymentCollectionRef);
 
-            // Group payments by book_id
             const paymentsMap = new Map();
 
             querySnapshotPayment.docs.forEach(doc => {
                 const data = doc.data();
                 if (Array.isArray(data.payments)) {
                     data.payments.forEach(payment => {
-                        // Only add payments to the map if the status matches
                         if (payment.status === status) {
                             paymentsMap.set(payment.book_id, payment);
                         }
@@ -41,12 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // const currentMonth = new Date().getMonth(); // Current month (0-11)
-            // const currentYear = new Date().getFullYear(); // Current year
-
             const selectedMonth = document.getElementById('selectedMonth').value;
+            const selectedYear = document.getElementById('selectedYear').value; 
+
             const currentMonth = selectedMonth === '' ? new Date().getMonth() : parseInt(selectedMonth);
-            const currentYear = new Date().getFullYear();
+            const currentYear = selectedYear === '' ? new Date().getFullYear() : parseInt(selectedYear);
 
 
             const filteredPayments = Array.from(paymentsMap.values()).filter(payment => {
@@ -59,17 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusContainerElement.innerHTML = '<p>No bookings found.</p>';
             } else {
 
-                // Sort all payments if necessary
                 const sortedPayments = filteredPayments.sort((a, b) => {
-                    const idA = parseInt(a.book_id.replace(/^\D+/g, ''), 10); // Extract numeric part from booking ID
-                    const idB = parseInt(b.book_id.replace(/^\D+/g, ''), 10); // Extract numeric part from booking ID
-                    return idB - idA; // Sort in descending order
+                    const idA = parseInt(a.book_id.replace(/^\D+/g, ''), 10); 
+                    const idB = parseInt(b.book_id.replace(/^\D+/g, ''), 10); 
+                    return idB - idA; 
                 });
 
                 filteredPayments.sort((a, b) => {
                     const isDisabledA = isPastDate(a.checkin_date) || isPastDate(a.checkout_date);
                     const isDisabledB = isPastDate(b.checkin_date) || isPastDate(b.checkout_date);
-                    return isDisabledA - isDisabledB; // non-disabled first
+                    return isDisabledA - isDisabledB; 
                 });
 
                 const statusContainer = document.getElementById('statusContainer');
@@ -140,40 +146,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         const buttonDisabled = isPastCheckinDate || isPastCheckoutDate;
 
                         const checkinButtonVisible = bookingStatus === 'Paid';
-                        // const checkinButtonDisabled = bookingStatus !== 'Checked-In' && bookingStatus !== 'Cancelled';
                         const checkoutButtonVisible = bookingStatus !== 'Checked-Out';
                         const checkoutButtonDisabled = bookingStatus === 'Paid';
                         const buttonsHidden = bookingStatus === 'Cancelled' || bookingStatus === 'Checked-Out';
 
-                        // if (isPastDate(checkoutDate) && status !== 'Checked-Out') {
-                        //     // Find the document snapshot for this payment and pass it to autoCheckoutBooking
-                        //     const docSnapshot = querySnapshotPayment.docs.find(doc => {
-                        //         const data = doc.data();
-                        //         return data.payments.some(p => p.book_id === bookingId);
-                        //     });
-
-                        //     if (docSnapshot) {
-                        //         autoCheckoutBooking(docSnapshot, payment.book_id);
-                        //     } else {
-                        //         console.error(`Document for booking ID ${bookingId} not found.`);
-                        //     }
-                        // }
                         const row = document.createElement('tr');
                         row.className = isPastCheckinDate || isPastCheckoutDate ? 'disabled' : '';
+
                         row.innerHTML = `
-                        <td class="text-center book-id ${isPastDate(payment.checkin_date) || isPastDate(payment.checkout_date) ? 'disabled' : ''}">${bookingId}</td>
-                        <td>${bookingDetails}</td>
-                        <td class="text-center" style="color: #127369; font-weight: bold;">${bookingStatus}</td> 
-                         ${buttonsHidden ? '' : `
-                        <td class="text-center">
-                            ${buttonDisabled ? '' : checkinButtonVisible ? `<button class="btn checked-in mb-3 mr-3" id="checkin-${bookingId}" data-toggle="modal" data-target="#checkinModal">Check In</button>` : ''}
-                             ${checkoutButtonDisabled ? '' : checkoutButtonVisible ? `<button class="btn checked-out mb-3" id="checkout-${bookingId}" data-toggle="modal" data-target="#checkoutModal">Check Out</button>` : ''}
-                        </td>
-                        `}
-                    `;
+                            <td class="text-center book-id ${isPastDate(payment.checkin_date) || isPastDate(payment.checkout_date) ? 'disabled' : ''}">${bookingId}</td>
+                            <td>${bookingDetails}</td>
+                            <td class="text-center" style="color: #127369; font-weight: bold; ${isPastDate(payment.checkin_date) || isPastDate(payment.checkout_date) ? 'disabled' : ''}">${bookingStatus}</td> 
+                            ${buttonsHidden ? '' :  `
+                            <td class="text-center">
+                                ${buttonDisabled ? '' : checkinButtonVisible ? `<button class="btn checked-in mb-3 mr-3" id="checkin-${bookingId}" data-toggle="modal" data-target="#checkinModal">Check In</button>` : ''}
+                                ${checkoutButtonVisible && !checkoutButtonDisabled && !buttonDisabled ?`<button class="btn checked-out mb-3" id="checkout-${bookingId}" data-toggle="modal" data-target="#checkoutModal">Check Out</button>` : ''}
+                            </td>
+                            `}
+                        `;
                         tbody.appendChild(row);
 
-                        // Handle image URL from Firebase Storage
                         if (vaccinationImage) {
                             const imgElement = row.querySelector('.vaccination-image');
                             if (imgElement) {
@@ -225,23 +217,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function checkinBooking(bookingId) {
         try {
-            // Reference to the payments collection
             const paymentCollectionRef = collection(db, 'payments');
             const querySnapshotPayment = await getDocs(paymentCollectionRef);
 
-            // Find the document containing the booking ID
             const docToUpdate = querySnapshotPayment.docs.find(doc =>
                 doc.data().payments.some(payment => payment.book_id === bookingId)
             );
 
             if (docToUpdate) {
-                // Update the booking status in the document
                 const paymentRef = docToUpdate.ref;
 
-                // Ensure paymentRef is a valid reference
                 console.log('Document Reference:', paymentRef);
 
-                // Get the payments array and update it
                 const payments = docToUpdate.data().payments;
                 const updatedPayments = payments.map(payment => {
                     if (payment.book_id === bookingId) {
@@ -250,11 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     return payment;
                 });
 
-                // Use updateDoc from Firestore
                 await updateDoc(paymentRef, { payments: updatedPayments });
-                console.log('Booking status updated successfully.');
+                window.alert(`Booking ID: ${bookingId} has been checked in.`);
 
-                // Refresh the bookings and close the modal
                 fetchAndDisplayBookings();
                 $('#checkinModal').modal('hide');
             } else {
@@ -267,23 +252,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function checkoutBooking(bookingId) {
         try {
-            // Reference to the payments collection
             const paymentCollectionRef = collection(db, 'payments');
             const querySnapshotPayment = await getDocs(paymentCollectionRef);
 
-            // Find the document containing the booking ID
             const docToUpdate = querySnapshotPayment.docs.find(doc =>
                 doc.data().payments.some(payment => payment.book_id === bookingId)
             );
 
             if (docToUpdate) {
-                // Update the booking status in the document
                 const paymentRef = docToUpdate.ref;
 
-                // Ensure paymentRef is a valid reference
                 console.log('Document Reference:', paymentRef);
 
-                // Get the payments array and update it
                 const payments = docToUpdate.data().payments;
                 const updatedPayments = payments.map(payment => {
                     if (payment.book_id === bookingId) {
@@ -292,11 +272,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     return payment;
                 });
 
-                // Use updateDoc from Firestore
                 await updateDoc(paymentRef, { payments: updatedPayments });
-                console.log('Booking status updated successfully.');
+                window.alert(`Booking ID: ${bookingId} has been checked out.`);
 
-                // Refresh the bookings and close the modal
                 fetchAndDisplayBookings();
                 $('#checkoutModal').modal('hide');
             } else {
@@ -337,6 +315,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     selectMonth.addEventListener('change', () => {
+        fetchAndDisplayBookings();
+    });
+
+    selectYear.addEventListener('change', () => {
         fetchAndDisplayBookings();
     });
 

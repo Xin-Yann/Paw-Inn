@@ -19,14 +19,13 @@ onAuthStateChanged(auth, (user) => {
 
 async function fetchAllBookings() {
     try {
-        // Fetch all users
         const usersSnapshot = await getDocs(collection(db, 'users'));
-        console.log('Users fetched:', usersSnapshot.docs.length); // Log number of users
+        console.log('Users fetched:', usersSnapshot.docs.length);
 
         const allBookings = [];
 
         for (const userDoc of usersSnapshot.docs) {
-            const userId = userDoc.data().userId; // Use the user_id field from the users collection
+            const userId = userDoc.data().userId;
             console.log(`Fetched user ID: ${userId}`);
 
             if (!userId) {
@@ -36,7 +35,6 @@ async function fetchAllBookings() {
 
             console.log(`Fetching payments for user ID: ${userId}`);
 
-            // Fetch the payments document for the user
             const paymentsDocRef = doc(db, 'payments', userId);
             const paymentsDocSnapshot = await getDoc(paymentsDocRef);
 
@@ -44,15 +42,12 @@ async function fetchAllBookings() {
                 const paymentData = paymentsDocSnapshot.data();
                 console.log('Payment Document Data:', paymentData);
 
-                // Check if `payments` field exists and is an array
                 if (Array.isArray(paymentData.payments)) {
                     console.log('Payments Array:', paymentData.payments);
 
-                    // Filter out the payments with status 'Paid'
                     const paidBookings = paymentData.payments.filter(payment => (payment.status === 'Paid' || payment.status === 'Checked-In'));
                     console.log('Paid Bookings:', paidBookings);
 
-                    // Add the filtered payments to the allBookings array
                     allBookings.push(...paidBookings);
                 } else {
                     console.log(`No payments array found in document for user ID: ${userId}`);
@@ -62,7 +57,7 @@ async function fetchAllBookings() {
             }
         }
 
-        console.log('All bookings:', allBookings); // Log all bookings fetched
+        console.log('All bookings:', allBookings);
         return allBookings;
     } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -82,7 +77,6 @@ async function initCalendar() {
         const eventEndDate = new Date(checkoutDate);
         eventEndDate.setDate(eventEndDate.getDate() + 2);
 
-        // Disable events where the checkout date has passed
         const eventClasses = checkoutDate < today ? `event-disabled ${roomClass}` : roomClass;
 
         return {
@@ -136,35 +130,34 @@ async function initCalendar() {
         const roomCountsToday = events.reduce((acc, event) => {
             const eventStartDate = new Date(event.start).setHours(0, 0, 0, 0);
             const eventEndDate = new Date(event.end).setHours(0, 0, 0, 0);
-    
+
             if (today >= eventStartDate && today < eventEndDate) {
                 acc[event.title] = (acc[event.title] || 0) + 1;
             }
             return acc;
         }, {});
-    
+
         const roomCountsDiv = document.getElementById('roomCountsToday');
         const roomCountsList = document.getElementById('roomCountsList');
-        roomCountsList.innerHTML = ''; // Clear any existing list items
-    
-        // Check if no rooms are occupied
-        if (Object.keys(roomCountsToday).length === 0) {
-            // Change the entire div content to "No room occupied"
-            roomCountsDiv.innerHTML = '<h3>No room occupied</h3>';
-        } else {
-            // Reset the heading if rooms are occupied
-            roomCountsDiv.querySelector('h3').textContent = 'Total Room Occupied For Today:';
-    
-            // Display room counts
-            for (const [roomName, count] of Object.entries(roomCountsToday)) {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${roomName}: ${count}`;
-                listItem.classList.add('pt-3');
-                roomCountsList.appendChild(listItem);
+        if (roomCountsDiv && roomCountsList) {
+            roomCountsList.innerHTML = '';
+            roomCountsList.innerHTML = '';
+
+            if (Object.keys(roomCountsToday).length === 0) {
+                roomCountsDiv.innerHTML = '<h3>No room occupied</h3>';
+            } else {
+                roomCountsDiv.querySelector('h3').textContent = 'Total Room Occupied For Today:';
+
+                for (const [roomName, count] of Object.entries(roomCountsToday)) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${roomName}: ${count}`;
+                    listItem.classList.add('pt-3');
+                    roomCountsList.appendChild(listItem);
+                }
             }
         }
     }
-    
+
 
     function getRoomClass(roomName) {
         switch (roomName.toLowerCase()) {
@@ -172,7 +165,6 @@ async function initCalendar() {
                 return 'event-deluxe-room';
             case 'suite room':
                 return 'event-suite-room';
-            // Add more cases as needed
             default:
                 return '';
         }
@@ -183,7 +175,6 @@ async function initCalendar() {
         const modalBody = document.querySelector('#eventModal .modal-body');
         const imageElement = document.getElementById('vaccination_image');
 
-        // Create modal content
         let modalContent = `
             <strong>Booking ID:</strong> ${details.bookId}<br>
             <strong>Room Name:</strong> ${details.roomName}<br>
@@ -198,31 +189,29 @@ async function initCalendar() {
 
         if (details.vaccinationImage) {
             try {
-                const storageRef = ref(storage, details.vaccinationImage); // Create a reference to the image path
-                const imageUrl = await getDownloadURL(storageRef); // Get the download URL
+                const storageRef = ref(storage, details.vaccinationImage);
+                const imageUrl = await getDownloadURL(storageRef);
                 modalContent += `<strong>Vaccination Image: <br><img id="vaccination_image" src="${imageUrl}" alt="Vaccination Image" style="width:50%; height:auto; padding-top: 20px;"></strong>`;
                 if (imageElement) {
-                    imageElement.style.display = 'block'; // Ensure the image is visible
+                    imageElement.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error fetching vaccination image:', error);
                 modalContent += `<p>Unable to load vaccination image.</p>`;
                 if (imageElement) {
-                    imageElement.style.display = 'none'; // Hide the image element if there's an error
+                    imageElement.style.display = 'none';
                 }
             }
         } else {
             modalContent += `<p>No vaccination image available.</p>`;
             if (imageElement) {
-                imageElement.style.display = 'none'; // Hide the image element if no image path is provided
+                imageElement.style.display = 'none';
             }
         }
 
-        // Set modal title and content
         modalTitle.textContent = `Room Details`;
         modalBody.innerHTML = modalContent;
 
-        // Show the modal
         const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
         eventModal.show();
     }

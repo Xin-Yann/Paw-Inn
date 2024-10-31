@@ -184,7 +184,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
 
       let resendAttempts = parseInt(sessionStorage.getItem('resendAttempts')) || 0;
-      // Get the last resend time from sessionStorage
       const lastResendTime = sessionStorage.getItem('lastResendTime');
       const currentTime = Date.now();
 
@@ -194,18 +193,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Check if the cooldown period has passed
       if (lastResendTime && (currentTime - lastResendTime < cooldownPeriod)) {
         const timeLeft = Math.ceil((cooldownPeriod - (currentTime - lastResendTime)) / 1000);
         alert(`Please wait ${timeLeft} seconds before requesting another OTP.`);
         return;
       }
 
-      // Generate a new OTP
       const newOTP = generateOTP();
-      const otpExpirationTime = currentTime + (5 * 60 * 1000); // OTP valid for 5 minutes
+      const otpExpirationTime = currentTime + (5 * 60 * 1000); 
 
-      // Store the new OTP, expiration time, and last resend time in sessionStorage
       sessionStorage.setItem("generatedOTP", newOTP);
       sessionStorage.setItem("otpGenerationTime", currentTime.toString());
       sessionStorage.setItem("otpExpirationTime", otpExpirationTime.toString());
@@ -214,10 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
       resendAttempts += 1;
       sessionStorage.setItem('resendAttempts', resendAttempts.toString());
 
-      // Get user email from session storage
       const userEmail = sessionStorage.getItem('userEmail');
-
-      // Send OTP to the user's email using EmailJS or other email service
       if (userEmail) {
         emailjs.send('service_7e6jx2j', 'template_l3gma7d', {
           to_email: userEmail,
@@ -243,36 +236,30 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("resend-otp").addEventListener("click", function (e) {
     e.preventDefault();
 
-    // Disable the link by adding a disabled class or using inline styles
     const resend = document.getElementById("resend-otp");
     resend.style.pointerEvents = 'none';
     resend.style.opacity = '0.5';
 
-    // Call the resendOTP function
     resendOTP();
 
-    // Re-enable the link after the cooldown period
     setTimeout(() => {
       console.log("Enabling link after 30 seconds.");
       resend.style.pointerEvents = 'auto';
       resend.style.opacity = '1';
-    }, cooldownPeriod); // cooldownPeriod should be in milliseconds (e.g., 30000 for 30 seconds)
+    }, cooldownPeriod);
   });
 
 
 
   function cancelPayment() {
-    // Logic to cancel the payment (e.g., resetting payment status, navigating to a cancellation page)
     alert('Your payment has been canceled due to exceeding OTP resend limits.');
-    // Reset the OTP process and redirect to the cancellation page or handle it accordingly
     sessionStorage.removeItem('generatedOTP');
     sessionStorage.removeItem('otpGenerationTime');
     sessionStorage.removeItem('otpExpirationTime');
     sessionStorage.removeItem('lastResendTime');
     sessionStorage.removeItem('resendAttempts');
 
-    // Navigate to payment cancellation page or reset the form
-    window.location.href = '../html/payment.html';  // Example navigation (you can change this URL)
+    window.location.href = '../html/payment.html';
   }
 
 
@@ -289,24 +276,23 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Current Time:', new Date(currentTime).toLocaleString());
 
     if (currentTime > otpExpirationTime) {
-      alert("OTP has expired. Please request a new OTP.");
-      return;
+      window.alert("OTP has expired. Please request a new OTP.");
+      throw new Error("OTP has expired. Please request a new OTP."); 
     }
 
     if (enteredOTP.length === 0) {
       window.alert("Please enter an OTP.");
-      return;
-    }else if (enteredOTP.length !== 6) {// Prevent form submission
+      throw new Error("Please enter an OTP."); 
+    } else if (enteredOTP.length !== 6) {
       window.alert("Input must be exactly 6 characters.");
-      return;
-    }else if (enteredOTP != generatedOTP) {
+      throw new Error("Input must be exactly 6 characters."); 
+    } else if (enteredOTP !== generatedOTP) {
       window.alert("Invalid OTP. Please try again.");
-      return;
+      throw new Error("Invalid OTP. Please try again."); 
     }
 
   }
 
-  // Function to handle payment confirmation and booking updates
   document.getElementById("verify-otp").addEventListener("click", async function (e) {
     e.preventDefault();
     try {
@@ -347,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const paymentDetails = JSON.parse(sessionStorage.getItem('paymentDetails'));
 
         const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: paymentDetails.paymentMethodId // Use only the valid payment_method
+          payment_method: paymentDetails.paymentMethodId,
         });
 
         if (error) {
@@ -380,30 +366,30 @@ document.addEventListener("DOMContentLoaded", () => {
               console.log('Updated Points:', updatedPoints);
 
               paymentsArray.push({
-                paymentId: paymentId ?? '',
-                userId: userId ?? '',
-                amount: newestBooking.price ?? 0,
+                paymentId: paymentId || '',
+                userId: userId || '',
+                amount: Number(newestBooking.price) || 0,
                 payment_date: new Date().toISOString(),
-                book_id: newestBooking.book_id ?? '',
-                book_date: newestBooking.book_date ?? '',
-                room_name: newestBooking.room_name ?? '',
-                checkin_date: newestBooking.checkin_date ?? '',
-                checkout_date: newestBooking.checkout_date ?? '',
-                owner_name: newestBooking.owner_name ?? '',
-                pet_name: newestBooking.pet_name ?? '',
-                email: newestBooking.email ?? '',
-                contact: newestBooking.contact ?? '',
-                category: newestBooking.category ?? '',
-                food_category: newestBooking.food_category ?? '',
-                vaccination_image: newestBooking.vaccination_image ?? '',
-                nights: newestBooking.nights ?? 0,
-                serviceTax: newestBooking.serviceTax ?? 0,
-                salesTax: newestBooking.salesTax ?? 0,
-                price: newestBooking.price ?? 0,
-                subtotal: newestBooking.subtotal ?? 0,
-                totalPrice: newestBooking.totalPrice ?? 0,
-                pointsRedeemed: redeemedPoints ?? 0,
-                newPoints: points ?? 0,
+                book_id: newestBooking.book_id || '',
+                book_date: newestBooking.book_date || '',
+                room_name: newestBooking.room_name || '',
+                checkin_date: newestBooking.checkin_date || '',
+                checkout_date: newestBooking.checkout_date || '',
+                owner_name: newestBooking.owner_name || '',
+                pet_name: newestBooking.pet_name || '',
+                email: newestBooking.email || '',
+                contact: newestBooking.contact || '',
+                category: newestBooking.category || '',
+                food_category: newestBooking.food_category || '',
+                vaccination_image: newestBooking.vaccination_image || '',
+                nights: Number(newestBooking.nights) || 0,
+                serviceTax: Number(newestBooking.serviceTax) || 0,
+                salesTax: Number(newestBooking.salesTax) || 0,
+                price: Number(newestBooking.price) || 0,
+                subtotal: Number(newestBooking.subtotal) || 0,
+                totalPrice: Number(newestBooking.totalPrice) || 0,
+                pointsRedeemed: Number(redeemedPoints) || 0,
+                newPoints: Number(points) || 0,
                 status: 'Paid'
               });
 
@@ -439,7 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (e) {
       console.error('Error confirming payment:', e);
-      alert('Error confirming payment. Please try again.');
+      // alert('Error confirming payment. Please try again.');
     }
 
   });

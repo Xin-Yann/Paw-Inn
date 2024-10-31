@@ -7,15 +7,20 @@ document.getElementById("add").addEventListener("click", async () => {
         const category = document.getElementById('product_category').value;
         const type = document.getElementById('product_type').value;
         const productId = document.getElementById('product_id').value;
-        const productBarcode = document.getElementById('product_barcode').value;
+        const productBarcode = parseInt(document.getElementById('product_barcode').value);
         const productName = document.getElementById('product_name').value;
         const productDescription = document.getElementById('product_description').value;
-        const productPrice = document.getElementById('product_price').value;
-        const productStock = document.getElementById('product_stock').value;
-        const productWeight = document.getElementById('product_weight').value;
+        const productPrice = parseFloat(document.getElementById('product_price').value);
+        const productStock = parseInt(document.getElementById('product_stock').value);
+        const productWeight = parseInt(document.getElementById('product_weight').value);
 
         const price = /^\d+(\.\d{1,2})?$/;
         const stockAndBarcode = /^\d+$/;
+
+        if (!productId || !productName || !productPrice || !productStock || !productWeight || !productBarcode) {
+            alert('Please fill out all required fields: category, type, ID, name, price, stock, weight, barcode.');
+            return;
+        }
 
         if (!price.test(productPrice)) {
             alert('Invalid Price. Please enter a valid number with up to two decimal places.');
@@ -37,11 +42,6 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        if (!productId || !productName || !productPrice || !productStock || !productWeight || !productBarcode) {
-            alert('Please fill out all required fields: category, type, ID, name, price, stock, weight, barcode.');
-            return;
-        }
-
         if (category === "Select category") {
             alert('Please select a category.');
             return;
@@ -52,7 +52,6 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        // Check if the product ID already exists
         const productRef = doc(collection(db, 'product', category, type), productId);
         const productSnapshot = await getDoc(productRef);
 
@@ -61,7 +60,6 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        // Check if the product name already exists
         const productsQuery = query(collection(db, 'product', category, type), where("product_name", "==", productName));
         const querySnapshot = await getDocs(productsQuery);
 
@@ -70,12 +68,9 @@ document.getElementById("add").addEventListener("click", async () => {
             return;
         }
 
-        // Get the full path of the image
         const imagePath = document.getElementById('product_image').value;
-        // Extract only the file name
         const imageName = imagePath.split('\\').pop().split('/').pop();
 
-        // Set the document in Firestore
         await setDoc(productRef, {
             product_id: productId,
             product_image: imageName,
@@ -97,7 +92,6 @@ document.getElementById("add").addEventListener("click", async () => {
     }
 });
 
-// Add an event listener to the product category select element
 document.getElementById("product_category").addEventListener("change", function () {
     updateOptions();
 });
@@ -109,7 +103,6 @@ function updateOptions() {
 
     typeSelect.innerHTML = '<option disabled selected>Select type</option>';
 
-    // Add type options based on the selected category
     switch (selectedCategory) {
         case "dog":
             addOption("dry food");

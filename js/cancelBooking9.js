@@ -58,13 +58,12 @@ async function cancelBooking(userId) {
         return;
     }
 
-    console.log('Retrieved Book ID:', book_id); // Debugging line
-    console.log('Payments Array:', payments); // Debugging line
+    console.log('Retrieved Book ID:', book_id);
+    console.log('Payments Array:', payments);
 
-    // Find the payment
     const payment = payments.find(payment => {
-        console.log('Checking Payment Book ID:', payment.book_id); // Debugging line
-        return payment.book_id === book_id; // Ensure no type conversion
+        console.log('Checking Payment Book ID:', payment.book_id); 
+        return payment.book_id === book_id; 
     });
 
     if (!payment) {
@@ -72,7 +71,6 @@ async function cancelBooking(userId) {
         return;
     }
 
-    // Display booking details
     const bookingDetails = `
         <strong>Booking Date:</strong> ${new Date(payment.book_date).toLocaleString()}<br>
         <strong>Pet Name:</strong> ${payment.pet_name}<br>
@@ -92,14 +90,14 @@ async function cancelBooking(userId) {
             <button class="back-button" onclick="window.history.back()">No, Go Back</button>
         </div>
     `;
-    confirmContainer.style.display = 'block'; // Show the confirmation buttons
+    confirmContainer.style.display = 'block';
 
     document.getElementById('confirm-cancel').addEventListener('click', async () => {
         try {
             payment.status = 'Cancelled';
             await updateDoc(docRef, { payments });
             alert(`Booking ID: ${book_id} has been cancelled.`);
-            window.location.href = '/html/bookingHistory.html'; // Redirect back to the booking history page
+            window.location.href = '/html/bookingHistory.html'; 
         } catch (error) {
             console.error('Error cancelling booking:', error);
             alert('Failed to cancel booking. Please try again.');

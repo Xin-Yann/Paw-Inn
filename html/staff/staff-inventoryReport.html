@@ -13,11 +13,59 @@
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
     <link rel="stylesheet" href="/css/staff/staff-nav3.css">
+    <link rel="stylesheet" href="/css/staff/staff-bookingHistory.css">
     <link rel="stylesheet" href="/css/styles.css">
     <style>
         .title {
             color: #127369;
             font-weight: 900;
+        }
+
+        .filter, .rooms {
+            display: flex;
+            justify-content: flex-start;
+            gap: 100px;
+        }
+
+        .filter-control, .room-filter {
+            display: inline;
+            background-color: #fff;
+            height: 40px;
+            width: 200px;
+            padding-left: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+            color: #151515;
+            border: 1px solid #e5e5e5;
+            border-radius: 40px;
+            transition: 0.2s all;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        /* Legend styling */
+        #legend {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: inline-block;
         }
     </style>
 
@@ -138,74 +186,98 @@
         <!-- Navbar End -->
         <div class="container">
 
+
             <div class="container pb-5 pt-4">
-                <label for="type" class="type">Type:</label>
-                <select id="type" class="form-control">
-                    <option value="product">Product Inventory Report</option>
-                    <option value="rooms">Rooms Inventory Report</option>
-                </select>
-
-                <div class="py-5" id="categoryFilter">
-                    <label for="categoryFilter">Filter by Type:</label>
-                    <select id="selectCategory">
-                        <option value="dog">Dog</option>
-                        <option value="cat">Cat</option>
-                        <option value="birds">Birds</option>
-                        <option value="fish&aquatics">Fish & Aquatics</option>
-                        <option value="hamster&rabbits">Hamsters & Rabbits</option>
-                    </select>
-                </div>
-
-                <div id="subcategoryFilter">
-                    <label for="categoryFilter">Filter by Category:</label>
-                    <select id="selectSubcategory">
-                        <option value="dry food">Dry Food</option>
-                        <option value="wet food">Wet Food</option>
-                        <option value="treats">Treats</option>
-                        <option value="toys">Toys</option>
-                        <option value="essentials">Essentials</option>
-                    </select>
-                </div>
-
-                <div class="py-5" id="roomCategoryFilter" style="display: none;">
-                    <label for="roomCategoryFilter">Filter by Type:</label>
-                    <select id="selectRoomCategory">
-                        <option value="dog">Dog</option>
-                        <option value="cat">Cat</option>
-                        <option value="cage">Cage</option>
-                        <option value="rabbit">Rabbits</option>
-                    </select>
-                </div>
-
-                <!-- <div>
-                    <select id="selectMonth">
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                </div> -->
 
                 <div>
+                    <label for="type" class="type">Type:</label>
+                    <select id="type" class="form-control">
+                        <option value="product">Product Inventory Report</option>
+                        <option value="rooms">Rooms Inventory Report</option>
+                    </select>
+                </div>
+                <div class="filter py-5" id="filter">
+                    <div id="categoryFilter">
+                        <label for="categoryFilter" class="type">Filter by Category:</label>
+                        <select id="selectCategory" class="filter-control">
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="birds">Birds</option>
+                            <option value="fish&aquatics">Fish & Aquatics</option>
+                            <option value="hamster&rabbits">Hamsters & Rabbits</option>
+                        </select>
+                    </div>
+
+                    <div id="subcategoryFilter">
+                        <label for="categoryFilter" class="type">Filter by Food Type:</label>
+                        <select id="selectSubcategory" class="filter-control">
+                            <option value="dry food">Dry Food</option>
+                            <option value="wet food">Wet Food</option>
+                            <option value="treats">Treats</option>
+                            <option value="toys">Toys</option>
+                            <option value="essentials">Essentials</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="rooms" id="roomFilter" style="display: none;">
+                    <div class="rooms py-5" id="roomCategoryFilter">
+                        <label for="roomCategoryFilter" class="type">Filter by Type:</label>
+                        <select id="selectRoomCategory" class="room-filter">
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="cage">Cage</option>
+                            <option value="rabbit">Rabbits</option>
+                        </select>
+                    </div>
+
+                    <!-- <div class="py-5" id="yearFilter" >
+                        <label for="yearFilter" class="type">Filter by Year:</label>
+                        <select id="selectYear" class="room-filter">
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                        </select>
+                    </div>
+
+                    <div class="py-5" id="monthFilter" >
+                        <label for="monthFilter" class="type">Filter by Month:</label>
+                        <select id="selectMonth" class="room-filter">
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div> -->
+
+                </div>
+
+                <div id="report">
                     <h1 class="title text-center py-5">Product Inventory Report</h1>
                     <canvas id="inventoryChart" class="pb-5"></canvas>
-                   
+                    <div id="legend"></div>
+                    <div id="report-message" style="display:none; color: red;"></div>
                 </div>
+                
             </div>
         </div>
     </section>
 
     <script type="module" src="/js/firebase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="module" src="/js/staff/staff-inventoryReport14.js"></script>
+    <script type="module" src="/js/staff/staff-inventoryReport.js"></script>
     <script type="module" src="/js/staff/staff-home.js"></script>
     <script type="module" src="/js/staff/staff-logout.js"></script>
 

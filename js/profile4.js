@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const namePattern = /^[A-Za-z\s]+$/;
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const contactPattern = /^(\d{3}[- ]?\d{3,4}[- ]?\d{4})$/;
+        const contactPattern = /^(\d{3}[- ]\d{3,4}[- ]\d{4})$/;
 
         if (!name || !email || !contact) {
             alert('Please fill out all required fields: name, email and contact.');
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!contactPattern.test(contact)) {
-            alert('Please enter a valid 10 or 11-digit contact number.');
+            alert('Invalid format. the contact number should be like 123-456 7890.');
             return false;
         }
 

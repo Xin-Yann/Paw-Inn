@@ -17,9 +17,10 @@
     <link rel="stylesheet" href="/css/staff/staff-bookingHistory.css">
     <script type="module" src="/js/firebase-config.js"></script>
     <style>
-       
-
-
+        .filter{
+            display: flex;
+            justify-content: flex-start;
+        }
     </style>
 
 </head>
@@ -148,23 +149,37 @@
                 </select>
             </div> -->
 
-            <div class="container pb-5">
-                <label for="monthSelect" class="type">Select Month:</label>
-                <select id="selectedMonth" class="form-control">
-                    <option value="0">January</option>
-                    <option value="1">February</option>
-                    <option value="2">March</option>
-                    <option value="3">April</option>
-                    <option value="4">May</option>
-                    <option value="5">June</option>
-                    <option value="6">July</option>
-                    <option value="7">August</option>
-                    <option value="8">September</option>
-                    <option value="9">October</option>
-                    <option value="10">November</option>
-                    <option value="11">December</option>
-                </select>
+            <div class="pb-5 filter">
+                <div class="type">
+                    <label for="monthSelect">Select Month:</label>
+                    <select id="selectedMonth" class="form-control">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                    </select>
+                </div>
+
+                <div class="ml-5 type">
+                    <label for="yearSelect">Select Year:</label>
+                    <select id="selectedYear" class="form-control">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
             </div>
+
+           
             <div id="statusContainer"></div>
 
         </div>

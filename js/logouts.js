@@ -12,7 +12,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
 function handleProfileClick() {
   if (auth.currentUser) {
     window.location.href = "/html/profile.html";

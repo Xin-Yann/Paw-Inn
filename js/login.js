@@ -22,7 +22,7 @@ document.getElementById('signIn').addEventListener('click', (event) => {
   }
 
   if (email.endsWith('@staff.com')) {
-    window.alert('Invalid Email');
+    window.alert('Invalid Email!');
     return;
   }
 
@@ -43,8 +43,14 @@ document.getElementById('signIn').addEventListener('click', (event) => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      
+      if (errorCode === 'auth/invalid-credential') {
+        window.alert("Invalid credentials. Please check your input.");
+      } else {
+        window.alert("Error: " + errorMessage);
+      }
+  
       console.error('Sign-in error:', errorCode, errorMessage);
-      window.alert("Invalid email or password. Please try again.");
     });
 });
 
@@ -61,14 +67,12 @@ document.getElementById('googleSignIn').addEventListener('click', () => {
         if (docSnap.exists()) {
           console.log("User already exists in Firestore");
         } else {
-          // Check if the user's email is already registered with password
           const querySnapshot = await getDocs(query(collection(db, 'users'), where('email', '==', user.email)));
           if (!querySnapshot.empty) {
             console.log("User already registered with password. Skipping Firestore save.");
           } else {
 
-            const membershipId = generateMembershipId();
-            // Save user details to Firestore
+            const membershipId = generateMembershipId()
             await setDoc(userRef, {
               userId: user.uid,
               name: user.displayName,

@@ -11,39 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
-    <link rel="stylesheet" href="/css/nav-4.css">
+    <link rel="stylesheet" href="/css/nav.css">
     <link rel="stylesheet" href="/css/books.css">
-
-    <style>
-        .fc-event {
-            background: #127369;
-            border: none;
-        }
-
-        .fc-daygrid-day.fc-day-past {
-            background-color: #f0f0f0;
-            /* Example grey color */
-            color: #a0a0a0;
-            /* Example grey text color */
-        }
-
-        .filter-controls button {
-            margin: 5px;
-            padding: 10px;
-            cursor: pointer;
-            display: flex;
-            width: 60%;
-            flex-direction: column;
-            align-items: center;
-            transform: translate(30%, -50%);
-        }
-
-        .error-message {
-            color: red;
-            /* Hidden by default */
-        }
-        
-    </style>
 </head>
 
 <body>
@@ -90,10 +59,8 @@
 
         <h1 class="text-center pt-5" style="color: #127369; font-weight: 900;">Book A Room</h1>
 
-
         <div id='calendar' style="padding: 50px;"></div>
 
-        <!-- Modal Structure -->
         <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -103,12 +70,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <!-- Event details will be injected here -->
-                    </div>
-                    <div class="modal-footer">
-
-                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
                 </div>
             </div>
         </div>
@@ -200,11 +163,11 @@
                 <p class="form-control px-3" style="border: none; font-size: 24px;">Sales Tax (10%): RM <span id="sales"></span></p>
                 <p class="form-control px-3 mb-5" style="border: none; font-size: 24px;">Total Price: RM <span  id="totalprice"></span></p>
             
-            <input type="hidden" id="status" value="Pending">
+                <input type="hidden" id="status" value="Pending">
 
-            <a href="#" type="submit" class="form-control btn btn-primary rounded submit px-3" id="submit"
-                style="background-color: #01647a;border: none;">Book Now</a>
-            
+                <a href="#" type="submit" class="form-control btn btn-primary rounded submit px-3" id="submit"
+                    style="background-color: #01647a;border: none;">Book Now</a>
+                
             </div>
         </form>
     </div>

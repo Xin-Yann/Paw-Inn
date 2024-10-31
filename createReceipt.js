@@ -3,7 +3,7 @@ const fs = require('fs');
 
 async function createReceiptPDF(paymentData) {
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([400, 961.89]);
+    const page = pdfDoc.addPage([400, 1050.89]);
     const { width, height } = page.getSize();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
@@ -149,6 +149,7 @@ async function createReceiptPDF(paymentData) {
     let currentY = tableStartY - 40;
     const maxTextWidth = 110; // Max width for product name in points
     const textWrapMargin = 50; // Margin to the right side for text wrapping
+    const lineSpacing = 12; // Line height for each line of text
 
     paymentData.cartItems.forEach(item => {
         const productName = item.name;
@@ -157,6 +158,10 @@ async function createReceiptPDF(paymentData) {
         const amount = (item.price * item.quantity).toFixed(2).toString(); // Convert to string
 
         const productNameLines = wrapText(productName, maxTextWidth, font, 10);
+
+        // Calculate the number of lines and the maximum row height
+        const maxLines = productNameLines.length;
+        const rowHeight = maxLines * lineSpacing;
         productNameLines.forEach((line, index) => {
             page.drawText(line, {
                 x: 50,
@@ -192,27 +197,51 @@ async function createReceiptPDF(paymentData) {
             color: rgb(0, 0, 0),
         });
 
-        currentY -= Math.max(30, productNameLines.length * 15); // Adjust the space based on the number of lines
+        currentY -= Math.max(20, productNameLines.length * 10); // Adjust the space based on the number of lines
+        currentY -= rowHeight + 5;
     });
 
     page.drawLine({
-        start: { x: 30, y: currentY - 5 },
-        end: { x: 380, y: currentY - 5 },
+        start: { x: 30, y: currentY },
+        end: { x: 380, y: currentY },
         thickness: 1,
         color: rgb(0, 0, 0),
     });
 
+    const spacing = 30; // Spacing between totals
+
+    currentY -= spacing;
+
+    const valueOffset = 340; // X position for values, adjust as needed
+    const valueSize = 336;
+
+    // Function to format value for alignment
+    function formatValue(value) {
+        return value.toFixed(2); // Ensure two decimal places
+    }
+
+    // Function to calculate x position for right alignment
+    function getRightAlignedX(value) {
+        // Use a fixed width font size (6 pixels per character as an approximation)
+        return valueOffset - (value.length * 6);
+    }
+
+    function getRightAlign(value) {
+        // Use a fixed width font size (6 pixels per character as an approximation)
+        return valueSize - (value.length * 6);
+    }
+
     page.drawText(`Subtotal:`, {
         x: 50,
-        y: height - 520,
+        y: currentY,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
-    page.drawText(`${paymentData.subtotal.toFixed(2)}`, {
-        x: 316,
-        y: height - 520,
+    page.drawText(formatValue(paymentData.subtotal), {
+        x: getRightAlignedX(formatValue(paymentData.subtotal)),
+        y: currentY,
         size: 11,
         font,
         color: rgb(0, 0, 0),
@@ -220,15 +249,15 @@ async function createReceiptPDF(paymentData) {
 
     page.drawText(`Sales Tax (10%):`, {
         x: 50,
-        y: height - 545,
+        y: currentY - 25,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
-    page.drawText(`${paymentData.salesTax.toFixed(2)}`, {
-        x: 316,
-        y: height - 545,
+    page.drawText(formatValue(paymentData.salesTax), {
+        x: getRightAlignedX(formatValue(paymentData.salesTax)),
+        y: currentY - 25,
         size: 11,
         font,
         color: rgb(0, 0, 0),
@@ -236,15 +265,15 @@ async function createReceiptPDF(paymentData) {
 
     page.drawText(`Discount:`, {
         x: 50,
-        y: height - 570,
+        y: currentY - 50,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
-    page.drawText(`-${paymentData.salesTax.toFixed(2)}`, {
-        x: 313,
-        y: height - 570,
+    page.drawText(formatValue(paymentData.salesTax), {
+        x: getRightAlignedX(formatValue(paymentData.salesTax)),
+        y: currentY - 50,
         size: 11,
         font,
         color: rgb(0, 0, 0),
@@ -252,38 +281,40 @@ async function createReceiptPDF(paymentData) {
 
     page.drawText(`Point Discount:`, {
         x: 50,
-        y: height - 595,
+        y: currentY - 75,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
-    page.drawText(`-${paymentData.totalPrice.toFixed(2)}`, {
-        x: 313,
-        y: height - 595,
+    page.drawText(formatValue(paymentData.totalPrice), {
+        x: getRightAlignedX(formatValue(paymentData.totalPrice)),
+        y: currentY - 75,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
     page.drawLine({
-        start: { x: 30, y: height - 620 },
-        end: { x: 380, y: height - 620 },
+        start: { x: 30, y: currentY - 100 },
+        end: { x: 380, y: currentY - 100 },
         thickness: 1,
         color: rgb(0, 0, 0),
     });
 
+    currentY -= spacing;
+
     page.drawText(`Total Price:`, {
         x: 50,
-        y: height - 655,
+        y: currentY - 100,
         size: 13,
         font,
         color: rgb(0, 0, 0),
     });
 
-    page.drawText(`RM ${paymentData.totalPrice.toFixed(2)}`, {
-        x: 295,
-        y: height - 655,
+    page.drawText(formatValue(paymentData.change), {
+        x: getRightAlign(formatValue(paymentData.change)),
+        y: currentY - 100,
         size: 13,
         font,
         color: rgb(0, 0, 0),
@@ -291,15 +322,15 @@ async function createReceiptPDF(paymentData) {
 
     page.drawText(`Cash:`, {
         x: 50,
-        y: height - 683,
+        y: currentY - 128,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
-    page.drawText(`RM ${paymentData.totalPrice.toFixed(2)}`, {
-        x: 303,
-        y: height- 683,
+    page.drawText(formatValue(paymentData.totalPrice), {
+        x: getRightAlignedX(formatValue(paymentData.totalPrice)),
+        y: currentY - 128,
         size: 11,
         font,
         color: rgb(0, 0, 0),
@@ -307,30 +338,30 @@ async function createReceiptPDF(paymentData) {
 
     page.drawText(`Change:`, {
         x: 50,
-        y: height - 711,
+        y: currentY - 158,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
-    page.drawText(`RM ${paymentData.change.toFixed(2)}`, {
-        x: 303,
-        y: height - 711,
+    page.drawText(formatValue(paymentData.totalPrice), {
+        x: getRightAlignedX(formatValue(paymentData.totalPrice)),
+        y: currentY - 158,
         size: 11,
         font,
         color: rgb(0, 0, 0),
     });
 
     page.drawLine({
-        start: { x: 30, y: height - 740 },
-        end: { x: 380, y: height - 740 },
+        start: { x: 30, y: currentY - 182 },
+        end: { x: 380, y: currentY - 182 },
         thickness: 1,
         color: rgb(0, 0, 0),
     });
 
     page.drawText(`Note:`, {
         x: 50,
-        y: height - 765,
+        y: currentY - 205,
         size: 10,
         font,
         color: rgb(0, 0, 0),
@@ -338,7 +369,7 @@ async function createReceiptPDF(paymentData) {
 
     page.drawText(`1. Good sold are non-refundable. `, {
         x: 50,
-        y: height - 790,
+        y: currentY - 228,
         size: 10,
         font,
         color: rgb(0, 0, 0),
@@ -346,16 +377,16 @@ async function createReceiptPDF(paymentData) {
 
     page.drawText(`2. Strictly no exchange for any product.`, {
         x: 50,
-        y: height - 810,
+        y: currentY - 248,
         size: 10,
         font,
         color: rgb(0, 0, 0),
     });
 
     page.drawText(`**This is a computer-generated invoice no signature is required.**`, {
-        x: 60,
-        y: height - 940,
-        size: 10,
+        x: 70,
+        y: currentY - 320,
+        size: 9,
         font,
         color: rgb(128 / 255, 128 / 255, 128 / 255), // Normalize RGB values
 
@@ -396,9 +427,14 @@ function wrapText(text, maxWidth, font, fontSize) {
             points: 1500,
         },
         cartItems: [
-            { barcode: '123456789012', name: 'Dog Food 4lbs', type: 'Dry Food', price: 0.00, quantity: 0 }
+            { barcode: '123456789012', name: 'Dog Food 4lbs', type: 'Dry Food', price: 0.00, quantity: 0 },
+            { barcode: '123456789012', name: 'Dog Food 4lbs fewgrhhwshgsgfrbheh', type: 'Dry Food', price: 0.00, quantity: 0 },
+            { barcode: '123456789012', name: 'Dog Food 4lbs', type: 'Dry Food', price: 0.00, quantity: 0 },
+            { barcode: '123456789012', name: 'Dog Food 4lbs', type: 'Dry Food', price: 0.00, quantity: 0 },
+            { barcode: '123456789012', name: 'Dog Food 4lbs', type: 'Dry Food', price: 0.00, quantity: 0 },
+
         ],
-        subtotal: 120.00,
+        subtotal: 182.00,
         salesTax: 12.30,
         totalPrice: 13.00,
         change: 133.00,

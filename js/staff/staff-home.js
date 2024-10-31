@@ -22,8 +22,8 @@ async function fetchAndDisplayPersonalDetails(email) {
                 const staffData = doc.data();
                 console.log('User data fetched:', staffData);
 
-                document.getElementById('Name').textContent = staffData.name || '';
-                document.getElementById('Email').textContent = staffData.email || '';
+                document.getElementById('name').textContent = staffData.name || '';
+                document.getElementById('email').textContent = staffData.email || '';
                 document.getElementById('staff-id').textContent = staffData.staffId || '';
 
             });
@@ -55,7 +55,7 @@ onAuthStateChanged(auth, (user) => {
 let arrow = document.querySelectorAll(".arrow");
 for (var i = 0; i < arrow.length; i++) {
     arrow[i].addEventListener("click", (e) => {
-        let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+        let arrowParent = e.target.parentElement.parentElement;
         arrowParent.classList.toggle("showMenu");
     });
 }

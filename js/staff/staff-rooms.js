@@ -10,13 +10,11 @@ function createButton(htmlContent, onClickHandler) {
     return button;
 }
 
-// Function to fetch data and display it in the webpage based on room type
 async function fetchDataAndDisplay() {
     try {
         const roomType = document.getElementById('room-type').value;
         console.log('Selected room type:', roomType);
 
-        // Extract the main room type from the subcollection name (e.g., "dog" from "dog rooms")
         const mainRoomType = roomType.split(' ')[0];
         const subcollectionName = roomType;
 
@@ -71,37 +69,45 @@ async function fetchDataAndDisplay() {
                     roomImage.classList.add('table-image');
                     td.appendChild(roomImage);
                 } else if (field === 'room_quantity' && Array.isArray(roomData[field])) {
-                    // Extract the single object containing date-quantity pairs
-                    const quantityMap = roomData[field][0];
-                    if (quantityMap && typeof quantityMap === 'object') {
-                        // Generate a string of all date-quantity pairs with each on a new line
-                        const today = new Date();
+                    const quantityMap = {};
 
-                        const filteredMap = Object.fromEntries(
-                            Object.entries(quantityMap)
-                            .filter(([key, value]) => new Date(key) >= today)
-                        );
+                    roomData[field].forEach(item => {
+                        if (item && typeof item === 'object') {
+                            Object.entries(item).forEach(([date, quantity]) => {
+                                if (!quantityMap[date]) {
+                                    quantityMap[date] = 0;
+                                }
+                                quantityMap[date] += quantity;
+                            });
+                        }
+                    });
 
-                        const quantityText = Object.entries(filteredMap)
-                            .sort((a, b) => new Date(a[0]) - new Date(b[0]))
-                            .map(([date, quantity]) => `${date}: ${quantity}`)
-                            .join('\n'); // Join with a line break for each entry
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = today.getMonth() + 1;
 
-                        // Use line breaks in the displayed text
-                        const p = document.createElement('p'); // <pre> tag preserves line breaks
-                        p.textContent = quantityText;
-                        p.style.width = '150px';
-                        td.appendChild(p);
-                    } else {
-                        td.textContent = 'N/A';
-                    }
+                    const currentMonthQuantities = Object.entries(quantityMap).filter(([key]) => {
+                        const date = new Date(key);
+                        return date >= today && date.getFullYear() === year && date.getMonth() + 1 === month; 
+                    });
+
+                    const quantityText = currentMonthQuantities
+                        .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+                        .map(([date, quantity]) => `${date}: ${quantity}`)
+                        .join('\n');
+
+                    const p = document.createElement('p');
+                    p.textContent = quantityText;
+                    p.style.width = '150px';
+                    td.appendChild(p);
+
+
                 } else {
                     td.textContent = roomData[field] || 'N/A';
                 }
                 tr.appendChild(td);
             });
 
-            // Edit button
             const action1 = document.createElement('td');
             const editButton = createButton('Edit', () => {
                 editRoom(roomData.id, mainRoomType, roomType);
@@ -110,7 +116,6 @@ async function fetchDataAndDisplay() {
             action1.appendChild(editButton);
             tr.appendChild(action1);
 
-            // Delete button
             const action2 = document.createElement('td');
             const deleteButton = createButton('Delete', async () => {
                 await deleteRoom(roomData.id, mainRoomType);
@@ -128,13 +133,10 @@ async function fetchDataAndDisplay() {
     }
 }
 
-
-
 function naturalSort(a, b) {
     return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 }
 
-// Function to delete room
 async function deleteRoom(roomId, mainRoomType) {
     try {
         const roomType = document.getElementById('room-type').value;

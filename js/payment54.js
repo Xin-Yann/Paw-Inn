@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let totalPrice;
 
-  // Function to display bookings from Firestore
   async function fetchAndDisplayBooking(userId) {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -50,18 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
         const bookings = userData.bookings || [];
-        // const newestBooking = bookings[bookings.length - 1];
 
         let booking;
         if (book_id) {
-          // Find the booking with the specific book_id
           booking = bookings.find(b => b.book_id === book_id);
           if (!booking) {
             console.error('No booking found with ID:', book_id);
             return;
           }
         } else {
-          // Get the newest booking
           booking = bookings[bookings.length - 1];
           if (!booking) {
             console.error('No bookings found for user ID:', userId);
@@ -87,13 +83,13 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('totalprice').textContent = booking.totalPrice;
 
         if (booking.vaccination_image) {
-          const storageRef = ref(storage, booking.vaccination_image); // Create a reference to the image path
-          const imageUrl = await getDownloadURL(storageRef); // Get the download URL
+          const storageRef = ref(storage, booking.vaccination_image); 
+          const imageUrl = await getDownloadURL(storageRef); 
           const imageElement = document.getElementById('vaccination_image');
           imageElement.src = imageUrl;
-          imageElement.style.display = 'block'; // Make sure the image is visible
+          imageElement.style.display = 'block'; 
         } else {
-          document.getElementById('vaccination_image').style.display = 'none'; // Hide the image element if no image path is provided
+          document.getElementById('vaccination_image').style.display = 'none';
         }
 
         totalPrice = booking.totalPrice;
@@ -107,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Initialize Stripe Elements
   const cardNumberElement = elements.create('cardNumber');
   cardNumberElement.mount('#card-number-element');
 
@@ -116,8 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const cardCvcElement = elements.create('cardCvc');
   cardCvcElement.mount('#card-cvc-element');
-
-
 
   async function validateCardDetails() {
     const cardHolderName = document.getElementById('cardHolder').value.trim();
@@ -146,8 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
 
-    // Check if there are any errors
-    // Handle card number errors
     if (!cardNumberElement || !cardCvcElement || !cardExpiryElement || !cardHolderName) {
       window.alert(`Please fill in all credit card detials.`)
       return false;
@@ -158,32 +149,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
 
-    // Handle card expiry errors
     if (cardExpiryError) {
       window.alert(`Card Expiry Error: ${cardExpiryError.message}`);
       return false;
     }
 
-    // Handle card CVC errors
     if (cardCvcError) {
       window.alert(`Card CVC Error: ${cardCvcError.message}`);
       return false;
     }
 
-    if (!cardHolderName) {
-      window.alert("Please Fill in Card Holder Name");
-      return;
-    }
-
     const paymentDetails = {
       cardHolderName: cardHolderName,
-      paymentMethodId: paymentMethod.id, // Use the Payment Method ID instead of the card number
+      paymentMethodId: paymentMethod.id, 
     };
     sessionStorage.setItem('paymentDetails', JSON.stringify(paymentDetails));
 
     console.log("Payment details stored in session:", paymentDetails);
 
-    return true; // Validation successful
+    return true;
   }
 
   function generateOTP() {
@@ -224,23 +208,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (userEmail && userEmail.trim() !== '') {
             const otp = generateOTP();
-            const otpGenerationTime = Date.now(); // Current time in milliseconds
-            const otpExpirationTime = otpGenerationTime + 10 * 60 * 1000; // 10 minutes from now
+            const otpGenerationTime = Date.now(); 
+            const otpExpirationTime = otpGenerationTime + 10 * 60 * 1000; 
 
-            const bookingId = document.getElementById('book_id').textContent; // Get booking ID
+            const bookingId = document.getElementById('book_id').textContent; 
             const redeemedPoints = parseFloat(document.getElementById('point_amount').textContent.replace(/[^0-9]/g, "").trim()) || 0;
 
             sessionStorage.setItem("generatedOTP", otp.trim());
             sessionStorage.setItem("otpGenerationTime", otpGenerationTime.toString());
             sessionStorage.setItem("otpExpirationTime", otpExpirationTime.toString());
-            sessionStorage.setItem("bookingId", bookingId); // Store booking ID
+            sessionStorage.setItem("bookingId", bookingId); 
             sessionStorage.setItem("redeemedPoints", redeemedPoints.toString());
 
             const templateParams = {
               from_name: userName,
               to_email: userEmail,
               otp: otp,
-              expiration_time: new Date(otpExpirationTime).toLocaleString() // Formatted expiration time
+              expiration_time: new Date(otpExpirationTime).toLocaleString()
             };
 
             console.log('Sending email with params:', templateParams);
@@ -563,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const pointsText = document.getElementById('point').textContent;
       let points = parseFloat(pointsText.replace(/[^0-9.]/g, "").trim());
       if (points <= 0) {
-        console.error('No points available for redemption.');
+        window.alert('No points available for redemption.');
         return;
       }
       const redeemedDiscount = points / 100;

@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Retrieve selected room name from sessionStorage
   const selectedRoomName = sessionStorage.getItem('selectedRoomName');
   const selectedRoomPrice = sessionStorage.getItem('selectedRoomPrice');
   const selectedRoomCategory = sessionStorage.getItem('selectedRoomCategory');
@@ -59,49 +58,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
   async function checkRoomAvailability(date) {
     try {
-      const roomCategories = [
-        { category: 'cat', collectionName: 'cat rooms' },
-        { category: 'dog', collectionName: 'dog rooms' },
-        { category: 'rabbit', collectionName: 'rabbit rooms' },
-        { category: 'cage', collectionName: 'cage rooms' },
-      ];
+        const roomCategories = [
+            { category: 'cat', collectionName: 'cat rooms' },
+            { category: 'dog', collectionName: 'dog rooms' },
+            { category: 'rabbit', collectionName: 'rabbit rooms' },
+            { category: 'cage', collectionName: 'cage rooms' },
+        ];
 
-      for (const { category, collectionName } of roomCategories) {
-        const docRef = doc(collection(db, 'rooms'), category);
-        const roomCollectionRef = collection(docRef, collectionName);
+        const selectedCategory = roomCategories.find(cat => cat.category === selectedRoomCategory);
+
+        if (!selectedCategory) {
+            console.error(`No category found for ${selectedRoomCategory}`);
+            return false;
+        }
+
+        const docRef = doc(collection(db, 'rooms'), selectedCategory.category);
+        const roomCollectionRef = collection(docRef, selectedCategory.collectionName);
         const roomQuerySnapshot = await getDocs(roomCollectionRef);
 
         for (const docSnap of roomQuerySnapshot.docs) {
-          if (docSnap.exists()) {
-            const room = docSnap.data();
-            const roomQuantities = room.room_quantity || [];
+            if (docSnap.exists()) {
+                const room = docSnap.data();
 
-            if (!Array.isArray(roomQuantities)) {
-              continue;
-            }
+                if (room.room_name === selectedRoomName) {
+                    console.log(`Found room with name ${selectedRoomName}`);
 
-            // Check availability for the specific date
-            for (const monthData of roomQuantities) {
-              if (typeof monthData === 'object' && monthData !== null) {
-                for (const [roomDate, quantity] of Object.entries(monthData)) {
-                  const availableDate = new Date(roomDate);
-                  if (availableDate.toDateString() === new Date(date).toDateString() &&
-                    parseInt(quantity, 10) > 0) {
-                    return true; // Room is available
-                  }
+                    const roomQuantities = room.room_quantity || [];
+                    if (!Array.isArray(roomQuantities)) {
+                        console.warn('Room quantities not an array', roomQuantities);
+                        continue;
+                    }
+
+                    for (const monthData of roomQuantities) {
+                        if (typeof monthData === 'object' && monthData !== null) {
+                            for (const [roomDate, quantity] of Object.entries(monthData)) {
+                                console.log(`Checking date ${roomDate} with quantity ${quantity}`);
+                                const availableDate = new Date(roomDate);
+                                if (availableDate.toDateString() === new Date(date).toDateString() &&
+                                    parseInt(quantity, 10) > 0) {
+                                    console.log(`Room available on ${date}`);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
         }
-      }
 
-      return false; // No rooms available
+        console.log(`No rooms available for ${date} or room name does not match.`);
+        return false; 
     } catch (error) {
-      console.error('Error checking room availability:', error);
-      return false;
+        console.error('Error checking room availability:', error);
+        return false;
     }
-  }
+}
+
 
   function calculateNights(checkinDate, checkoutDate) {
     if (!checkinDate || !checkoutDate) return 0;
@@ -143,21 +155,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutDate = checkoutElem.value;
     const nights = calculateNights(checkinDate, checkoutDate);
 
-    // Ensure priceElem has a valid format
     const priceText = priceElem ? priceElem.textContent.replace('RM ', '').trim() : '0';
-    const roomPrice = parseFloat(priceText) || selectedRoomPrice; // Fallback to selectedRoomPrice if parseFloat fails
+    const roomPrice = parseFloat(priceText) || selectedRoomPrice;
 
     document.querySelectorAll('.error').forEach(el => el.textContent = '');
-    // Check room availability
+
     const isCheckinAvailable = await checkRoomAvailability(checkinDate);
     const isCheckoutAvailable = await checkRoomAvailability(checkoutDate);
 
-    // Determine overall availability
     const isAvailable = isCheckinAvailable && isCheckoutAvailable;
     const isSameDay = new Date(checkinDate).toDateString() === new Date(checkoutDate).toDateString();
     const validNights = isAvailable && !isSameDay ? nights : 0;
 
-    // Calculate subtotal and totalPrice
     let subtotal = isAvailable && !isSameDay ? roomPrice : 0;
     subtotal = parseFloat(subtotal) || 0;
 
@@ -166,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function () {
       : { basePrice: 0, serviceTax: 0, salesTax: 0, totalPrice: 0 };
 
 
-    // Update elements with appropriate values
     if (priceElem) {
       priceElem.textContent = `${subtotal.toFixed(2)}`;
     } else {
@@ -218,7 +226,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Initialize date variables
   var currentDateTime = new Date();
   var year = currentDateTime.getFullYear();
   var month = (currentDateTime.getMonth() + 1).toString().padStart(2, '0');
@@ -273,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function () {
       await updateTotalPrice();
     });
 
-    // Call updateTotalPrice when the page loads to set initial values
     updateTotalPrice();
   } else {
     console.error('Check-in or Check-out elements not found');
@@ -288,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
         newBookingID = bookingCounterDoc.data().lastBookingID + 1;
       }
       await setDoc(bookingCounterDocRef, { lastBookingID: newBookingID });
-      return `B${newBookingID.toString().padStart(2, '0')}`; // Example format: P00001
+      return `B${newBookingID.toString().padStart(2, '0')}`; 
     } catch (e) {
       console.error('Failed to generate booking ID: ', e);
       throw new Error('Failed to generate booking ID');
@@ -319,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
   async function uploadVaccinationImage(file, userId) {
     try {
       const storageRef = ref(storage, `vaccination_images/${userId}/${file.name}`);
-      console.log('Storage reference:', storageRef.fullPath); // Debug path
+      console.log('Storage reference:', storageRef.fullPath); 
       await uploadBytes(storageRef, file);
       const imageUrl = await getDownloadURL(storageRef);
       return imageUrl;
@@ -329,15 +335,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Inside the click event listener for the submit button
   document.getElementById("submit").addEventListener("click", async () => {
     try {
       const userId = getCurrentUserId();
 
-      // Clear previous error messages
       document.querySelectorAll('.error').forEach(el => el.textContent = '');
 
-      // Get form values
       const roomName = document.getElementById('room_name').value;
       const checkinDate = document.getElementById('checkin').value;
       const checkoutDate = document.getElementById('checkout').value;
@@ -358,14 +361,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const sales = document.getElementById('sales').textContent;
       const totalPrice = document.getElementById('totalprice').textContent;
 
-      // Validate inputs
       let isValid = true;
-      const contactNo = /^(\d{3}[- ]?\d{3,4}[- ]?\d{4})$/;
-
-      if (!contactNo.test(contact)) {
-        window.alert("Please enter a valid contact number");
-        return;
-      }
+      const contactNo = /^(\d{3}[- ]\d{3,4}[- ]?\d{4})$/;     
 
       if (!roomName) {
         document.getElementById('name_error').textContent = 'Please select the room from the Dog, Cat, Rabbit, or Cage page.';
@@ -395,6 +392,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('contact_error').textContent = 'Please fill in your contact number.';
         isValid = false;
       }
+      if (!contactNo.test(contact)) {
+        window.alert("Please enter a valid contact number");
+        return;
+      }
       if (!category) {
         document.getElementById('category_error').textContent = 'Please select one of the animal categories.';
         isValid = false;
@@ -415,7 +416,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      // Stop further processing if validation fails
       if (!isValid) {
         window.alert("Please fill in all required fields.");
         return;
@@ -425,21 +425,16 @@ document.addEventListener('DOMContentLoaded', function () {
         imageUrl = await uploadVaccinationImage(imageFile, userId);
       }
 
-
-      // Create or update a document within the "bookings" collection using the userId as the document ID
       const userDocRef = doc(db, 'book', userId);
 
-      // Fetch the current data from Firestore
       const docSnap = await getDoc(userDocRef);
       let bookingsArray = [];
 
       if (docSnap.exists()) {
-        // If the document exists, fetch its current data and update it
         const userData = docSnap.data();
         bookingsArray = userData.bookings || [];
       }
 
-      // Construct new booking object
       const newBooking = {
         book_id: bookingId,
         book_date: new Date().toISOString(),
@@ -462,14 +457,11 @@ document.addEventListener('DOMContentLoaded', function () {
         totalPrice: totalPrice
       };
 
-      // Add the new booking to the array
       bookingsArray.push(newBooking);
 
-      // Update the document in Firestore with the updated bookings array
       await setDoc(userDocRef, { bookings: bookingsArray }, { merge: true });
 
       console.log('Booking added to array in Firestore for user ID:', userId);
-      // After successful booking addition, navigate to payment page
       console.log('Navigating to payment page...');
       window.location.href = "../html/payment.html";
     } catch (e) {
@@ -478,7 +470,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Define the function to fetch user payments
   async function fetchRoomQuantity(year = new Date().getFullYear()) {
     try {
       const roomCategories = [
@@ -495,19 +486,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const roomCollectionRef = collection(docRef, collectionName);
         const roomQuerySnapshot = await getDocs(roomCollectionRef);
 
-
-
         roomQuerySnapshot.forEach(docSnap => {
           if (docSnap.exists()) {
             const room = docSnap.data();
             const roomName = room.room_name || 'Unknown';
-            const roomQuantities = room.room_quantity || []; // Array of maps
+            const roomQuantities = room.room_quantity || []; 
 
             if (!Array.isArray(roomQuantities)) {
               return;
             }
 
-            // Process data for each month
             roomQuantities.forEach((monthData, monthIndex) => {
               for (const [date, quantity] of Object.entries(monthData)) {
                 const roomDate = new Date(date);
@@ -515,9 +503,9 @@ document.addEventListener('DOMContentLoaded', function () {
                   roomData.push({
                     category,
                     roomName,
-                    date: date, // Store date as string
+                    date: date, 
                     quantity: parseInt(quantity, 10),
-                    month: roomDate.getMonth(), // Store month index for filtering
+                    month: roomDate.getMonth(), 
                   });
                 }
               }
@@ -543,8 +531,6 @@ document.addEventListener('DOMContentLoaded', function () {
       validRange: {
         start: '2024-01-01',
         end: '2025-12-31'
-        // start: new Date().getFullYear() + '-01-01', // Start of the year
-        // end: new Date().getFullYear() + '-12-31'   // End of the year
       },
       dayCellDidMount: async function (info) {
         const cellDate = new Date(info.date);
@@ -557,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (cellDate >= nextDay) {
           const cell = info.el.querySelector('.fc-daygrid-day-frame');
           if (cell) {
-            const roomData = await fetchRoomQuantity(); // Fetch room data
+            const roomData = await fetchRoomQuantity(); 
 
             const filterContainer = document.createElement('div');
             filterContainer.className = 'filter-controls';

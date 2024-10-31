@@ -8,7 +8,6 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
-// Function to fetch and display room details
 async function fetchAndDisplayProductDetails() {
     try {
         const roomCategory = getQueryParam('category');
@@ -41,7 +40,6 @@ async function fetchAndDisplayProductDetails() {
     }
 }
 
-// Function to save edited room details
 async function saveProductDetails() {
     try {
         const roomCategory = document.getElementById('room_category').value;
@@ -49,9 +47,9 @@ async function saveProductDetails() {
         const roomType = document.getElementById('room_type').value;
         const roomName = document.getElementById('room_name').value;
         const roomDescription = document.getElementById('room_description').value;
-        const roomPrice = document.getElementById('room_price').value;
+        const roomPrice = parseFloat(document.getElementById('room_price').value);
         const roomQuantity = parseInt(document.getElementById('room_quantity').value);
-        const roomSize = document.getElementById('room_size').value;
+        const roomSize = parseInt(document.getElementById('room_size').value);
 
         const roomDocRef = doc(db, 'rooms', roomCategory, roomType, roomId);
 
@@ -73,7 +71,6 @@ async function saveProductDetails() {
             return;
         }
 
-        // Check if required fields are filled
         if (!roomName || !roomPrice || !roomQuantity || !roomSize || !roomDescription) {
             alert('Please fill out all required fields: name, price, quantity, size.');
             return;
@@ -109,14 +106,14 @@ async function saveProductDetails() {
         
         });
 
-        // Handle the image upload
+       
         const imageFile = document.getElementById('room_image').files[0];
         let imageName;
 
         if (imageFile) {
             imageName = imageFile.name;
         } else {
-            imageName = currentRoomData.room_image; // Retain existing image name if no new file is uploaded
+            imageName = currentRoomData.room_image;
         }
 
         const updatedData = {
@@ -124,7 +121,7 @@ async function saveProductDetails() {
             room_name: roomName,
             room_description: roomDescription,
             room_price: roomPrice,
-            room_quantity: roomQuantitybyMonth, // Save the updated quantity
+            room_quantity: roomQuantitybyMonth,
             room_size: roomSize,
         };
 
@@ -146,7 +143,7 @@ function formattedDate(date) {
 
 function generateDate(startDate, endDate) {
     const dateArray = [];
-    let currentDate = new Date(startDate); // Start from startDate;
+    let currentDate = new Date(startDate);
     while (currentDate <= endDate) {
         dateArray.push(formattedDate(currentDate));
         currentDate.setDate(currentDate.getDate() + 1);

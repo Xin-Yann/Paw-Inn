@@ -14,13 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const userId = getCurrentUserId();
-      fetchAndDisplayBooking(userId);
+      onlineCheckIn (userId);
     } else {
       console.error('No authenticated user found.');
     }
   });
 
-  async function fetchAndDisplayBooking(userId) {
+  async function onlineCheckIn(userId) {
     const urlParams = new URLSearchParams(window.location.search);
     const book_id = urlParams.get('book_id');
 
@@ -50,13 +50,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    console.log('Retrieved Book ID:', book_id); // Debugging line
-    console.log('Payments Array:', payments); // Debugging line
+    console.log('Retrieved Book ID:', book_id);
+    console.log('Payments Array:', payments); 
 
     // Find the payment
     const payment = payments.find(payment => {
-        console.log('Checking Payment Book ID:', payment.book_id); // Debugging line
-        return payment.book_id === book_id; // Ensure no type conversion
+        console.log('Checking Payment Book ID:', payment.book_id); 
+        return payment.book_id === book_id; 
     });
 
     if (!payment) {
@@ -64,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Display booking details
     const bookingDetails = `
         <strong>Booking ID:</strong> ${payment.book_id}<br>
         <strong>Booking Date:</strong> ${new Date(payment.book_date).toLocaleString()}<br>
@@ -86,14 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
             <button class="back-button" onclick="window.history.back()">No, Go Back</button>
         </div>
     `;
-    confirmContainer.style.display = 'block'; // Show the confirmation buttons
+    confirmContainer.style.display = 'block'; 
 
     document.getElementById('confirm-checkin').addEventListener('click', async () => {
         try {
             payment.status = 'Checked-In';
             await updateDoc(docRef, { payments });
             alert(`Booking ID: ${book_id} has been checked in.`);
-            window.location.href = '/html/bookingHistory.html'; // Redirect back to the booking history page
+            window.location.href = '/html/bookingHistory.html'; 
         } catch (error) {
             console.error('Error checking in booking:', error);
             alert('Failed to check in booking. Please try again.');

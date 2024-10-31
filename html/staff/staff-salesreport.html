@@ -19,6 +19,46 @@
             color: #127369;
             font-weight: 900;
         }
+
+        .filter-control {
+            display: inline;
+            background-color: #fff;
+            height: 40px;
+            width: 200px;
+            padding-left: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+            color: #151515;
+            border: 1px solid #e5e5e5;
+            border-radius: 40px;
+            transition: 0.2s all;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .productLegend {
+            gap: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .legendTitle {
+            font-family: 'Nunito';
+            font-weight: bold;
+            color: #127369;
+        }
+
+        .filterContainer {
+            display: flex;
+        }
     </style>
 
 </head>
@@ -117,9 +157,6 @@
             </li>
             <li>
                 <div class="profile-details">
-                    <div class="profile-content">
-                        <!--<img src="image/profile.jpg" alt="profileImg">-->
-                    </div>
                     <div class="name-job">
                         <div class="profile_name" id="staff-id"></div>
                         <div class="profile_name" id="Name"></div>
@@ -135,24 +172,58 @@
             <i class='bx bx-menu'></i>
             <span class="text">Paws Inn</span>
         </div>
-        <!-- Navbar End -->
         <div class="container">
 
             <div class="container pb-5 pt-4">
                 <label for="type" class="type">Type:</label>
                 <select id="type" class="form-control">
-                    <option value="product">Product Sales Report</option>
+                    <option value="products">Product Sales Report</option>
                     <option value="rooms">Rooms Sales Report</option>
                 </select>
 
-                <div class="py-5">
-                    <label for="year">Select Year:</label>
-                    <select id="year"></select>
+                <div class="filterContainer">
+
+                    <div class="py-5">
+                        <label for="year">Select Year:</label>
+                        <select id="year" class="filter-control"></select>
+                    </div>
+
+                    <div id="categoryFilter" class="py-5 ml-5">
+                        <label for="categoryFilter">Filter by Category:</label>
+                        <select id="selectProductCategory" class="filter-control">
+                            <option value="all">All</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="birds">Birds</option>
+                            <option value="fish&aquatics">Fish & Aquatics</option>
+                            <option value="hamster&rabbits">Hamsters & Rabbits</option>
+                        </select>
+                    </div>
+
+                    <div class="py-5 ml-5" id="roomsCategoryFilter">
+                        <label for="roomCategoryFilter">Filter by Type:</label>
+                        <select id="selectRoomCategory" class="filter-control">
+                            <option value="All">All</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="cage">Cage</option>
+                            <option value="rabbit">Rabbits</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="salesReport">
+                    <h1 class="title text-center py-5">Rooms Sales Report</h1>
+                    <canvas id="myChart2" class="pb-5"></canvas>
+                    <div id="legend"></div>
+                    <div id="report-message" style="display:none; color: red;"></div>
                 </div>
 
                 <div id="report">
                     <h1 class="title text-center py-5">Product Sales Report</h1>
                     <canvas id="myChart" class="pb-5"></canvas>
+                    <div id="productLegend"></div>
+                    <div id="report-messages" style="display:none; color: red;"></div>
                 </div>
             </div>
         </div>
@@ -160,7 +231,7 @@
 
     <script type="module" src="/js/firebase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="module" src="/js/staff/staff-salesreport3.js"></script>
+    <script type="module" src="/js/staff/staff-salesreport.js"></script>
     <script type="module" src="/js/staff/staff-home.js"></script>
     <script type="module" src="/js/staff/staff-logout.js"></script>
 

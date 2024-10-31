@@ -31,7 +31,7 @@ async function fetchAndDisplaySales() {
             }
         }
 
-        console.log('Fetched Products:', productStocks); // Debugging
+        console.log('Fetched Products:', productStocks); 
         return productStocks;
     }
     catch (error) {
@@ -44,32 +44,41 @@ let chart = null;
 
 async function displaysSalesReport() {
     const inventory = await fetchAndDisplaySales();
-    console.log('Fetched Inventory Data:', inventory); // Debugging
+    console.log('Fetched Inventory Data:', inventory);
 
     const selectCategory = document.getElementById("selectCategory").value || 'dog';
     const selectSubcategory = document.getElementById("selectSubcategory").value || 'dry food';
 
-    // Filter inventory based on selected category and subcategory
     const filteredInventory = inventory.filter(product => {
         const matchesCategory = selectCategory ? product.category === selectCategory : true;
         const matchesSubcategory = selectSubcategory ? product.subcategory === selectSubcategory : true;
         return matchesCategory && matchesSubcategory;
     });
-
-    console.log('Filtered Inventory:', filteredInventory); // Debugging
+    
+    console.log('Filtered Inventory:', filteredInventory);
 
     const labels = filteredInventory.map(product => `${product.subcategory} - ${product.name}`);
     const dataValues = filteredInventory.map(product => product.stock);
 
-    // Use a unique color for each product
     const barColors = filteredInventory.map((_, index) => `rgba(${(index * 50) % 255}, 99, 132, 0.6)`);
 
-    // Destroy the previous chart if it exists
+    const legendDiv = document.getElementById('legend');
+    legendDiv.innerHTML = ''; 
+    filteredInventory.forEach((product, index) => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        const color = barColors[index];
+        legendItem.innerHTML = `
+            <span class="color-box" style="background-color: ${color};" aria-hidden="true"></span>
+        <span class="legend-text">${product.subcategory} - ${product.name}: <span style="color: #127369; font-weight:bold;">${product.stock} in stock</span></span>
+        `;
+        legendDiv.appendChild(legendItem);
+    });
+
     if (inventoryChart) {
         inventoryChart.destroy();
     }
 
-    // Create the bar chart
     inventoryChart = new Chart("inventoryChart", {
         type: "bar",
         data: {
@@ -92,7 +101,8 @@ async function displaysSalesReport() {
             },
             plugins: {
                 legend: {
-                    display: false
+                    display: false,
+
                 }
             },
             title: {
@@ -125,8 +135,8 @@ async function fetchAndDisplayRoomInventory() {
 
                         roomData.room_quantity.forEach((quantityObj, index) => {
                             Object.entries(quantityObj).forEach(([date, quantity]) => {
-                                const parsedQuantity = parseInt(quantity, 10);
-                                console.log("Date:", date, "Quantity:", parsedQuantity);
+                                const parsedQuantity = parseInt(quantity, 10);   roomQuantity += parsedQuantity;
+                                // }
                                 if (!isNaN(parsedQuantity)) {
                                     roomQuantity += parsedQuantity;
                                 }
@@ -148,7 +158,7 @@ async function fetchAndDisplayRoomInventory() {
             }
         }
 
-        console.log('Fetched Rooms:', roomStocks); // Debugging
+        console.log('Fetched Rooms:', roomStocks);
         return roomStocks;
     }
     catch (error) {
@@ -162,28 +172,37 @@ async function displayRoomInventoryChart() {
 
     const selectRoomCategory = document.getElementById("selectRoomCategory").value || 'dog';
 
-    // Filter rooms based on the selected category
     const filteredRooms = rooms.filter(room => room.category === selectRoomCategory);
 
-    // Extract data for chart
-    const roomNames = filteredRooms.map(room => room.name); // Room names
-    const roomStocksData = filteredRooms.map(room => room.stock); // Room stock quantities
+    const roomNames = filteredRooms.map(room => room.name);
+    const roomStocksData = filteredRooms.map(room => room.stock);
 
-    // Get the canvas element
-    const ctx = document.getElementById('roomInventoryChart').getContext('2d');
+    const barColors = filteredRooms.map((_, index) => `rgba(${(index * 50) % 255}, 75, 192, 192, 0.2)`);
+
+    const legendDiv = document.getElementById('roomslegend');
+    legendDiv.innerHTML = ''; 
+    filteredRooms.forEach((room, index) => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        const color = barColors[index];
+        legendItem.innerHTML = `
+            <span class="color-box" style="background-color: #4bc0c0;" aria-hidden="true"></span>
+            <span class="legend-text">${room.category} - ${room.name}: <span style="color: #127369; font-weight:bold;">${room.stock} in stock</span></span>
+        `;
+        legendDiv.appendChild(legendItem);
+    });
 
     if (chart) {
         chart.destroy();
     }
 
-    // Create the bar chart
-    chart = new Chart(ctx, {
+    chart = new Chart("roomInventoryChart", {
         type: 'bar',
         data: {
-            labels: roomNames,  // X-axis labels
+            labels: roomNames,
             datasets: [{
                 label: 'Room Stock',
-                data: roomStocksData,  // Data to display in chart
+                data: roomStocksData,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
@@ -192,14 +211,12 @@ async function displayRoomInventoryChart() {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true  // Y-axis starts at 0
+                    beginAtZero: true
                 }
             }
         }
     });
 }
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const selectCategory = document.getElementById("selectCategory");
@@ -215,18 +232,14 @@ document.addEventListener("DOMContentLoaded", function () {
         'hamster&rabbits': ['dry food', 'toys', 'essentials', 'treats']
     };
 
-    // Function to update subcategories based on the selected category
     function updateSubcategoryOptions(category) {
-        console.log('Selected category:', category); // Check category value
+        console.log('Selected category:', category);
 
-        // Clear existing options
         selectSubcategory.innerHTML = '';
 
-        // Get the subcategory options for the selected category
         const options = subcategories[category] || [];
-        console.log('Subcategories for selected category:', options); // Check options
+        console.log('Subcategories for selected category:', options);
 
-        // Populate the selectSubcategory with new options
         options.forEach(option => {
             const optElement = document.createElement('option');
             optElement.value = option.toLowerCase();
@@ -234,22 +247,17 @@ document.addEventListener("DOMContentLoaded", function () {
             selectSubcategory.appendChild(optElement);
         });
 
-        // Trigger displaysSalesReport when options are updated
         displaysSalesReport();
     }
 
-    // Ensure elements exist before adding event listeners
     if (selectCategory && selectSubcategory) {
-        // Event listener to update subcategories and trigger the sales report
         selectCategory.addEventListener("change", function () {
             const selectedCategory = selectCategory.value;
             updateSubcategoryOptions(selectedCategory);
         });
 
-        // Event listener to trigger report when subcategory changes
         selectSubcategory.addEventListener("change", displaysSalesReport);
 
-        // Initial population of subcategories based on the default category
         updateSubcategoryOptions(selectCategory.value);
     } else {
         console.error("Dropdown elements not found!");
@@ -258,7 +266,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (selectRoomCategory) {
         selectRoomCategory.addEventListener("change", displayRoomInventoryChart);
 
-        // Call displaysSalesReport to display data with default values
         displayRoomInventoryChart();
     } else {
         console.error("Dropdown elements not found!");
@@ -272,22 +279,24 @@ document.addEventListener("DOMContentLoaded", function () {
         report.innerHTML = '';
 
         if (filter === 'product') {
-            document.getElementById('subcategoryFilter').style.display = 'block';
-            document.getElementById('categoryFilter').style.display = 'block';
-            document.getElementById('roomCategoryFilter').style.display = 'none';
+            document.getElementById('filter').style.display = 'flex';
+            document.getElementById('roomFilter').style.display = 'none';
             report.innerHTML = `
             <h1 class="title text-center py-5">Product Inventory Report</h1>
             <canvas id="inventoryChart" class="pb-5"></canvas>
+            <div id="legend"></div>
         `;
             await displaysSalesReport();
 
         } else if (filter === 'rooms') {
-            document.getElementById('subcategoryFilter').style.display = 'none';
-            document.getElementById('categoryFilter').style.display = 'none';
-            document.getElementById('roomCategoryFilter').style.display = 'block';
+            document.getElementById('filter').style.display = 'none';
+            document.getElementById('roomFilter').style.display = 'flex';
             report.innerHTML = `
-            <h1 class="title text-center pb-5">Rooms Sales Report</h1>
+            <h1 class="title text-center pb-5">Rooms Inventory Report</h1>
             <canvas id="roomInventoryChart" class="pb-5"></canvas>
+            <div id="roomslegend"></div>
+            <p id="report-messages" style="display:none; color: red;"></p>
+            
             `;
             await displayRoomInventoryChart();
         }

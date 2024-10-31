@@ -8,7 +8,6 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
-// Function to fetch and display product details
 async function fetchAndDisplayProductDetails() {
     try {
         const productCategory = getQueryParam('category');
@@ -35,8 +34,7 @@ async function fetchAndDisplayProductDetails() {
             document.getElementById('product_stock').value = productData.product_stock || '';
             document.getElementById('product_weight').value = productData.product_weight || '';
 
-            // Construct the image URL
-            const imageFileName = productData.product_image || ''; // Assuming `product_image` holds the file name
+            const imageFileName = productData.product_image || ''; 
             const imageUrl = `/image/products/${productCategory}/${productType}/${imageFileName}`;
 
             let productImageElement = document.getElementById('productImage');
@@ -51,9 +49,9 @@ async function fetchAndDisplayProductDetails() {
 
             if (imageFileName) {
                 productImageElement.src = imageUrl;
-                productImageElement.style.display = 'block'; // Ensure the image is displayed
+                productImageElement.style.display = 'block';
             } else {
-                productImageElement.style.display = 'none'; // Hide the image if no file name is present
+                productImageElement.style.display = 'none'; 
             }
 
 
@@ -65,7 +63,6 @@ async function fetchAndDisplayProductDetails() {
     }
 }
 
-// Function to handle file input change and preview the image
 function handleFileInputChange(event) {
     const file = event.target.files[0];
     const productImageElement = document.getElementById('productImage');
@@ -75,19 +72,17 @@ function handleFileInputChange(event) {
         reader.onload = function (e) {
             if (productImageElement) {
                 productImageElement.src = e.target.result;
-                productImageElement.style.display = 'block'; // Display the new image
+                productImageElement.style.display = 'block'; 
             }
         };
         reader.readAsDataURL(file);
     } else {
-        // Hide the image if no file is selected
         if (productImageElement) {
             productImageElement.style.display = 'none';
         }
     }
 }
 
-// Function to save edited product details
 async function saveProductDetails() {
     try {
         const productCategory = document.getElementById('product_category').value;
@@ -97,7 +92,7 @@ async function saveProductDetails() {
         const productName = document.getElementById('product_name').value;
         const productDescription = document.getElementById('product_description').value;
         const productPrice = document.getElementById('product_price').value;
-        const productStock = parseInt(document.getElementById('product_stock').value);
+        const productStock = document.getElementById('product_stock').value;
         const productWeight = document.getElementById('product_weight').value;
 
         const productDocRef = doc(db, 'product', productCategory, productType, productId);
@@ -105,7 +100,6 @@ async function saveProductDetails() {
         const price = /^\d+(\.\d{1,2})?$/;
         const stockAndBarcode = /^\d+$/;
 
-        // Check if required fields are filled
         if (!productName || !productPrice || !productStock || !productWeight || !productBarcode) {
             alert('Please fill out all required fields: name, price, stock, weight.');
             return;
@@ -131,34 +125,36 @@ async function saveProductDetails() {
             return;
         }
 
-        // Check if the file input actually has a file
         const imageFile = document.getElementById('product_image').files[0];
         let imageName;
 
         if (imageFile) {
-            imageName = imageFile.name; // Get the file name without uploading
-            document.getElementById('product_image').value = ''; // Clear file input
+            imageName = imageFile.name;
+            document.getElementById('product_image').value = '';
         } else {
-            // Fetch the existing data to potentially get the existing image
             const currentSnapshot = await getDoc(productDocRef);
             const currentData = currentSnapshot.exists() ? currentSnapshot.data() : {};
-            imageName = currentData.product_image; // Retain the existing image name if no new file is uploaded
+            imageName = currentData.product_image;
         }
+
+        const productBarcodeInt = parseInt(productBarcode);
+        const productPriceFloat = parseFloat(productPrice);
+        const productStockInt = parseInt(productStock);
+        const productWeightInt = parseInt(productWeight);
 
         const updatedData = {
             product_image: imageName,
-            product_barcode: productBarcode,
+            product_barcode: productBarcodeInt,
             product_name: productName,
             product_description: productDescription,
-            product_price: productPrice,
-            product_stock: productStock,
-            product_weight: productWeight,
+            product_price: productPriceFloat,
+            product_stock: productStockInt,
+            product_weight: productWeightInt,
         };
 
         await updateDoc(productDocRef, updatedData);
         alert('Product updated successfully!');
 
-        // Redirect to the appropriate category page
         switch (productCategory) {
             case 'dog':
                 window.location.href = encodeURI('../staff/staff-productdog.html');

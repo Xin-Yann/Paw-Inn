@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return user ? user.uid : null;
     }
 
-    // Function to fetch and display personal details
     async function fetchAndDisplayPersonalDetails(email) {
         try {
             console.log(`Fetching details for email: ${email}`);
@@ -24,10 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const staffData = doc.data();
                     console.log('User data fetched:', staffData);
 
-                    document.getElementById('Name').value = staffData.name || '';
-                    document.getElementById('Email').value = staffData.email || '';
+                    document.getElementById('name').value = staffData.name || '';
+                    document.getElementById('email').value = staffData.email || '';
                     document.getElementById('Contact').value = staffData.contact || '';
-                    document.getElementById('staff-id').value = staffData.staffId || '';
+                    document.getElementById('staffId').value = staffData.staffId || '';
 
                 });
             } else {
@@ -56,8 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function validateProfileDetails() {
-        const name = document.getElementById('Name').value;
-        const email = document.getElementById('Email').value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
         const contact = document.getElementById('Contact').value;
 
         const namePattern = /^[A-Za-z\s]+$/;
@@ -101,9 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const docRef = doc(db, 'users', docSnapshot.id);
 
                     const updatedData = {
-                        staffId: document.getElementById('staff-id').value,
-                        name: document.getElementById('Name').value,
-                        email: document.getElementById('Email').value,
+                        staffId: document.getElementById('staffId').value,
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
                         contact: document.getElementById('Contact').value
                     };
 

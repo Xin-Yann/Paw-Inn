@@ -5,7 +5,7 @@ const db = getFirestore();
 
 const auth = getAuth();
 
-document.getElementById('signIn').addEventListener('click', () => {
+document.getElementById('signIn').addEventListener('click', (event) => {
   event.preventDefault();
   const email = document.getElementById('Email').value;
   const password = document.getElementById('Password').value;
@@ -16,7 +16,6 @@ document.getElementById('signIn').addEventListener('click', () => {
     return;
   }
 
-  // Check if the email ends with "@staff.com"
   if (!email.endsWith('@staff.com')) {
     window.alert('Only staff members are allowed to login.');
     return;
@@ -33,7 +32,6 @@ document.getElementById('signIn').addEventListener('click', () => {
       fetchStaffdata();
       console.log('Signed in user:', staff);
 
-      // Store user email in session storage
       sessionStorage.setItem('staffEmail', staff.email);
 
       window.location.href = "staff-home.html";
@@ -41,23 +39,13 @@ document.getElementById('signIn').addEventListener('click', () => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.error('Error adding document: ', errorCode, errorMessage);
-      switch (errorCode) {
-        case 'auth/wrong-password':
-          window.alert("Invalid password. Please try again.");
-          break;
-        case 'auth/user-not-found':
-          window.alert("No user found with this email. Please sign up.");
-          break;
-        case 'auth/invalid-email':
-          window.alert("Invalid email format. Please check your email.");
-          break;
-        case 'auth/email-already-in-use':
-          window.alert("The email address is already in use by another account.");
-          break;
-        default:
-          window.alert("Error: " + errorMessage);
+      
+      if (errorCode === 'auth/invalid-credential') {
+        window.alert("Invalid credentials. Please check your input.");
+      } else {
+        window.alert("Error: " + errorMessage);
       }
+  
     });
 });
 

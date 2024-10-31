@@ -204,3 +204,9 @@
 .profiledetails-form .save-btn:focus {
     background-color: #127369;;
 }
+
+.profile {
+    display: flex;
+    justify-content: space-around;
+    /* margin-left: 185px; */
+}

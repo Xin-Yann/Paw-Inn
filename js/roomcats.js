@@ -97,7 +97,7 @@ async function fetchDataAndDisplay() {
 
                 const roomHTML = `
             <div class="rooms-container" room-id="${roomData.room_id}" room-name="${roomData.room_name}" room-category="${category}" room-price="${roomData.room_price}" room-image="${roomData.room_image}" room-description="${roomData.room_description}" room-size="${roomData.room_size}" room-status="${statusMessage}">
-                <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer;">
+                <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer; height:45%;">
                 <div class="card-body">
                     <h4 class="card-title pt-3">${roomData.room_name}</h4>
                     <p class="card-desc" style="height:25px">${roomData.room_description}</p>

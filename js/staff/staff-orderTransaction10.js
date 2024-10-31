@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     selectMonth.value = currentMonth;
     console.log('Current month:', currentMonth);
 
+    const currentYear = new Date().getFullYear();
+    const selectYear = document.getElementById('selectedYear');
+
+    selectYear.value = currentYear;
+    console.log('Current year:', currentYear);
+
     fetchAndDisplayOrder();
 
     async function fetchAndDisplayOrder() {
@@ -23,9 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const querySnapshot = await getDocs(transactionQuery);
 
             const selectedMonth = document.getElementById('selectedMonth').value;
-            const currentMonth = selectedMonth === '' ? new Date().getMonth() : parseInt(selectedMonth);
-            const currentYear = new Date().getFullYear();
+            const selectedYear = document.getElementById('selectedYear').value;  
 
+            const currentMonth = selectedMonth === '' ? new Date().getMonth() : parseInt(selectedMonth);
+            const currentYear = selectedYear === '' ? new Date().getFullYear() : parseInt(selectedYear);
             console.log('Current month:', currentMonth);
 
             const transactionTableBody = document.getElementById('statusContainer');
@@ -44,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return orderDate.getMonth() === currentMonth && orderDate.getFullYear() === currentYear;
                 })
 
-                // Sort orders by document ID in descending order
                 filteredOrders.sort((a, b) => b.id.localeCompare(a.id));
 
                 if (filteredOrders.length === 0) {
@@ -68,9 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tbody = document.createElement('tbody');
                     filteredOrders.forEach((order) => {
 
-                        console.log('Order:', order); // Debugging line to ensure data is being retrieved
+                        console.log('Order:', order);
 
-                        // Retrieve necessary details
                         const transactionId = order.id;
                         const paymentDate = order.paymentDate
                             ? new Date(order.paymentDate).toLocaleString()
@@ -79,12 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         const method = order.method || 'N/A';
                         const change = order.change !== undefined ? order.change.toFixed(2) : 'N/A';
 
-                        // Get member details (if available)
                         const memberDetails = order.memberDetails || {};
                         const memberName = memberDetails.name || 'N/A';
                         const membershipId = memberDetails.membershipId || 'N/A';
 
-                        // Get cart items (assuming an array of items)
                         const cartItems = order.cartItems || [];
                         const cartItemsHTML = cartItems.map((item) => `
                         <div>
@@ -95,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `).join('');
 
-                        // Build the order details HTML
                         const orderDetails = `
                         <div class="transaction-details">      
                             <strong>Payment Date:</strong> ${paymentDate}<br>
@@ -108,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
 
-                        // Create the row and append it to the tbody
                         const row = document.createElement('tr');
                         row.innerHTML = `
                         <td class="text-center">${transactionId}</td>
@@ -130,6 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     selectMonth.addEventListener('change', () => {
+        fetchAndDisplayOrder();
+    });
+
+    selectYear.addEventListener('change', () => {
         fetchAndDisplayOrder();
     });
 

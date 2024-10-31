@@ -139,11 +139,6 @@
             border-radius: 3px;
         }
 
-        .totals {
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
-
         .totals h3 {
             margin-top: 0;
         }
@@ -396,21 +391,20 @@
                 <div class="cart-wrapper">
                     <div class="cart">
 
-                        <h5 class="py-3">Member Info</h5>
-                        <div id="member-info" class="pb-3">
-                            <p id="member_points"></p>
-                            <!-- <p id="points-deducted"></p>
-                            <p id="new-points-added"></p>
-                            <p id="new-points"></p> -->
+                        <div id="membersInfo">                            
+                            <div id="member-info" class="pb-3">
+                                <h5 class="py-3" id="member-title">Member Info</h5>
+                                <p id="member_points"></p>
+                                <p id="pointsRedeemed"></p>
+                             
+                                <button id="redeem-points" style="display:none;">Redeem Points</button>
+                                
 
+                            </div>
+                            <div id="messageDiv"></div>                          
+                            
                         </div>
-
-                        <!-- <p id="pointsAdded"></p>
-                        <p id="points-to-redeem"></p> -->
-
-                        <div id="messageDiv" ></div>
-                        
-                        <button id="redeem-points">Redeem Points</button>
+                        <hr>
 
 
 
@@ -445,9 +439,6 @@
                             </div>
                         </div> -->
 
-
-
-                        <hr>
                         <h4 class="text-center pt-3"> Products</h4>
                         <div class="cart-items" id="cartItems">
                             <!-- Example of cart item -->
@@ -485,8 +476,10 @@
                     </p>
 
                     <p>Change to be returned: <span id="change-amount">0</span></p>
-                    <button id="cash-payment" class="checkout" data-toggle="modal"
-                        data-target="#membershipModal">Process Cash Payment</button>
+                    <p id="change-message" class="text-danger"></p>
+                    <button id="cash-payment" class="checkout">Process Cash Payment</button>
+                    <!-- <button id="cash-payment" class="checkout" data-toggle="modal"
+                        data-target="#membershipModal">Process Cash Payment</button> -->
 
                     <div class="modal fade" id="membershipModal" tabindex="-1" role="dialog"
                         aria-labelledby="membershipModalLabel" aria-hidden="true">
@@ -510,7 +503,7 @@
                             </div>
                         </div>
                     </div>
-                    <p id="change-message"></p>
+
                 </div>
 
             </div>
@@ -525,7 +518,7 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="module" src="/js/staff/staff-home.js"></script>
-    <script type="module" src="/js/staff/staff-checkout43.js "></script>
+    <script type="module" src="/js/staff/staff-checkout44.js "></script>
 </body>
 
 </html>

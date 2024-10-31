@@ -5,7 +5,7 @@ const db = getFirestore();
 const auth = getAuth();
 
 (function () {
-    emailjs.init("86kjxi3kBUTZUUwYJ"); // Replace with your EmailJS user ID
+    emailjs.init("86kjxi3kBUTZUUwYJ"); 
 })();
 
 
@@ -49,7 +49,6 @@ async function fetchUserDataFromFirestore(userId) {
     }
 }
 
-// Function to send email using EmailJS
 function SendMail() {
     var params = {
         from_name: document.getElementById("from_name").value,
@@ -71,6 +70,9 @@ document.getElementById('Submit').addEventListener('click', async (event) => {
         const title = document.getElementById('title').value;
         const message = document.getElementById('message').value;
 
+        document.getElementById('title_error').textContent = '';
+        document.getElementById('message_error').textContent = '';
+
         const docRef = await addDoc(collection(db, 'contact'), {
             name: name,
             email: email,
@@ -78,6 +80,18 @@ document.getElementById('Submit').addEventListener('click', async (event) => {
             message: message
         });
 
+        let isValid = true;
+
+        if (!title) {
+            document.getElementById('title_error').textContent = 'Please fill in title.';
+            isValid = false;
+        }
+        if (!message) {
+            document.getElementById('message_error').textContent = 'Please fill in message.';
+            isValid = false;
+        }
+
+        
         if (!name || !email || !title || !message) {
             window.alert('All field must be filled out.');
             return;

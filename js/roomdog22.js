@@ -28,13 +28,12 @@ auth.onAuthStateChanged(async (user) => {
 });
 
 
-// Function to fetch data and display it
+// Function to fetch room data and display 
 async function fetchDataAndDisplay() {
     try {
         const roomCategories = [{ category: 'dog', collectionName: 'dog rooms' }];
 
         for (const { category, collectionName } of roomCategories) {
-            // Create a reference to the collection
             const dogRoomsCollectionRef = collection(db, 'rooms', category, collectionName);
 
             const dogRoomsQuerySnapshot = await getDocs(query(dogRoomsCollectionRef));
@@ -46,22 +45,9 @@ async function fetchDataAndDisplay() {
                 const roomData = doc.data();
                 console.log("Fetching image for room:", roomData.room_name, "Image path:", roomData.room_image);
 
-                // Determine the overall availability status
                 let isAvailable = false;
                 let isSellingFast = false;
                 let totalAvailableRooms = 0;
-
-                // roomData.room_quantity.forEach(quantityMap => {
-                //     for (const quantity of Object.values(quantityMap)) {
-                //         const parsedQuantity = parseInt(quantity);
-                //         if (parsedQuantity > 0) {
-                //             isAvailable = true;
-                //         }
-                //         if (parsedQuantity > 0 && parsedQuantity < 5) {
-                //             isSellingFast = true;
-                //         }
-                //     }
-                // });
 
                 if (Array.isArray(roomData.room_quantity)) {
 
@@ -88,7 +74,7 @@ async function fetchDataAndDisplay() {
                 }
 
                 let statusMessage = "None";
-                if (totalAvailableRooms === 0) { // Check if total available rooms is zero
+                if (totalAvailableRooms === 0) {
                     statusMessage = "Fully Booked";
                 } else if (isAvailable) {
                     statusMessage = isSellingFast ? "Selling Fast" : "Available";
@@ -99,18 +85,18 @@ async function fetchDataAndDisplay() {
                 }
 
                 const roomHTML = `
-            <div class="rooms-container" room-id="${roomData.room_id}" room-name="${roomData.room_name}" room-category="${category}" room-price="${roomData.room_price}" room-image="${roomData.room_image}" room-description="${roomData.room_description}" room-size="${roomData.room_size}" room-status="${statusMessage}">
-                <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer;">
-                <div class="card-body">
-                    <h4 class="card-title pt-3">${roomData.room_name}</h4>
-                    <p class="card-desc" style="height:25px">${roomData.room_description}</p>
-                    <p class="pt-3"><b>Room Size:</b> ${roomData.room_size} sqft</p>
-                    <p >Available Status: ${statusMessage}</p>
-                    <h5 class="product-price py-3">RM${roomData.room_price}</h5>
-                    <button class="btn btn-primary book-now" room-id="${roomData.room_id}" id="book-now">Book Now</button>
-                </div>
-            </div>
-        `;
+                    <div class="rooms-container" room-id="${roomData.room_id}" room-name="${roomData.room_name}" room-category="${category}" room-price="${roomData.room_price}" room-image="${roomData.room_image}" room-description="${roomData.room_description}" room-size="${roomData.room_size}" room-status="${statusMessage}">
+                        <img class="card-img-top pb-3" src="/image/${category}/${roomData.room_image}" alt="${roomData.room_name}" style="cursor: pointer;">
+                        <div class="card-body">
+                            <h4 class="card-title pt-3">${roomData.room_name}</h4>
+                            <p class="card-desc" style="height:25px">${roomData.room_description}</p>
+                            <p class="pt-3"><b>Room Size:</b> ${roomData.room_size} sqft</p>
+                            <p >Available Status: ${statusMessage}</p>
+                            <h5 class="product-price py-3">RM${roomData.room_price}</h5>
+                            <button class="btn btn-primary book-now" room-id="${roomData.room_id}" id="book-now">Book Now</button>
+                        </div>
+                    </div>
+                `;
                 roomContainer.innerHTML += roomHTML;
             }
         }
@@ -153,7 +139,7 @@ async function fetchDataAndDisplay() {
         // Add event listeners for the "Book Now" buttons
         document.querySelectorAll('.book-now').forEach(button => {
             button.addEventListener('click', async (event) => {
-                event.stopPropagation(); // Prevent triggering the container click event
+                event.stopPropagation();
                 const userId = getCurrentUserId();
                 if (!userId) {
                     window.alert(`Please login to make booking.`);

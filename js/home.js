@@ -11,16 +11,14 @@ Typebot.initBubble({
 AOS.init();
 function displayModal(index) {
     var modalId = "modal" + (index + 1);
-    document.getElementById(modalId).style.display = 'block'; // Display the corresponding modal
+    document.getElementById(modalId).style.display = 'block';
 }
 var readMoreLinks = document.getElementsByClassName('readMoreLink');
 var cards = document.getElementsByClassName('card');
 
-
-// Loop through all read more links and add event listeners
 for (var i = 0; i < readMoreLinks.length; i++) {
     readMoreLinks[i].addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent the default link behavior
+        event.preventDefault(); 
 
         var index = Array.from(readMoreLinks).indexOf(this);
         displayModal(index);
