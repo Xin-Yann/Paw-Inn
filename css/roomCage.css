@@ -1,0 +1,60 @@
+body {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+}
+
+.rooms-container {
+    width: calc(32.4% - 20px);
+    box-sizing: border-box;
+    padding: 20px;
+    background-color: #F2E7DC;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    margin: 15px;
+}
+
+.card-body {
+    overflow: hidden;
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    margin-bottom: 10px;
+    height: 60px;
+    font-weight: bold;
+}
+
+.card-text {
+    margin-bottom: 10px;
+}
+
+.card-desc{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: normal;
+}
+
+.btn-primary {
+    margin-top: auto; /* Align button to bottom */
+    background-color: #127369 !important;
+    color: white !important;
+    border-color: #01647a !important;
+}
+
+.btn-primary:hover {
+    background-color: #cdf4fd !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+    color: #127369 !important;
+}
+
+.img-fluid {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50% !important;
+    height: 280px;
+}

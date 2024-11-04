@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws Inn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="stylesheet" href="/css/staff/staff-nav.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/staff/staff-bookingHistory.css">
+</head>
+
+<body>
+    <div class="sidebar close">
+        <div class="logo-details">
+            <span class="logo_name pl-5 pt-4">Paws Inn</span>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="/html/staff/staff-home.html">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="link_name">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/html/staff/staff-sales.html">
+                    <i class='bx bx-cart'></i>
+                    <span class="link_name">Sales</span>
+                </a>
+            </li>
+            <li>
+                <a href="/html/staff/staff-room.html">
+                    <i class='bx bx-home'></i>
+                    <span class="link_name">Room</span>
+                </a>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-collection'></i>
+                        <span class="link_name">Product</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="/html/staff/staff-productdog.html">Dog</a></li>
+                    <li><a href="/html/staff/staff-productcat.html">Cat</a></li>
+                    <li><a href="/html/staff/staff-productbird.html">Bird</a></li>
+                    <li><a href="/html/staff/staff-productfish&aquatics.html">Fish and Aquatics</a></li>
+                    <li><a href="/html/staff/staff-producthamster&rabbit.html">Hamster and Rabbits</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-plus'></i>
+                        <span class="link_name">Add New</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Add New</a></li>
+                    <li><a href="/html/staff/staff-addroom.html">Add Room</a></li>
+                    <li><a href="/html/staff/staff-addproduct.html">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/html/staff/staff-calendar.html">
+                    <i class='bx bx-calendar'></i>
+                    <span class="link_name">Calendar</span>
+                </a>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-line-chart'></i>
+                        <span class="link_name">Report</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="/html/staff/staff-salesreport.html">Sales Report</a></li>
+                    <li><a href="/html/staff/staff-inventoryReport.html">Inventory Report</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-dollar'></i>
+                        <span class="link_name">Transactions</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="/html/staff/staff-bookingHistory.html">Booking Transactions</a></li>
+                    <li><a href="/html/staff/staff-orderTransaction.html">Order Transactions</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/html/staff/staff-profile.html">
+                    <i class='bx bx-user'></i>
+                    <span class="link_name">Profile</span>
+                </a>
+            </li>
+            <li>
+                <div class="profile-details">
+                    <div class="profile-content"></div>
+                    <div class="name-job">
+                        <div class="profile_name" id="staff-id"></div>
+                        <div class="profile_name" id="Name"></div>
+                        <div class="job" id="Email"></div>
+                    </div>
+                    <i class='bx bx-log-out' id="logOut"></i>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <section class="home-section">
+        <div class="home-content">
+            <i class='bx bx-menu'></i>
+            <span class="text">Paws Inn</span>
+        </div>
+        <h1 class="text-center pt-5 pb-5" style="color: #127369; font-weight: 900;">Booking Transactions</h1>
+        <div class="container pb-5">
+            <div class="filter pb-5">
+                <div>
+                    <label for="status" class="type">Status:</label>
+                    <select id="status" class="form-control">
+                        <option value="Checked-In">Checked In</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Checked-Out">Checked Out</option>
+                    </select>
+                </div>
+                <div class="ml-5" class="type">
+                    <label for="monthSelect">Select Month:</label>
+                    <select id="selectedMonth" class="form-control">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                    </select>
+                </div>
+
+                <div class="ml-5" class="type">
+                    <label for="yearSelect">Select Year:</label>
+                    <select id="selectedYear" class="form-control">
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                    </select>
+                </div>
+            </div>
+            <div id="statusContainer"></div>
+            <!-- Check-In -->
+            <div class="modal fade" id="checkinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Check-In Booking</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="checkinBookingDetails">
+                            <img id="vaccinationImage" class="vaccination-image" alt="Vaccination Image" width="100"
+                                height="100">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn checked-in" id="confirmCheckinButton">
+                                Check-In</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Check-Out -->
+            <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="checkoutBookingDetails"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn checked-in" id="confirmCheckoutButton">
+                                Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/staff/staff-bookTransaction.js"></script>
+    <script type="module" src="/js/staff/staff-home.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,303 @@
+.no-results {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#product-table {
+    display: none;
+}
+
+.home-section {
+    padding: 20px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+#product-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    flex: 1;
+}
+
+.product-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.product-info {
+    padding: 10px;
+}
+
+.cart-wrapper {
+    flex: 0 0 375px;
+}
+
+.cart {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.cart-items {
+    max-height: 1500px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.cart-item img {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}
+
+.cart-item-image {
+    display: flex;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-info h4 {
+    margin: 0;
+}
+
+.cart-item-info p {
+    margin: 5px 0;
+}
+
+.cart-item-info .price {
+    color: #127369;
+    font-weight: bold;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    cursor: pointer;
+    background-color: #127369 !important;
+    color: white !important;
+    border: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 3px;
+}
+
+.btn-cart {
+    cursor: pointer;
+    background-color: #127369 !important;
+    color: white !important;
+    padding: 10px 10px !important;
+    border: none;
+    margin: 0 -2px 15px 0;
+    border-radius: 3px;
+}
+
+.quantity {
+    border: none;
+    width: 15%;
+    text-align: center;
+}
+
+.totals {
+    padding-top: 10px;
+}
+
+.totals h3 {
+    margin-top: 0;
+}
+
+.totals p {
+    display: flex;
+    justify-content: space-between;
+}
+
+.totals h4 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.checkout {
+    width: 100%;
+    background-color: #127369;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.checkout:hover {
+    background-color: #0e5b54;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product {
+    box-sizing: border-box;
+    padding: 25px;
+    background-color: #e6f9fa;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    margin: 15px;
+    width: 280px;
+}
+
+.categoryheader {
+    text-align: center;
+    font-family: Catty Pillow Demo;
+    font-size: 50px;
+    padding-top: 40px;
+}
+
+.modal-dialog {
+    max-width: 700px;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    background: none;
+}
+
+.product-image {
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin: auto;
+}
+
+.price-quantity {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.form-control {
+    display: inline;
+    background-color: #fff;
+    height: 40px;
+    width: 200px;
+    padding-left: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #151515;
+    border: 1px solid #e5e5e5;
+    border-radius: 40px;
+    transition: 0.2s all;
+}
+
+.type {
+    padding-left: 15px;
+}
+
+.input-quantity {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 45px;
+}
+
+.quantity-input {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.product.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.product.disabled .add-cart {
+    cursor: not-allowed;
+}
+
+button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.search-bar {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.search-bar input {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-control {
+    display: inline !important;
+    background-color: #fff !important;
+    height: 40px !important;
+    width: 200px !important;
+    padding-left: 10px !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    color: #151515 !important;
+    border: 1px solid #e5e5e5 !important;
+    border-radius: 40px !important;
+    transition: 0.2s all !important;
+}
+
+

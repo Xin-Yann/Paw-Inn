@@ -1,0 +1,15 @@
+.font {
+    font-family: 'Nunito', sans-serif !important;
+    color: #127369;
+    font-weight: 900;
+}
+
+.btn.btn-primary {
+    background-color: #127369 !important;
+    border: none !important;
+}
+
+.btn.btn-primary:hover {
+    background-color: #A6B37D !important;
+    border: none !important;
+}

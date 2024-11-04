@@ -4,53 +4,585 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Hotel</title>
+    <title>Paws Inn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
-    <link rel="stylesheet" href="../css/nav-10.css">
-    <link rel="stylesheet" href="../css/home.css">
-    <script type="module" src="/js/firebase-configs.js"></script>
-
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 
 <body>
-    <div class="container" id="myHeader">
-        <div class="row pt-4">
-            <div class="col-6">
-                <h2 class="title px-2 pt-2"><a href="home.html">Pet Hotel</a></h2>
+    <div class="overflow-hidden">
+        <div class="container" id="myHeader">
+            <div class="row pt-4">
+                <div class="col-6">
+                    <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
+                </div>
+                <div class="col-6 links">
+                    <a href="home.html">Home</a>
+                    <div class="dropdown">
+                        <a href="#">Room Type</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/roomdog.html">Dog</a>
+                            <a href="/html/roomcat.html">Cat</a>
+                            <a href="/html/roomrabbit.html">Rabbit</a>
+                            <a href="/html/roomcage.html">Cage</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#">History</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/bookingHistory.html">Booking History</a>
+                            <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
+                        </div>
+                    </div>
+                    <a href="/html/contact.html">Contact Us</a>
+                    <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
+                    <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
+                </div>
             </div>
-            <div class="col-6 links">
-                <a href="home.html">Home</a>
-                <div class="dropdown">
-                    <a href="#">Room Type</a>
-                    <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
-                        <path d="M0-.75h24v24H0z" fill="none"></path>
-                    </svg>
-                    <div class="dropdown-content">
-                        <a href="/html/">Dog</a>
-                        <a href="/html/">Cat</a>
-                        <a href="/html/">Birds</a>
-                        <a href="/html/">Cage</a>
+        </div>
+
+        <div class="pt-4">
+            <img src="/image/banner.jpg" style="width: 1519px;" />
+            <a href="/html/roomdog.html" class="btn">Book Now</a>
+        </div>
+
+        <!--About us-->
+        <div class="pt-5">
+            <h1 class="text-center about">About Us</h1>
+            <div class="container py-5" style="line-height: 30px;">
+                <p style=" padding: 0 150px 0 150px;">Welcome to Paw Inn, where your pets are our family! Located in the
+                    Georgetown, our pet hotel offers a
+                    cozy and safe haven for your beloved furry friends. Founded by passionate pet lovers, we provide
+                    top-notch boarding, daycare, and grooming services in a state-of-the-art facility designed with your
+                    pet's comfort in mind. Our dedicated team ensures personalized care and 24/7 supervision, giving you
+                    peace of mind while you're away. Choose Paw Inn for a home-away-from-home experience your pets will
+                    love!</p>
+            </div>
+        </div>
+
+        <!--Boarding Policy-->
+        <div class="py-5" style="background: #FFF4F0;">
+            <h1 class="text-center about pb-3">Boarding Policy</h1>
+            <div class="container card-position pt-4">
+                <div class="card pt-4 pl-3" data-aos="fade-up">
+                    <img src="/image/dog.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Dog Boarding</b></h4>
+                        <a href="#" class="readMoreLink">Read More</a>
                     </div>
                 </div>
-                <a href="/html/offerdetails.html">Booking History</a>
-                <a href="/html/contact.html">Contact Us</a>
-                <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
-                <span style="cursor:pointer"><i class="fa fa-sign-out" id="signOut"></i></span>
+
+                <!-- Dog Boarding Policy -->
+                <div id="modal1" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center pb-4">Dog Boarding Policy</h3>
+                        <ol type="1">
+                            <li>General Requirement</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Vaccinations: All dogs must be up-to-date on vaccinations including rabies,
+                                        distemper, parvovirus, and Bordetella (kennel cough). Proof of vaccinations is
+                                        required.</p>
+                                </li>
+                                <li>
+                                    <p>Health: Dogs must be free from contagious diseases and parasites. A health check
+                                        and
+                                        flea/tick prevention are required prior to boarding.</p>
+                                </li>
+                                <li>
+                                    <p>Behavior: Dogs must be non-aggressive and socialized. Any history of aggression
+                                        must be disclosed.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Reservations</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Reservations: Must be made in advance. A deposit may be required to secure a
+                                        spot.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Check in and Check out</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Check-In: Available between 10:00 AM and 6:00 PM. Late check-ins may incur an
+                                        additional fee.</p>
+                                </li>
+                                <li>
+                                    <p>Check-Out: By 6:00 PM on the day of departure. Late check-outs may incur an
+                                        additional fee.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Feeding and Medication</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Special dietary: Owners must provide enough food for the duration of the stay.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>Medication: All medications must be provided with clear instructions. An
+                                        additional fee may be charged for administering medications.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Personal Items</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Bedding/Toys: Owners are encouraged to bring familiar bedding and toys. However,
+                                        the facility is not responsible for lost or damaged items.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Emergency Care</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Veterinary Care: In case of illness or injury, the facility will seek veterinary
+                                        care at the owner's expense. Owners must provide emergency contact information.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>Emergency Contact: Owners must provide at least one emergency contact who is
+                                        available during the boarding period.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Behavior and Safety</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Aggressive Behavior: Dogs displaying aggressive behavior may be separated from
+                                        other dogs or sent home.</p>
+                                </li>
+                            </ul>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Cat Boarding -->
+                <div class="card pt-4 pl-3" data-aos="fade-up">
+                    <img src="/image/cat.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Cat Boarding</b></h4>
+                        <a href="#" class="readMoreLink">Read More</a>
+                    </div>
+                </div>
+
+                <div id="modal2" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center pb-4">Cat Boarding Policy</h3>
+                        <ol type="1">
+                            <li>General Requirement</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Vaccinations: All cats must be up-to-date on vaccinations including rabies and
+                                        FVRCP (feline distemper). Proof of vaccinations is required.</p>
+                                </li>
+                                <li>
+                                    <p>Health: Cats must be free from contagious diseases and parasites. A health check
+                                        and flea/tick prevention are required prior to boarding.</p>
+                                </li>
+                                <li>
+                                    <p>Behavior: Cats must be non-aggressive and socialized. Any history of aggression
+                                        must be disclosed.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Reservations</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Reservations: Must be made in advance. A deposit may be required to secure a
+                                        spot.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Check in and Check out</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Check-In: Available between 10:00 AM and 6:00 PM. Late check-ins may incur an
+                                        additional fee.</p>
+                                </li>
+                                <li>
+                                    <p>Check-Out: By 6:00 PM on the day of departure. Late check-outs may incur an
+                                        additional fee.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Feeding and Medication</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Special dietary: Owners must provide enough food for the duration of the stay.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>Medication: All medications must be provided with clear instructions. An
+                                        additional fee may be charged for administering medications.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Personal Items</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Bedding/Toys: Owners are encouraged to bring familiar bedding and toys. However,
+                                        the facility is not responsible for lost or damaged items. </p>
+                                </li>
+                                <li>
+                                    <p>Carrier: Cats must arrive in a secure carrier.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Emergency Care</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Veterinary Care: In case of illness or injury, the facility will seek veterinary
+                                        care at the owner's expense. Owners must provide emergency contact information.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>Emergency Contact: Owners must provide at least one emergency contact who is
+                                        available during the boarding period.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Behavior and Safety</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Aggressive Behavior: Cats displaying aggressive behavior may be separated from
+                                        other cats or sent home.</p>
+                                </li>
+                            </ul>
+                            <br>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Rabbit Boarding< -->
+                <div class="card pt-4 pl-3" data-aos="fade-up">
+                    <img src="/image/animal.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Rabbit Boarding</b></h4>
+                        <a href="#" class="readMoreLink">Read More</a>
+                    </div>
+                </div>
+
+                <div id="modal3" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center pb-4">Rabbit Boarding Policy</h3>
+                        <ol type="1">
+                            <li>General Requirement</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Vaccinations: All rabbits must be up-to-date on vaccinations if applicable.
+                                        Proof of vaccinations is required.</p>
+                                </li>
+                                <li>
+                                    <p>Health: Rabbits must be free from contagious diseases and parasites. A health
+                                        check is required prior to boarding.</p>
+                                </li>
+                                <li>
+                                    <p>Behavior: Rabbits must be non-aggressive and socialized. Any history of
+                                        aggression must be disclosed.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Reservations</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Reservations: Must be made in advance. A deposit may be required to secure a
+                                        spot.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Check in and Check out</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Check-In: Available between 10:00 AM and 6:00 PM. Late check-ins may incur an
+                                        additional fee.</p>
+                                </li>
+                                <li>
+                                    <p>Check-Out: By 6:00 PM on the day of departure. Late check-outs may incur an
+                                        additional fee.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Feeding and Medication</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Special dietary: Owners must provide enough food for the duration of the stay.
+                                        Fresh vegetables and hay are encouraged.</p>
+                                </li>
+                                <li>
+                                    <p>Medication: All medications must be provided with clear instructions. An
+                                        additional fee may be charged for administering medications.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Personal Items</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Bedding/Toys: Owners are encouraged to bring familiar bedding and toys. However,
+                                        the facility is not responsible for lost or damaged items.</p>
+                                </li>
+                                <li>
+                                    <p>Carrier: Rabbits must arrive in a secure carrier.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Emergency Care</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Veterinary Care: In case of illness or injury, the facility will seek veterinary
+                                        care at the owner's expense. Owners must provide emergency contact information.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>Emergency Contact: Owners must provide at least one emergency contact who is
+                                        available during the boarding period.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Behavior and Safety</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Aggressive Behavior: Rabbits displaying aggressive behavior may be separated
+                                        from other rabbits or sent home.</p>
+                                </li>
+                            </ul>
+                            <br>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Caged Animal Boarding -->
+                <div class="card pt-4 pl-3" data-aos="fade-up">
+                    <img src="/image/feather.png" alt="Avatar" class="py-5 pl-3" style="width: 65px;">
+                    <div class="container">
+                        <h4 class="card-title"><b>Caged Animal Boarding</b></h4>
+                        <a href="#" class="readMoreLink">Read More</a>
+                    </div>
+                </div>
+
+                <div id="modal4" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 class="modal-text text-center pb-4">Caged Animal Boarding Policy</h3>
+                        <ol type="1">
+                            <li>General Requirement</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Health: All animals must be free from contagious diseases and parasites. A
+                                        health check is required prior to boarding.</p>
+                                </li>
+                                <li>
+                                    <p>Behavior: Animals must be non-aggressive and socialized. Any history of
+                                        aggression must be disclosed.</p>
+                                </li>
+                                <li>
+                                    <p>Housing: Owners must provide appropriate cages or enclosures for their pets.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Reservations</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Reservations: Must be made in advance. A deposit may be required to secure a
+                                        spot.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Check in and Check out</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Check-In: Available between 10:00 AM and 6:00 PM. Late check-ins may incur an
+                                        additional fee.</p>
+                                </li>
+                                <li>
+                                    <p>Check-Out: By 6:00 PM on the day of departure. Late check-outs may incur an
+                                        additional fee.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Feeding and Medication</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Special dietary: Owners must provide enough food for the duration of the stay.
+                                        Special dietary needs must be specified.</p>
+                                </li>
+                                <li>
+                                    <p>Medication: All medications must be provided with clear instructions. An
+                                        additional fee may be charged for administering medications.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Personal Items</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Bedding/Toys: Owners are encouraged to bring familiar bedding and toys. However,
+                                        the facility is not responsible for lost or damaged items.</p>
+                                </li>
+                                <li>
+                                    <p>Cage: Animals must arrive in a secure and appropriate cage or enclosure.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Emergency Care</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Veterinary Care: In case of illness or injury, the facility will seek veterinary
+                                        care at the owner's expense. Owners must provide emergency contact information.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>Emergency Contact: Owners must provide at least one emergency contact who is
+                                        available during the boarding period.</p>
+                                </li>
+                            </ul>
+                            <br>
+                            <li>Behavior and Safety</li>
+                            <br>
+                            <ul type="disc">
+                                <li>
+                                    <p>Aggressive Behavior: Animals displaying aggressive behavior may be separated
+                                        from other animals or sent home.</p>
+                                </li>
+                            </ul>
+                            <br>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--What to pack-->
+        <div class="pt-5">
+            <h1 class="text-center about">What To Pack</h1>
+            <div class="container py-5">
+                <div class="card-position">
+                    <div class="column">
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct.png" alt="Check Icon">
+                            </div>
+                            <div class="text">
+                                <h2>Bring Your Own Food</h2>
+                                <p>Use small plastic baggies to package pre-measured meals and label them.</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct (1).png" alt="Cross Icon">
+                            </div>
+                            <div class="text">
+                                <h2>Dietary Supplements</h2>
+                                <p>Indicate the appropriate number of doses that your dog will need to take in your
+                                    absence.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dogs">
+                        <img src="/image/Group.png" alt="Dog 1">
+                    </div>
+                    <div class="column">
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct (2).png" alt="Check Icon">
+                            </div>
+                            <div class="text">
+                                <h2>Documents Required</h2>
+                                <p>Be sure that all required documents and forms are ready to present on drop off day.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="icon-container">
+                                <img src="/image/correct-3.png" alt="Check Icon">
+                            </div>
+                            <div class="text">
+                                <h2>A reminder of Home</h2>
+                                <p>To keep your dog feeling close to you in your absence, include something with your
+                                    scent.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Footer-->
+        <div class="row text-left px-5 pt-5 foot">
+            <div class="col-md-5 col-sm-12 px-5 pb-5">
+                <h3 class="pb-3">Quick Links</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><a href="/html/home.html">Home</a></p>
+                        <p><a href="/html/roomdog.html">Room Type</a></p>
+                        <p><a href="/html/bookingHistory.html">Booking History</a></p>
+                        <p><a href="/html/contact.html">Contact Us</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5 col-sm-12 pb-5 pl-5">
+                <h3 class="py-3">Follow Us</h3>
+                <a href="https://www.facebook.com/petfurmilycentre/" target="blank"><i class="fa fa-facebook"
+                        aria-hidden="true" style="color:white !important"></i></a>
+                <a href="https://www.instagram.com/petfurmilycentre.pg/" target="blank"><i class="fa fa-instagram"
+                        aria-hidden="true" style="color:white !important"></i></a>
             </div>
         </div>
     </div>
-    <div class="pt-4">
-        <img src="/image/banner.jpg" style="width: 1535px;" />
-        <button class="btn">Book Now</button>
-    </div>
-    <div class="pt-4">
-        <h2 class="text-center about">About Us</h2>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.js"></script>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/home.js"></script>
+    <script type="module" src="/js/logouts.js"></script>
 </body>
 
 </html>

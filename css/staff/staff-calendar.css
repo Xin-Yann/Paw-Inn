@@ -1,0 +1,19 @@
+.event-deluxe-room {
+    background-color: #FFD700;
+    border-color: #FFD700;
+}
+
+.event-suite-room {
+    background-color: #8A2BE2;
+    border-color: #8A2BE2;
+}
+
+.event-disabled {
+    background-color: #d3d3d3 !important;
+    border-color: #d3d3d3 !important;
+}
+
+.fc-daygrid-day.fc-day-past {
+    background-color: #f0f0f0;
+    color: #a0a0a0;
+}

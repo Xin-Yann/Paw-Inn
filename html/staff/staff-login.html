@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Paws Inn</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <section class="ftco-section" style="padding: 5em 0;">
+        <video autoplay="autoplay" muted="muted" loop="loop" id="bg-video">
+            <source src="/image/4740-179738694_small.mp4" type="video/mp4" />
+        </video>
+
+        <div class="container justify-content-center">
+            <div class="login-wrap p-4 p-md-5 justify-content-center " style="background-color: white; left: 25%;">
+                <h3 class="mb-4 text-center">Welcome to Paws Inn Staff Portal !</h3>
+                <div class="d-flex">
+                    <div class="w-100">
+                        <h3 class="mb-4">Sign In</h3>
+                    </div>
+                </div>
+                <form action="#" class="signin-form">
+                    <div class="form-group mb-3">
+                        <label class="label" for="name">Email</label>
+                        <input type="text" class="form-control" placeholder="Email" id="Email" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="label" for="password">Password</label>
+                        <input type="password" class="form-control" placeholder="Password" id="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="form-control btn btn-primary rounded submit px-3" id="signIn">Sign
+                            In</button>
+                    </div>
+                    <div class="form-group d-md-flex">
+                        <div class="w-50 text-left">
+                            <label class="checkbox-wrap checkbox-primary mb-0"><a href="/html/privacy.html"> Privacy Policy &
+                                    T&C</a>
+                                <input type="checkbox" id="checkbox" checked required>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <p class="text-center pb-3">Not a member? <a data-toggle="tab" href="/html/staff/staff-register.html">Sign Up</a></p>
+                   
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/staff/staff-login.js"></script>
+
+
+</body>
+
+</html>

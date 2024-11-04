@@ -1,0 +1,50 @@
+.title {
+    color: #127369;
+    font-weight: 900;
+}
+
+.filter, .rooms {
+    display: flex;
+    justify-content: flex-start;
+    gap: 100px;
+}
+
+.filter-control, .room-filter {
+    display: inline;
+    background-color: #fff;
+    height: 40px;
+    width: 200px;
+    padding-left: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #151515;
+    border: 1px solid #e5e5e5;
+    border-radius: 40px;
+    transition: 0.2s all;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#legend {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.color-box {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    display: inline-block;
+}

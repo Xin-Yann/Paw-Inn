@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws Inn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/staff/staff-nav.css">
+    <link rel="stylesheet" href="/css/staff/staff-inventoryReport.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="sidebar close">
+        <div class="logo-details">
+            <span class="logo_name pl-5 pt-4">Paws Inn</span>
+        </div>
+        <ul class="nav-links">
+            <li>
+                <a href="/html/staff/staff-home.html">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="link_name">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/html/staff/staff-sales.html">
+                    <i class='bx bx-cart'></i>
+                    <span class="link_name">Sales</span>
+                </a>
+            </li>
+            <li>
+                <a href="/html/staff/staff-room.html">
+                    <i class='bx bx-home'></i>
+                    <span class="link_name">Room</span>
+                </a>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-collection'></i>
+                        <span class="link_name">Product</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="/html/staff/staff-productdog.html">Dog</a></li>
+                    <li><a href="/html/staff/staff-productcat.html">Cat</a></li>
+                    <li><a href="/html/staff/staff-productbird.html">Bird</a></li>
+                    <li><a href="/html/staff/staff-productfish&aquatics.html">Fish and Aquatics</a></li>
+                    <li><a href="/html/staff/staff-producthamster&rabbit.html">Hamster and Rabbits</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-plus'></i>
+                        <span class="link_name">Add New</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Add New</a></li>
+                    <li><a href="/html/staff/staff-addroom.html">Add Room</a></li>
+                    <li><a href="/html/staff/staff-addproduct.html">Add Product</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/html/staff/staff-calendar.html">
+                    <i class='bx bx-calendar'></i>
+                    <span class="link_name">Calendar</span>
+                </a>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-line-chart'></i>
+                        <span class="link_name">Report</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="/html/staff/staff-salesreport.html">Sales Report</a></li>
+                    <li><a href="/html/staff/staff-inventoryReport.html">Inventory Report</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-dollar'></i>
+                        <span class="link_name">Transactions</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a href="/html/staff/staff-bookingHistory.html">Booking Transactions</a></li>
+                    <li><a href="/html/staff/staff-orderTransaction.html">Order Transactions</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="/html/staff/staff-profile.html">
+                    <i class='bx bx-user'></i>
+                    <span class="link_name">Profile</span>
+                </a>
+            </li>
+            <li>
+                <div class="profile-details">
+                    <div class="profile-content"></div>
+                    <div class="name-job">
+                        <div class="profile_name" id="staff-id"></div>
+                        <div class="profile_name" id="Name"></div>
+                        <div class="job" id="Email"></div>
+                    </div>
+                    <i class='bx bx-log-out' id="logOut"></i>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <section class="home-section">
+        <div class="home-content">
+            <i class='bx bx-menu'></i>
+            <span class="text">Paws Inn</span>
+        </div>
+        <div class="container">
+            <div class="container pb-5 pt-4">
+                <div>
+                    <label for="type" class="type">Type:</label>
+                    <select id="type" class="form-control">
+                        <option value="product">Product Inventory Report</option>
+                        <option value="rooms">Rooms Inventory Report</option>
+                    </select>
+                </div>
+                <div class="filter py-5" id="filter">
+                    <div id="categoryFilter">
+                        <label for="categoryFilter" class="type">Filter by Category:</label>
+                        <select id="selectCategory" class="filter-control">
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="birds">Birds</option>
+                            <option value="fish&aquatics">Fish & Aquatics</option>
+                            <option value="hamster&rabbits">Hamsters & Rabbits</option>
+                        </select>
+                    </div>
+
+                    <div id="subcategoryFilter">
+                        <label for="categoryFilter" class="type">Filter by Food Type:</label>
+                        <select id="selectSubcategory" class="filter-control">
+                            <option value="dry food">Dry Food</option>
+                            <option value="wet food">Wet Food</option>
+                            <option value="treats">Treats</option>
+                            <option value="toys">Toys</option>
+                            <option value="essentials">Essentials</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="rooms" id="roomFilter" style="display: none;">
+                    <div class="rooms py-5" id="roomCategoryFilter">
+                        <label for="roomCategoryFilter" class="type">Filter by Type:</label>
+                        <select id="selectRoomCategory" class="room-filter">
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="cage">Cage</option>
+                            <option value="rabbit">Rabbits</option>
+                        </select>
+                    </div>
+
+                    <!-- <div class="py-5" id="yearFilter" >
+                        <label for="yearFilter" class="type">Filter by Year:</label>
+                        <select id="selectYear" class="room-filter">
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                        </select>
+                    </div>
+
+                    <div class="py-5" id="monthFilter" >
+                        <label for="monthFilter" class="type">Filter by Month:</label>
+                        <select id="selectMonth" class="room-filter">
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div> -->
+
+                </div>
+
+                <div id="report">
+                    <h1 class="title text-center py-5">Product Inventory Report</h1>
+                    <canvas id="inventoryChart" class="pb-5"></canvas>
+                    <div id="legend"></div>
+                    <div id="report-message" style="display:none; color: red;"></div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="/js/staff/staff-inventoryReport.js"></script>
+    <script type="module" src="/js/staff/staff-home.js"></script>
+    <script type="module" src="/js/staff/staff-logout.js"></script>
+
+</body>
+
+</html>

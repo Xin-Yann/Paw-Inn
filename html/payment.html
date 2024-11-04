@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paws Inn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/payment.css">
+</head>
+
+<body>
+    <div class="overflow-hidden">
+        <div class="container" id="myHeader">
+            <div class="row pt-4">
+                <div class="col-6">
+                    <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
+                </div>
+                <div class="col-6 links">
+                    <a href="home.html">Home</a>
+                    <div class="dropdown">
+                        <a href="#">Room Type</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/roomdog.html">Dog</a>
+                            <a href="/html/roomcat.html">Cat</a>
+                            <a href="/html/roomrabbit.html">Rabbit</a>
+                            <a href="/html/roomcage.html">Cage</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#">History</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/bookingHistory.html">Booking History</a>
+                            <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
+                        </div>
+                    </div>
+                    <a href="/html/contact.html">Contact Us</a>
+                    <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
+                    <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-center py-5" style="color: #127369; font-weight: 900;">Payment</h1>
+        <div class="container">
+            <div class="row container justify-content-center mb-5 px-5 pt-5"
+                style=" box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; margin-left: 95px; width: 85%; ">
+                <div class="col-5 order-summary border-right pb-3 ml-5">
+                    <div class="book">
+                        <h2 class="text-left py-5">Booking Summary</h2>
+
+                        <p>Booking Id: <span id="book_id"></span></p>
+
+                        <p style="display: none;">Booking Date: <span id="book_date"></span></p>
+
+                        <p>Room Name: <span id="room_name"></span></p>
+
+                        <p>Check-in Date: <span id="checkin_date"></span></p>
+
+                        <p>Check-out Date: <span id="checkout_date"></span></p>
+
+                        <p>Owner Name: <span id="owner_name"></span></p>
+
+                        <p>Pet Name: <span id="pet_name"></span></p>
+
+                        <p>Email: <span id="email"></span></p>
+
+                        <p>Contact: <span id="contact"></span></p>
+
+                        <p>Category: <span id="category"></span></p>
+
+                        <p>Food Category: <span id="food_category"></span></p>
+
+                        <p>Vaccination Proof: <img id="vaccination_image" alt="Image" class="py-3" style="width: 50%;">
+                        </p>
+
+                        <p>Total Nights: <span id="nights"></span></p>
+
+                        <p>Price (per night): <span id="price"></span></p>
+                    </div>
+                </div>
+                <div class="col-5 pb-5 pl-5 ml-5">
+                    <form id="payment-form" class="payment-form order-summary">
+                        <h2 class="text-center py-5">Credit Card Details</h2>
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <div id="card-number-element" class="form-control"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <div id="card-expiry-element" class="form-control"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <div id="card-cvc-element" class="form-control"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardHolder">Cardholder Name</label>
+                            <input type="text" id="cardHolder" name="cardHolder" class="form-control" required>
+                        </div>
+
+                        <hr>
+
+                        <div class="pt-3">
+                            <p class="form-control px-3" style="border: none; font-size: 18px; background-color: #f8f9fd;">Subtotal: <span
+                                    id="subtotal"></span></p>
+                            <div class="pb-2" style="display: flex;">
+                                <p id="point" class="form-control pr-3" style="border: none; font-size: 18px; background-color: #f8f9fd;">Points: 0
+                                </p>
+                                <button class="send-otp-button" id="redeem">Redeem</button>
+                            </div>
+                            <div id="point_amount" class="discamount discamount pl-3 pb-2" style="color: red;"></div>
+                            <p class="form-control px-3" style="border: none; font-size: 18px; background-color: #f8f9fd;">Service Tax (SST 6%): RM
+                                <span id="service"></span>
+                            </p>
+                            <p class="form-control px-3" style="border: none; font-size: 18px; background-color: #f8f9fd;">Sales Tax (10%): RM
+                                <span id="sales"></span>
+                            <p class="form-control px-3 mb-5" style="border: none; font-size: 24px; background-color: #f8f9fd;">Total Price: RM
+                                <span id="totalprice"></span>
+                            </p>
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                        <button id="payment">Pay Now</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="non-refund-notice pb-5 pt-3">
+                    <p>Note: All bookings are non-refundable. Please ensure your information is correct before
+                        proceeding.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!--Footer-->
+        <div class="row text-left px-5 pt-5 foot">
+            <div class="col-md-5 col-sm-12 px-5 pb-5">
+                <h3 class="pb-3" style="color: white; font-family: 'Nunito';">Quick Links</h3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p><a href="/html/home.html">Home</a></p>
+                        <p><a href="/html/roomdog.html">Room Type</a></p>
+                        <p><a href="/html/bookingHistory.html">Booking History</a></p>
+                        <p><a href="/html/contact.html">Contact Us</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5 col-sm-12 pb-5 pl-5">
+                <h3 class="py-3" style="color: white; font-family: 'Nunito';">Follow Us</h3>
+                <a href="https://www.facebook.com/petfurmilycentre/" target="blank"><i class="fa fa-facebook"
+                        aria-hidden="true" style="color:white !important"></i></a>
+                <a href="https://www.instagram.com/petfurmilycentre.pg/" target="blank"><i class="fa fa-instagram"
+                        aria-hidden="true" style="color:white !important"></i></a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/payment.js"></script>
+    <script type="module" src="/js/logouts.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+</body>
+
+</html>

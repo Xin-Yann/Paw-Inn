@@ -4,112 +4,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Hotel</title>
+    <title>Paws Inn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    <link rel="stylesheet" href="../css/nav-8.css">
-    <link rel="stylesheet" href="../css/book.css">
-    <script type="module" src="/js/booking.js"></script>
-
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap">
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/books.css">
 </head>
 
 <body>
-    <div class="container" id="myHeader">
-        <div class="row pt-4">
-            <div class="col-6">
-                <h1 class="title px-2 pt-2"><a href="home.html">Pet Hotel</a></h1>
-            </div>
-            <div class="col-6 links">
-                <a href="home.html">Home</a>
-                <div class="dropdown">
-                    <a href="#">Room Type</a>
-                    <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
-                        <path d="M0-.75h24v24H0z" fill="none"></path>
-                    </svg>
-                    <div class="dropdown-content">
-                        <a href="/html/">Dog</a>
-                        <a href="/html/">Cat</a>
-                        <a href="/html/">Birds</a>
-                        <a href="/html/">Cage</a>
+    <div class="overflow-hidden">
+        <div class="container" id="myHeader">
+            <div class="row pt-4">
+                <div class="col-6">
+                    <h2 class="title px-2 pt-2"><a href="home.html">Paws Inn</a></h2>
+                </div>
+                <div class="col-6 links">
+                    <a href="home.html">Home</a>
+                    <div class="dropdown">
+                        <a href="#">Room Type</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/roomdog.html">Dog</a>
+                            <a href="/html/roomcat.html">Cat</a>
+                            <a href="/html/roomrabbit.html">Rabbit</a>
+                            <a href="/html/roomcage.html">Cage</a>
+                        </div>
                     </div>
+                    <div class="dropdown">
+                        <a href="#">History</a>
+                        <svg fill="#127369" height="24" viewBox="0 1 24 24" width="24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path>
+                            <path d="M0-.75h24v24H0z" fill="none"></path>
+                        </svg>
+                        <div class="dropdown-content">
+                            <a href="/html/bookingHistory.html">Booking History</a>
+                            <a href="/html/unpaidBooking.html">Unpaid Bookings</a>
+                        </div>
+                    </div>
+                    <a href="/html/contact.html">Contact Us</a>
+                    <span style="cursor:pointer; margin: -30px;"><i class="fa fa-user" id="profile"></i></span>
+                    <span style="cursor:pointer"><i class="fa fa-sign-out" id="logOut"></i></span>
                 </div>
-                <a href="/html/offerdetails.html">Booking History</a>
-                <a href="/html/contact.html">Contact Us</a>
-                <div id="cart" class="cart-icon">
-                    <i class="fa fa-shopping-bag"></i>
-                    <span id="cartItemCount" class="cart-item-count">0</span>
+            </div>
+        </div>
+
+        <h1 class="text-center pt-5" style="color: #127369; font-weight: 900;">Book A Room</h1>
+
+        <div id='calendar' style="padding: 50px;"></div>
+
+        <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
                 </div>
-                <span style="cursor:pointer; margin: -20px;"><i class="fa fa-user" id="profile"></i></span>
-                <span style="cursor:pointer"><i class="fa fa-sign-out" id="signOut"></i></span>
             </div>
         </div>
 
         <form>
-            <div class="elem-group">
-                <label for="name">Pet's Owner Name</label>
-                <input type="text" id="name" name="visitor_name" placeholder="John Doe" pattern=[A-Z\sa-z]{3,20}
-                    required>
-            </div>
-            <div class="elem-group">
-                <label for="name">Pet's Name</label>
-                <input type="text" id="name" name="visitor_name" placeholder="John Doe" pattern=[A-Z\sa-z]{3,20}
-                    required>
-            </div>
-            <div class="elem-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="visitor_email" placeholder="john.doe@email.com" required>
-            </div>
-            <div class="elem-group">
-                <label for="phone">Contact</label>
-                <input type="tel" id="phone" name="visitor_phone" placeholder="498-348-3872"
-                    pattern=(\d{3})-?\s?(\d{3})-?\s?(\d{4}) required>
-            </div>
-            <div class="elem-group">
-                <label for="room-selection">Category of Animal</label>
-                <select class="selection" id="room-selection" name="room_preference" required>
-                    <option value="">Choose a Category of animal</option>
-                    <option value="dog">Dog</option>
-                    <option value="cat">Cat</option>
-                    <option value="rabbit">Rabbits</option>
-                    <option value="caged">Caged</option>
-                </select>
-            </div>
-            <div class="elem-group">
-                <label for="room-selection">Select Food Category</label>
-                <select id="room-selection" name="room_preference" required>
-                    <option value="">Choose a Food Category</option>
-                    <option value="normal">Normal</option>
-                    <option value="self">Self-Provide</option>
-                    <option value="medical">Medical Treatment</option>
-                </select>
-            </div>
-            <hr>
-            <div class="elem-group inlined">
-                <label for="checkin-date">Check-in Date</label>
-                <input type="date" id="checkin-date" name="checkin" required>
-            </div>
-            <div class="elem-group inlined">
-                <label for="checkout-date">Check-out Date</label>
-                <input type="date" id="checkout-date" name="checkout" required>
-            </div>
-            <div class="elem-group">
-                <label for="room-selection">Select Room Preference</label>
-                <select id="room-selection" name="room_preference" required>
-                    <option value="">Choose a Room from the List</option>
-                    <option value="connecting">Connecting</option>
-                    <option value="adjoining">Adjoining</option>
-                    <option value="adjacent">Adjacent</option>
-                </select>
-            </div>
-            <button type="submit">Book The Rooms</button>
-        </form>
+            <h1 class="text-center pt-5" style="color: #127369; font-weight: 900;">Fill The Booking Details</h1>
+            <div class="row pl-5 pt-5 justify-content-center" style="gap: 60px;">
+                <div class="col pb-3 ">
+                    <div class="elem-group">
+                        <label for="room_name">Room Name</label>
+                        <input type="text" id="room_name" name="room_name" pattern=[A-Z\sa-z]{3,20} disabled>
+                        <p id="name_error" class="error-message"></p>
+                    </div>
 
+                    <div class="elem-group inlined">
+                        <label for="checkin">Check-in Date</label>
+                        <input type="date" id="checkin" name="checkin" required>
+                        <p id="checkin_error" class="error-message"></p>
+                    </div>
+
+                    <div class="elem-group inlined">
+                        <label for="checkout">Check-out Date</label>
+                        <input type="date" id="checkout" name="checkout" required>
+                        <p id="checkout_error" class="error-message"></p>
+                    </div>
+
+                    <p id="available_error" class="error-message"></p>
+
+                    <div class="elem-group">
+                        <label for="name">Pet's Owner Name</label>
+                        <input type="text" id="owner_name" name="owner_name" placeholder="your name"
+                            pattern=[A-Z\sa-z]{3,20} required>
+                        <p id="owner_error" class="error-message"></p>
+                    </div>
+
+                    <div class="elem-group">
+                        <label for="name">Pet's Name</label>
+                        <input type="text" id="pet_name" name="pet_name" placeholder="Pet's Name"
+                            pattern=[A-Z\sa-z]{3,20} required>
+                        <p id="pet_error" class="error-message"></p>
+                    </div>
+                    <div class="elem-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="your email" required>
+                        <p id="email_error" class="error-message"></p>
+                    </div>
+                </div>
+                <div class="col pb-5 pl-5">
+                    <div class="elem-group">
+                        <label for="phone">Contact</label>
+                        <input type="tel" id="contact" name="contact" placeholder="your phone number" required>
+                        <p id="contact_error" class="error-message"></p>
+                    </div>
+                    <div class="elem-group">
+                        <label for="category">Category of Animal</label>
+                        <select class="selection" id="category" name="category" disabled>
+                            <option value="">Choose a Category of animal</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="rabbit">Rabbits</option>
+                            <option value="cage">Caged</option>
+                        </select>
+                        <p id="category_error" class="error-message"></p>
+                    </div>
+                    <div class="elem-group">
+                        <label for="food_category">Select Food Category</label>
+                        <select id="food_category" name="food_category" required>
+                            <option value="">Choose a Food Category</option>
+                            <option value="normal">Normal</option>
+                            <option value="self">Self-Provide</option>
+                            <option value="medical">Medical Treatment</option>
+                        </select>
+                        <p id="food_error" class="error-message"></p>
+                    </div>
+                    <div class="elem-group">
+                        <label for="vaccination_image">Vaccination Proof (only accept PDF, PNG, JPG, JPEG):</label>
+                        <input type="file" id="vaccination_image" name="vaccination_image" required><br>
+                        <p id="vaccination_error" class="error-message"></p>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="container px-4 py-4">
+                <p class="form-control px-3" style="border: none; font-size: 18px;" >Total Nights: <span id="nights"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 18px;">Price (per night): RM <span id="price"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 24px;">Subtotal: RM <span id="subtotal"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 24px;">Service Tax (SST 6%): RM <span id="service"></span></p>
+                <p class="form-control px-3" style="border: none; font-size: 24px;">Sales Tax (10%): RM <span id="sales"></span></p>
+                <p class="form-control px-3 mb-5" style="border: none; font-size: 24px;">Total Price: RM <span  id="totalprice"></span></p>
+            
+                <input type="hidden" id="status" value="Pending">
+
+                <a href="#" type="submit" class="form-control btn btn-primary rounded submit px-3" id="submit"
+                    style="background-color: #01647a;border: none;">Book Now</a>
+                
+            </div>
+        </form>
+    </div>
+
+    <div id="room_quantity"></div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/bookings.js"></script>
+    <script type="module" src="/js/logouts.js"></script>
 </body>
 
 </html>
