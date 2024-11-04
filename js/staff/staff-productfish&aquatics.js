@@ -113,7 +113,7 @@ function editProduct(productId, productType) {
     const encodedType = encodeURIComponent(productType);
     const url = `/html/staff/staff-editproduct.html?category=${encodedCategory}&id=${productId}&type=${encodedType}`;
     
-    console.log('Redirect URL:', url); // Debugging: log the generated URL
+    console.log('Redirect URL:', url); 
     window.location.href = url;
 }
 

@@ -5,7 +5,6 @@ const db = getFirestore();
 let selectYear;
 
 async function fetchAndDisplaySales() {
-
     const sales = {};
     const selectedCategory = document.getElementById('selectProductCategory').value;
     try {
@@ -59,7 +58,6 @@ async function fetchAndDisplaySales() {
     return sales;
 
 }
-
 
 let myChart = null;
 let myChart2 = null;
@@ -365,8 +363,6 @@ async function displaysRoomSalesReport() {
             }
         }
     });
-
-
 
     if (myChart2) {
         myChart2.destroy();

@@ -1,13 +1,21 @@
 import { getFirestore, doc, getDoc, updateDoc, query, collection, getDocs, where } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
+import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
 
 const storage = getStorage();
-
 const db = getFirestore();
 const auth = getAuth();
 const stripe = Stripe('pk_test_51PLiKDHzquwkd6f4bfXP8K4Vhe69OYRBKhR0SIdtaof4VdVoXDWWI3hLYtqk6KqEKeYYOWbRLMgr4BtumdxhdXBX00GNGUlLiI');
 const elements = stripe.elements();
+
+Typebot.initBubble({
+  typebot: "customer-support-92olq2c",
+  theme: {
+      button: { backgroundColor: "#0d9488" },
+      chatWindow: { backgroundColor: "#fff" },
+  },
+});
 
 document.addEventListener("DOMContentLoaded", () => {
 

@@ -1,5 +1,14 @@
 import { getFirestore, collection, getDocs, getDoc, query, where, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
+
+Typebot.initBubble({
+    typebot: "customer-support-92olq2c",
+    theme: {
+        button: { backgroundColor: "#0d9488" },
+        chatWindow: { backgroundColor: "#fff" },
+    },
+});
 
 document.addEventListener('DOMContentLoaded', () => {
 

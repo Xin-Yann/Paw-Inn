@@ -1,9 +1,17 @@
 import { getFirestore, collection, getDocs, query, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
 
-// Initialize Firestore
 const db = getFirestore();
 const auth = getAuth();
+
+Typebot.initBubble({
+    typebot: "customer-support-92olq2c",
+    theme: {
+        button: { backgroundColor: "#0d9488" },
+        chatWindow: { backgroundColor: "#fff" },
+    },
+});
 
 function getCurrentUserId() {
     const user = auth.currentUser;
@@ -34,7 +42,6 @@ async function fetchDataAndDisplay() {
         const roomCategories = [{ category: 'cat', collectionName: 'cat rooms' }];
 
         for (const { category, collectionName } of roomCategories) {
-            // Create a reference to the collection
             const dogRoomsCollectionRef = collection(db, 'rooms', category, collectionName);
 
             const dogRoomsQuerySnapshot = await getDocs(query(dogRoomsCollectionRef));
@@ -46,21 +53,8 @@ async function fetchDataAndDisplay() {
                 const roomData = doc.data();
                 console.log("Fetching image for room:", roomData.room_name, "Image path:", roomData.room_image);
 
-                // Determine the overall availability status
                 let isAvailable = false;
                 let isSellingFast = false;
-
-                // roomData.room_quantity.forEach(quantityMap => {
-                //     for (const quantity of Object.values(quantityMap)) {
-                //         const parsedQuantity = parseInt(quantity);
-                //         if (parsedQuantity > 0) {
-                //             isAvailable = true;
-                //         }
-                //         if (parsedQuantity > 0 && parsedQuantity < 5) {
-                //             isSellingFast = true;
-                //         }
-                //     }
-                // });
 
                 if (Array.isArray(roomData.room_quantity)) {
 
@@ -80,7 +74,7 @@ async function fetchDataAndDisplay() {
 
                     });
 
-                    console.log("room_quantity is an object:", roomData.room_quantity);
+                    // console.log("room_quantity is an object:", roomData.room_quantity);
                 } else {
                     console.warn("room_quantity is not an object:", roomData.room_quantity);
                 }

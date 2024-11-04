@@ -136,7 +136,6 @@ async function fetchAndDisplayRoomInventory() {
                         roomData.room_quantity.forEach((quantityObj, index) => {
                             Object.entries(quantityObj).forEach(([date, quantity]) => {
                                 const parsedQuantity = parseInt(quantity, 10);   roomQuantity += parsedQuantity;
-                                // }
                                 if (!isNaN(parsedQuantity)) {
                                     roomQuantity += parsedQuantity;
                                 }

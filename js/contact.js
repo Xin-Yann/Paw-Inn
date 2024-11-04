@@ -1,8 +1,17 @@
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, doc, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
 
 const db = getFirestore();
 const auth = getAuth();
+
+Typebot.initBubble({
+    typebot: "customer-support-92olq2c",
+    theme: {
+        button: { backgroundColor: "#0d9488" },
+        chatWindow: { backgroundColor: "#fff" },
+    },
+});
 
 (function () {
     emailjs.init("86kjxi3kBUTZUUwYJ"); 

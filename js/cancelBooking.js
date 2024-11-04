@@ -1,8 +1,17 @@
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
 
 const db = getFirestore();
 const auth = getAuth();
+
+Typebot.initBubble({
+    typebot: "customer-support-92olq2c",
+    theme: {
+        button: { backgroundColor: "#0d9488" },
+        chatWindow: { backgroundColor: "#fff" },
+    },
+});
 
 function getCurrentUserId() {
     const user = auth.currentUser;
@@ -62,8 +71,8 @@ async function cancelBooking(userId) {
     console.log('Payments Array:', payments);
 
     const payment = payments.find(payment => {
-        console.log('Checking Payment Book ID:', payment.book_id); 
-        return payment.book_id === book_id; 
+        console.log('Checking Payment Book ID:', payment.book_id);
+        return payment.book_id === book_id;
     });
 
     if (!payment) {
@@ -97,7 +106,7 @@ async function cancelBooking(userId) {
             payment.status = 'Cancelled';
             await updateDoc(docRef, { payments });
             alert(`Booking ID: ${book_id} has been cancelled.`);
-            window.location.href = '/html/bookingHistory.html'; 
+            window.location.href = '/html/bookingHistory.html';
         } catch (error) {
             console.error('Error cancelling booking:', error);
             alert('Failed to cancel booking. Please try again.');

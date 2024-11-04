@@ -2,24 +2,37 @@ import { getFirestore, collection, setDoc, doc, getDoc, query, where, getDocs } 
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDaPvOB_hQnvGhiWpF77JG1euFNgu5kC94",
-  authDomain: "pet-hotel-9116c.firebaseapp.com",
-  projectId: "pet-hotel-9116c",
-  storageBucket: "pet-hotel-9116c.appspot.com",
-  messagingSenderId: "550182128399",
-  appId: "1:550182128399:web:74b7ed2fd96cb2f8524c7a",
-  measurementId: "G-68HVJYMQ53"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDaPvOB_hQnvGhiWpF77JG1euFNgu5kC94",
+//   authDomain: "pet-hotel-9116c.firebaseapp.com",
+//   projectId: "pet-hotel-9116c",
+//   storageBucket: "pet-hotel-9116c.appspot.com",
+//   messagingSenderId: "550182128399",
+//   appId: "1:550182128399:web:74b7ed2fd96cb2f8524c7a",
+//   measurementId: "G-68HVJYMQ53"
+// };
 
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);
+
+const db = getFirestore();
+const auth = getAuth();
+const storage = getStorage();
+
+Typebot.initBubble({
+  typebot: "customer-support-92olq2c",
+  theme: {
+      button: { backgroundColor: "#0d9488" },
+      chatWindow: { backgroundColor: "#fff" },
+  },
+});
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  const storage = getStorage(app);
+  // const db = getFirestore(app);
+  // const auth = getAuth(app);
+  // const storage = getStorage(app);
 
   function getCurrentUserId() {
     const user = auth.currentUser;
