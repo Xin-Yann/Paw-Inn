@@ -35,8 +35,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-
-// Function to fetch data and display it
+// Function to fetch data and display it in the page based on room type
 async function fetchDataAndDisplay() {
     try {
         const roomCategories = [{ category: 'cat', collectionName: 'cat rooms' }];
@@ -106,8 +105,7 @@ async function fetchDataAndDisplay() {
             }
         }
 
-
-        // Add event listeners to images and cards
+        // Display room details pop up
         document.querySelectorAll('.rooms-container').forEach(container => {
             container.addEventListener('click', () => {
                 const roomData = {
@@ -141,10 +139,9 @@ async function fetchDataAndDisplay() {
 
         });
 
-        // Add event listeners for the "Book Now" buttons
         document.querySelectorAll('.book-now').forEach(button => {
             button.addEventListener('click', async (event) => {
-                event.stopPropagation(); // Prevent triggering the container click event
+                event.stopPropagation(); 
                 const userId = getCurrentUserId();
                 if (!userId) {
                     window.alert(`Please login to make booking.`);
@@ -167,7 +164,6 @@ async function fetchDataAndDisplay() {
                 if (roomData.quantity === "Fully Booked" || roomData.quantity == "None") {
                     window.alert(`No slots available for ${roomData.name}.`);
                 } else {
-                    // Store selected room data in sessionStorage
                     sessionStorage.setItem('selectedRoomName', roomData.name);
                     sessionStorage.setItem('selectedRoomCategory', roomData.category);
                     sessionStorage.setItem('selectedRoomPrice', roomData.price);
@@ -238,8 +234,7 @@ async function showModal(roomData) {
     bookNowButton.setAttribute('room-price', roomData.price);
     bookNowButton.setAttribute('room-status', roomData.quantity);
 
-
-    // Add event listener for redirecting to the booking page
+    // Book Now Button
     bookNowButton.addEventListener('click', () => {
         const userId = getCurrentUserId();
         if (!userId) {
@@ -261,11 +256,10 @@ async function showModal(roomData) {
 
     modalBody.appendChild(bookNowButton);
 
-    // Show the modal
     const modal = new bootstrap.Modal(document.getElementById('room-details-modal'));
     modal.show();
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    fetchDataAndDisplay(); // Ensure this is called after DOM is fully loaded
+    fetchDataAndDisplay(); 
 });

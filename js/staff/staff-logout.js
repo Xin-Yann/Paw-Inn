@@ -30,14 +30,12 @@ document.getElementById('logOut').addEventListener('click', () => {
   // Sign out the current user
   signOut(auth)
     .then(() => {
-      // Sign-out successful, clear session storage
       sessionStorage.clear();
       console.log('User signed out');
       window.location.href = "../staff/staff-home.html";
       window.alert("You have been successfully signed out.");
     })
     .catch((error) => {
-      // An error happened.
       console.error('Sign-out error:', error);
     });
 });

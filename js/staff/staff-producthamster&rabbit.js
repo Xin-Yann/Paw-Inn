@@ -10,8 +10,7 @@ function createButton(htmlContent, onClickHandler) {
     return button;
 }
 
-
-// Function to fetch data and display it in the webpage based on food type
+// Function to fetch data and display it in the page based on food type
 async function fetchDataAndDisplay() {
     try {
         const productType = document.getElementById('food-type').value;

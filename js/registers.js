@@ -3,6 +3,7 @@ import { getFirestore, collection, setDoc, doc } from "https://www.gstatic.com/f
 const auth = getAuth();
 const db = getFirestore();
 
+// Function to hash password
 function hashPassword(password) {
     return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
 }
@@ -25,16 +26,19 @@ document.getElementById('signUpButton').addEventListener('click', async (event) 
             return;
         }
 
+        
         const uppercase = /[A-Z]/;
         const lowercase = /[a-z]/;
         const contactNo = /^(\d{3}[- ]\d{3,4}[- ]?\d{4})$/;
         const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+        // Check password format
         if (password.length < 8 || !uppercase.test(password) || !lowercase.test(password)) {
             window.alert("Password must be at least 8 characters long and contain at least one uppercase and one lowercase character");
             return;
         }
 
+        // Check contact and email format
         if (!contactNo.test(contact)) {
             window.alert("Please enter a valid contact number");
             return;

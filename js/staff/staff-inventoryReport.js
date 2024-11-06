@@ -2,6 +2,7 @@ import { getFirestore, collection, getDocs } from "https://www.gstatic.com/fireb
 
 const db = getFirestore();
 
+//Fetch product details
 async function fetchAndDisplaySales() {
     const productStocks = [];
     try {
@@ -42,6 +43,7 @@ async function fetchAndDisplaySales() {
 let inventoryChart = null;
 let chart = null;
 
+//Product Inventory Report
 async function displaysSalesReport() {
     const inventory = await fetchAndDisplaySales();
     console.log('Fetched Inventory Data:', inventory);
@@ -113,6 +115,7 @@ async function displaysSalesReport() {
     });
 }
 
+//Fetch room details
 async function fetchAndDisplayRoomInventory() {
     const roomStocks = [];
     try {
@@ -165,6 +168,7 @@ async function fetchAndDisplayRoomInventory() {
     }
 }
 
+// Room Inventory Report
 async function displayRoomInventoryChart() {
     const rooms = await fetchAndDisplayRoomInventory();
     console.log('Fetched Inventory Data:', rooms);

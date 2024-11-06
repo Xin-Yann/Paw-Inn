@@ -3,6 +3,7 @@ import { getFirestore, collection, setDoc, doc, getDoc } from "https://www.gstat
 const auth = getAuth();
 const db = getFirestore();
 
+//Hash password function
 function hashPassword(password) {
     return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
 }
@@ -33,11 +34,13 @@ document.getElementById('signUp').addEventListener('click', async (event) => {
         const checkbox = document.getElementById('checkbox');
         const staffId = await generateStaffID();
 
+        // Check if required fields are filled
         if (!name || !email || !password || !contact) {
             window.alert("Please fill in all the details.");
             return;
         }
 
+        //check password and contact format 
         const uppercase = /[A-Z]/;
         const lowercase = /[a-z]/;
         const contactNo = /^(\d{3}[- ]\d{3,4}[- ]?\d{4})$/;

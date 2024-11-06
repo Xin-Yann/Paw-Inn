@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return user ? user.uid : null;
     }
 
-    // Function to fetch and display personal details
+    // Function to fetch and display user details
     async function fetchAndDisplayPersonalDetails(userId) {
         try {
             console.log(`Fetching details for email: ${userId}`);

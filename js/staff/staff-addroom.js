@@ -18,6 +18,7 @@ document.getElementById("add").addEventListener("click", async () => {
         const price = /^\d+(\.\d{1,2})?$/;
         const quantityAndSize = /^\d+$/;
 
+        // Check if required fields are filled
         if (!roomId || !roomName || !roomPrice || !roomQuantity || !roomSize || !imagePath) {
             alert('Please fill out all required fields: category, type, ID, name, price, quantity, size and image.');
             return;
@@ -51,6 +52,7 @@ document.getElementById("add").addEventListener("click", async () => {
         const roomRef = doc(collection(db, 'rooms', category, type), roomId);
         const roomSnapshot = await getDoc(roomRef);
 
+        //check room id is exists
         if (roomSnapshot.exists()) {
             alert('Room ID already exists. Please choose a different ID.');
             return;
@@ -59,6 +61,7 @@ document.getElementById("add").addEventListener("click", async () => {
         const roomsQuery = query(collection(db, 'rooms', category, type), where("room_name", "==", roomName));
         const querySnapshot = await getDocs(roomsQuery);
 
+        //check room name is exists
         if (!querySnapshot.empty) {
             alert('Room name already exists. Please choose a different name.');
             return;
@@ -66,6 +69,7 @@ document.getElementById("add").addEventListener("click", async () => {
 
         const imageName = imagePath.split('\\').pop().split('/').pop();
 
+        // Generate an end date two years from today
         const today = new Date();
         const endDate = new Date();
         endDate.setFullYear(today.getFullYear() + 2);

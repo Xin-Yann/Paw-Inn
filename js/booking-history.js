@@ -28,10 +28,12 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// Function to cancel booking page
 window.cancelBooking = function (bookingId) {
     window.location.href = `/html/cancelBooking.html?book_id=${encodeURIComponent(bookingId)}`;
 }
 
+// Function to check in booking page
 window.checkinBooking = function (bookingId) {
     window.location.href = `/html/checkin.html?book_id=${encodeURIComponent(bookingId)}`;
 }
@@ -41,6 +43,7 @@ function isPastDate(dateString) {
     return date < new Date();
 }
 
+// Function to fetch booking detials
 async function fetchAndDisplayBookings(userId) {
     try {
         const status = document.getElementById('status').value;
@@ -63,12 +66,14 @@ async function fetchAndDisplayBookings(userId) {
                 return bookingDate.getMonth() === currentMonth && bookingDate.getFullYear() === currentYear;
             });
 
+            // Sort book_id in descending order
             paymentFilter.sort((a, b) => {
                 const idA = parseInt(a.book_id.replace(/^\D+/g, ''), 10); 
                 const idB = parseInt(b.book_id.replace(/^\D+/g, ''), 10);
                 return idB - idA; 
             });
 
+            // Sort to put enabled bookings before disabled ones
             paymentFilter.sort((a, b) => {
                 const isDisabledA = isPastDate(a.checkin_date) || isPastDate(a.checkout_date);
                 const isDisabledB = isPastDate(b.checkin_date) || isPastDate(b.checkout_date);

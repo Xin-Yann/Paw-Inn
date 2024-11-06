@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchAndDisplayOrder();
 
+    //Fetch order details
     async function fetchAndDisplayOrder() {
         try {
 

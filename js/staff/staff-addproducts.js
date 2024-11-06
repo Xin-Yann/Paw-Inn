@@ -17,6 +17,7 @@ document.getElementById("add").addEventListener("click", async () => {
         const price = /^\d+(\.\d{1,2})?$/;
         const stockAndBarcode = /^\d+$/;
 
+         // Check if required fields are filled
         if (!productId || !productName || !productPrice || !productStock || !productWeight || !productBarcode) {
             alert('Please fill out all required fields: category, type, ID, name, price, stock, weight, barcode.');
             return;
@@ -55,6 +56,7 @@ document.getElementById("add").addEventListener("click", async () => {
         const productRef = doc(collection(db, 'product', category, type), productId);
         const productSnapshot = await getDoc(productRef);
 
+        //check product id is exists
         if (productSnapshot.exists()) {
             alert('Product ID already exists. Please choose a different ID.');
             return;
@@ -63,6 +65,7 @@ document.getElementById("add").addEventListener("click", async () => {
         const productsQuery = query(collection(db, 'product', category, type), where("product_name", "==", productName));
         const querySnapshot = await getDocs(productsQuery);
 
+        //check product name is exists
         if (!querySnapshot.empty) {
             alert('Product name already exists. Please choose a different name.');
             return;

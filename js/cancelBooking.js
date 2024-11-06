@@ -101,6 +101,7 @@ async function cancelBooking(userId) {
     `;
     confirmContainer.style.display = 'block';
 
+    // Function to cancel booking
     document.getElementById('confirm-cancel').addEventListener('click', async () => {
         try {
             payment.status = 'Cancelled';

@@ -35,6 +35,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
+// Function to fetch data and display it in the page based on room type
 async function fetchDataAndDisplay() {
     try {
         const roomCategories = [{ category: 'dog', collectionName: 'dog rooms' }];
@@ -107,6 +108,7 @@ async function fetchDataAndDisplay() {
             }
         }
 
+        // Display room detials pop up
         document.querySelectorAll('.rooms-container').forEach(container => {
             container.addEventListener('click', () => {
                 const roomData = {
@@ -236,6 +238,7 @@ async function showModal(roomData) {
     bookNowButton.setAttribute('room-price', roomData.price);
     bookNowButton.setAttribute('room-status', roomData.quantity);
 
+    // Book Now Button
     bookNowButton.addEventListener('click', () => {
         const userId = getCurrentUserId();
         if (!userId) {

@@ -7,6 +7,7 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
+//Function to fetch product detials
 async function fetchAndDisplayProductDetails() {
     try {
         const productCategory = getQueryParam('category');
@@ -96,9 +97,11 @@ async function saveProductDetails() {
 
         const productDocRef = doc(db, 'product', productCategory, productType, productId);
 
+        //Check price, stock, barcode and weight format 
         const price = /^\d+(\.\d{1,2})?$/;
         const stockAndBarcode = /^\d+$/;
 
+         // Check if required fields are filled
         if (!productName || !productPrice || !productStock || !productWeight || !productBarcode) {
             alert('Please fill out all required fields: name, price, stock, weight.');
             return;

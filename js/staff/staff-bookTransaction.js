@@ -64,13 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const statusContainerElement = document.getElementById('statusContainer');
                 statusContainerElement.innerHTML = '<p>No bookings found.</p>';
             } else {
-
+                // Sort book_id in descending order
                 const sortedPayments = filteredPayments.sort((a, b) => {
                     const idA = parseInt(a.book_id.replace(/^\D+/g, ''), 10); 
                     const idB = parseInt(b.book_id.replace(/^\D+/g, ''), 10); 
                     return idB - idA; 
                 });
 
+                // Sort to put enabled booking before disabled ones
                 filteredPayments.sort((a, b) => {
                     const isDisabledA = isPastDate(a.checkin_date) || isPastDate(a.checkout_date);
                     const isDisabledB = isPastDate(b.checkin_date) || isPastDate(b.checkout_date);
@@ -201,19 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
+    //Check in Pop Up
     function openCheckinModal(bookingId, bookingDetails) {
         document.getElementById('checkinBookingDetails').innerHTML = bookingDetails;
         document.getElementById('confirmCheckinButton').onclick = () => checkinBooking(bookingId);
         $('#checkinModal').modal('show');
     }
 
+    //Check Out Pop Up
     function openCheckoutModal(bookingId, bookingDetails) {
         document.getElementById('checkoutBookingDetails').innerHTML = bookingDetails;
         document.getElementById('confirmCheckoutButton').onclick = () => checkoutBooking(bookingId);
         $('#checkoutModal').modal('show');
     }
 
+    //Check-in Booking
     async function checkinBooking(bookingId) {
         try {
             const paymentCollectionRef = collection(db, 'payments');
@@ -249,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    //Check-out booking
     async function checkoutBooking(bookingId) {
         try {
             const paymentCollectionRef = collection(db, 'payments');

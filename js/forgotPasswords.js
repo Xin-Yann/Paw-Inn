@@ -4,6 +4,7 @@ import { getFirestore, collection, query, where, getDocs } from "https://www.gst
 const auth = getAuth();
 const db = getFirestore();
 
+//Function to fetch user detials
 async function fetchAndDisplayPersonalDetails(email) {
     try {
         console.log(`Fetching details for email: ${email}`);

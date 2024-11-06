@@ -41,6 +41,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
+//Function to fetch user data
 async function fetchUserDataFromFirestore(userId) {
     try {
         if (userId) {
@@ -58,6 +59,7 @@ async function fetchUserDataFromFirestore(userId) {
     }
 }
 
+// Function to send email
 function SendMail() {
     var params = {
         from_name: document.getElementById("from_name").value,
@@ -100,7 +102,6 @@ document.getElementById('Submit').addEventListener('click', async (event) => {
             isValid = false;
         }
 
-        
         if (!name || !email || !title || !message) {
             window.alert('All field must be filled out.');
             return;

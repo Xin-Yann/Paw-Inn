@@ -7,6 +7,7 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
+//Function to fetch room detials 
 async function fetchAndDisplayProductDetails() {
     try {
         const roomCategory = getQueryParam('category');
@@ -52,6 +53,7 @@ async function saveProductDetails() {
 
         const roomDocRef = doc(db, 'rooms', roomCategory, roomType, roomId);
 
+        // Check if price, quantity and size format
         const price = /^\d+(\.\d{1,2})?$/;
         const quantityAndSize = /^\d+$/;
 
@@ -70,6 +72,7 @@ async function saveProductDetails() {
             return;
         }
 
+         // Check if required fields are filled
         if (!roomName || !roomPrice || !roomQuantity || !roomSize || !roomDescription) {
             alert('Please fill out all required fields: name, price, quantity, size.');
             return;

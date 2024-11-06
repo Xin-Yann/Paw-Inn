@@ -33,19 +33,14 @@ for (var i = 0; i < cards.length; i++) {
     });
 }
 
-
-// Get all close buttons
 var closeBtns = document.querySelectorAll('.close');
 
-// Loop through all close buttons and add event listeners
 for (var i = 0; i < closeBtns.length; i++) {
     closeBtns[i].addEventListener('click', function () {
-        // Hide the modal when close button is clicked
         this.parentNode.parentNode.style.display = 'none';
     });
 }
 
-// Close the modal when the user clicks anywhere outside of the modal
 window.onclick = function (event) {
     var modals = document.getElementsByClassName('modal');
     for (var i = 0; i < modals.length; i++) {

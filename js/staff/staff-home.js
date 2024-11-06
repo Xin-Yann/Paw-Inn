@@ -9,6 +9,7 @@ function getCurrentUserId() {
     return user ? user.uid : null;
 }
 
+//Fetch staff detials 
 async function fetchAndDisplayPersonalDetails(email) {
     try {
         console.log(`Fetching details for email: ${email}`);

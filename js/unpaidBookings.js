@@ -32,6 +32,7 @@ window.payBooking = function (bookingId) {
     window.location.href = `/html/payment.html?book_id=${encodeURIComponent(bookingId)}`;
 }
 
+// Function to fetch and display booking detials 
 async function fetchAndDisplayBookStatus(userId) {
     try {
         const bookDocRef = doc(db, 'book', userId);
@@ -54,6 +55,7 @@ async function fetchAndDisplayBookStatus(userId) {
                 return checkinDate < today;
             })
 
+            // Check past date booking
             if (pastDate.length > 0) {
                 console.log(`You have ${pastDate.length} past checked in date bookings.`);
                 const confirmDelete = window.confirm(
@@ -69,6 +71,7 @@ async function fetchAndDisplayBookStatus(userId) {
                 }
             }
 
+            // Sort book_id in descending order
             bookArray.sort((a, b) => {
                 const idA = a.book_id && typeof a.book_id === 'string'
                     ? parseInt(a.book_id.replace(/^\D+/g, ''), 10)
@@ -138,6 +141,7 @@ async function fetchAndDisplayBookStatus(userId) {
     }
 }
 
+// Function to fetch roon quantity
 async function fetchRoomQuantity(year = new Date().getFullYear()) {
     try {
         const roomCategories = [
@@ -164,7 +168,6 @@ async function fetchRoomQuantity(year = new Date().getFullYear()) {
                         return;
                     }
 
-                    // Process data for each month
                     roomQuantities.forEach((monthData, monthIndex) => {
                         for (const [date, quantity] of Object.entries(monthData)) {
                             const roomDate = new Date(date);
@@ -191,7 +194,7 @@ async function fetchRoomQuantity(year = new Date().getFullYear()) {
     }
 }
 
-
+// Function to delete booking if insufficient room quantity
 async function deleteBooking(bookings, bookDocRef) {
     const deleteBook = [];
 

@@ -34,7 +34,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-
+//Fetch all product details
 async function getAllProductStock(selectedFoodType = null) {
     try {
         const productStocks = [];
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         createCategoryTabs(); 
         displayProducts(allProductStocks, Object.keys(categories)[0]); 
 
-         // Add event listener for the food type dropdown
+         // Food type dropdown
          const foodTypeSelect = document.getElementById('food-type');
          foodTypeSelect.addEventListener('change', (event) => {
              const selectedFoodType = event.target.value;
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
          });
 
         const searchInput = document.getElementById('search-input');
-
+        // Search Funtion
         if (searchInput) {
             searchInput.addEventListener('input', () => {
                 const searchTerm = searchInput.value.trim().toLowerCase();
@@ -204,6 +204,7 @@ function displayProducts(products, selectedCategory = null, selectedFoodType = n
             <h5 class="pb-4">RM ${product.productPrice}</h5>
         `;
 
+        //Add to cart button
         const addToCartButton = createButton('ADD TO CART', () => {
             addToCart(
                 product.productId,
@@ -234,6 +235,7 @@ function displayProducts(products, selectedCategory = null, selectedFoodType = n
     });
 }
 
+//Fucntion to add product to cart
 async function addToCart(productId, productBarcode, productName, productPrice, productStock, productImage, type, category) {
     try {
 
@@ -478,6 +480,7 @@ async function decrementQuantity(event) {
     displayCartItems();
 }
 
+//Function to remove item from cart
 async function deleteCartItem(event) {
     event.preventDefault();
 

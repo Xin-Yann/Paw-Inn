@@ -4,6 +4,7 @@ const db = getFirestore();
 
 let selectYear;
 
+//Function to fetch orders details
 async function fetchAndDisplaySales() {
     const sales = {};
     const selectedCategory = document.getElementById('selectProductCategory').value;
@@ -62,6 +63,7 @@ async function fetchAndDisplaySales() {
 let myChart = null;
 let myChart2 = null;
 
+// Room Sales Report
 async function displaysSalesReport() {
     const selectedCategory = document.getElementById("selectRoomCategory").value;
     document.getElementById('salesReport').style.display = 'none';
@@ -220,8 +222,7 @@ async function displaysSalesReport() {
     });
 }
 
-//Room Report
-
+//Function to fetch room's booking details
 async function fetchAndDisplayRoomSales() {
     const sales = {};
     const selectedCategory = document.getElementById('selectRoomCategory').value;
@@ -270,7 +271,7 @@ async function fetchAndDisplayRoomSales() {
     }
 }
 
-
+// Room sales report
 async function displaysRoomSalesReport() {
     document.getElementById('salesReport').style.display = 'block';
     document.getElementById('report').style.display = 'none';

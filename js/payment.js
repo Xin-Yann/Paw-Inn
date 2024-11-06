@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let totalPrice;
 
+  //Function to fetch and display booking details
   async function fetchAndDisplayBooking(userId) {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -59,18 +60,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let booking;
         if (book_id) {
+          // Find the booking with the specific book_id
           booking = bookings.find(b => b.book_id === book_id);
           if (!booking) {
             console.error('No booking found with ID:', book_id);
             return;
           }
         } else {
+          // Get the newest booking
           booking = bookings[bookings.length - 1];
           if (!booking) {
             console.error('No bookings found for user ID:', userId);
             return;
           }
         }
+
         document.getElementById('book_id').textContent = booking.book_id;
         document.getElementById('book_date').textContent = booking.book_date;
         document.getElementById('room_name').textContent = booking.room_name;
@@ -100,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         totalPrice = booking.totalPrice;
-
 
       } else {
         console.error('No document found for user ID:', userId);
@@ -187,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     SendMailOtp();
   });
 
+  // Function to send OTP
   async function SendMailOtp() {
     try {
 
@@ -288,6 +292,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(elementId).textContent = message;
   }
 
+
+  //Function to redeem points
   async function redeemPoints() {
     try {
       const pointsText = document.getElementById('point').textContent;

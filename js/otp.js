@@ -114,14 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
               const startDate = new Date(checkinDate);
               const endDate = new Date(checkoutDate);
 
-              // Update quantities in each map
+              // Update quantities 
               for (const monthData of currentQuantities) {
                 for (const [date, quantity] of Object.entries(monthData)) {
                   const dateObj = new Date(date);
                   if (dateObj >= startDate && dateObj <= endDate) {
                     console.log(`Processing date: ${date}`);
 
-                    // Convert quantity to number if it's a string
                     const currentQuantity = typeof quantity === 'string' ? parseInt(quantity, 10) : quantity;
                     console.log(`Current quantity for ${date}: ${currentQuantity}`);
 
@@ -183,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cooldownPeriod = 30 * 1000;
   const maxAttempts = 4;
 
+  // Function to resend OTP
   function resendOTP() {
     try {
 
@@ -296,6 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
+  // Function to proceed payment process
   document.getElementById("verify-otp").addEventListener("click", async function (e) {
     e.preventDefault();
     try {

@@ -1,7 +1,6 @@
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 import { getFirestore, getDoc, getDocs, doc, setDoc, query, collection, where } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-// Initialize Firebase
 const db = getFirestore();
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
@@ -31,6 +30,7 @@ document.getElementById('signIn').addEventListener('click', (event) => {
     return;
   }
 
+  // Function for using email and password to sign in
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
@@ -54,6 +54,7 @@ document.getElementById('signIn').addEventListener('click', (event) => {
     });
 });
 
+// Function for google sign in
 document.getElementById('googleSignIn').addEventListener('click', () => {
   signInWithPopup(auth, provider)
     .then(async (result) => {

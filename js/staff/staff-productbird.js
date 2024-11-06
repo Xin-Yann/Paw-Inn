@@ -10,7 +10,7 @@ function createButton(htmlContent, onClickHandler) {
     return button;
 }
 
-
+// Function to fetch data and display it in the page based on food type
 async function fetchDataAndDisplay() {
     try {
         const productType = document.getElementById('food-type').value;
@@ -61,6 +61,7 @@ async function fetchDataAndDisplay() {
                 tr.appendChild(td);
             });
 
+            // Edit button
             const action1 = document.createElement('td');
             const editButton = createButton('Edit', () => {
                 editProduct(foodData.id, productType);
@@ -69,6 +70,7 @@ async function fetchDataAndDisplay() {
             action1.appendChild(editButton);
             tr.appendChild(action1);
 
+            // Delete button
             const action2 = document.createElement('td');
             const deleteButton = createButton('Delete', async () => {
                 await deleteProduct(foodData.id, productType);
@@ -90,6 +92,7 @@ function naturalSort(a, b) {
     return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 }
 
+// Function to delete product
 async function deleteProduct(productId, productType) {
     try {
         const productRef = doc(db, `products/birds/${productType}/${productId}`);

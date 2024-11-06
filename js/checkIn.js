@@ -5,7 +5,6 @@ import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js
 const db = getFirestore();
 const auth = getAuth();
 
-
 Typebot.initBubble({
     typebot: "customer-support-92olq2c",
     theme: {
@@ -13,7 +12,6 @@ Typebot.initBubble({
         chatWindow: { backgroundColor: "#fff" },
     },
 });
-
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -64,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('Retrieved Book ID:', book_id);
         console.log('Payments Array:', payments);
 
-        // Find the payment
         const payment = payments.find(payment => {
             console.log('Checking Payment Book ID:', payment.book_id);
             return payment.book_id === book_id;
@@ -98,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
         confirmContainer.style.display = 'block';
 
+        //Function to check in booking
         document.getElementById('confirm-checkin').addEventListener('click', async () => {
             try {
                 payment.status = 'Checked-In';

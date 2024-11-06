@@ -31,6 +31,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
+//Function to fetch cart data
 async function getCartData(user) {
     try {
         if (user) {
@@ -126,7 +127,6 @@ function applyDiscount() {
 document.getElementById('apply-discount').addEventListener('click', applyDiscount);
 
 async function updateTotals(subtotal, salestaxRate) {
-    console.log('Update Totals Function Start');
 
     const pointDiscountElement = document.getElementById('pointDiscount');
     console.log('Points Discount Element:', pointDiscountElement);
@@ -164,7 +164,7 @@ async function generateTransactionID() {
             newTransactionID = transactionCounterDoc.data().lastTransactionID + 1;
         }
         await setDoc(transactionCounterDocRef, { lastTransactionID: newTransactionID });
-        return `T${newTransactionID.toString().padStart(2, '0')}`; // Example format: P01
+        return `T${newTransactionID.toString().padStart(2, '0')}`; 
     } catch (e) {
         console.error('Failed to generate transaction ID: ', e);
         throw new Error('Failed to generate transaction ID');
@@ -206,6 +206,7 @@ denominationButtons.forEach(button => {
     });
 });
 
+//Membership
 async function checkMembership(pointsToAdd, pointsToRedeem) {
     const memberInfoDiv = document.getElementById('member-info');
     const memberId = sessionStorage.getItem('membershipId');
@@ -357,6 +358,7 @@ async function updateMemberPoints(membershipId, pointsToAdd) {
     }
 }
 
+//Redeem Points
 async function redeemPoints(membershipId, pointsToRedeem) {
     try {
         const usersCollection = collection(db, 'users');
@@ -468,11 +470,11 @@ document.getElementById('redeem-points').addEventListener('click', async () => {
     }
 });
 
+//Convert total price to points RM 1 = 1 points
 async function calculatePoints(totalPrice) {
     const pointsPerRM = 1;
     return Math.floor(totalPrice * pointsPerRM);
 }
-
 
 function displayMessage(message, color) {
     const messageDiv = document.getElementById('messageDiv');
@@ -528,6 +530,7 @@ document.getElementById('cash-payment').addEventListener('click', async () => {
                 const cartItems = await getCartData(userId);
                 const transactionId = await generateTransactionID();
 
+                //if customent is Member
                 if (membershipInfo.valid) {
                     if (!memberDetails) {
                         console.error('Member details are not available.');
@@ -593,7 +596,7 @@ document.getElementById('cash-payment').addEventListener('click', async () => {
                     console.log('Updated Member Details:', updatedMemberDetails);
 
                 } else {
-                    console.log("Proceeding without membership points or details for a non-member.");
+                    //if customer is Non-member
                     const transactionId = await generateTransactionID();
                     for (let item of cartItems) {
                         await updateProductStock(item.id, item.quantity, item.category, item.type);
@@ -633,6 +636,7 @@ document.getElementById('cash-payment').addEventListener('click', async () => {
 
 let isEmailSent = false;
 
+// Save Payment Details 
 async function savePaymentDetails(transactionId, cartItems, cashPaid, subtotal, salesTax, discount, pointDiscount, totalPrice, changes, updatedMemberDetails) {
     try {
 
@@ -688,6 +692,7 @@ async function savePaymentDetails(transactionId, cartItems, cashPaid, subtotal, 
     }
 }
 
+// Function to clear cart after payment submission
 async function clearCart(userId) {
     try {
         const cartRef = doc(collection(db, 'carts'), userId);

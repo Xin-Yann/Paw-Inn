@@ -10,6 +10,7 @@ function createButton(htmlContent, onClickHandler) {
     return button;
 }
 
+//Fetch Roon Details
 async function fetchDataAndDisplay() {
     try {
         const roomType = document.getElementById('room-type').value;
@@ -108,6 +109,7 @@ async function fetchDataAndDisplay() {
                 tr.appendChild(td);
             });
 
+            //Edit Button
             const action1 = document.createElement('td');
             const editButton = createButton('Edit', () => {
                 editRoom(roomData.id, mainRoomType, roomType);
@@ -116,6 +118,7 @@ async function fetchDataAndDisplay() {
             action1.appendChild(editButton);
             tr.appendChild(action1);
 
+            //Delete Button
             const action2 = document.createElement('td');
             const deleteButton = createButton('Delete', async () => {
                 await deleteRoom(roomData.id, mainRoomType);
@@ -137,6 +140,7 @@ function naturalSort(a, b) {
     return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 }
 
+//Function to delete product
 async function deleteRoom(roomId, mainRoomType) {
     try {
         const roomType = document.getElementById('room-type').value;

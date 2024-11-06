@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('price').textContent = selectedRoomPrice;
   document.getElementById('category').value = selectedRoomCategory;
 
+  //Function to chekc room quantity
   async function checkRoomAvailability(date) {
     try {
         const roomCategories = [
@@ -122,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return false;
     }
 }
-
 
   function calculateNights(checkinDate, checkoutDate) {
     if (!checkinDate || !checkoutDate) return 0;
@@ -293,6 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Function to fetch user details
   async function fetchUserDataFromFirestore(userId) {
     try {
       if (userId) {
@@ -462,6 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  //Function to fetch room quantity 
   async function fetchRoomQuantity(year = new Date().getFullYear()) {
     try {
       const roomCategories = [
@@ -513,6 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return [];
     }
   }
+
   async function initCalendar() {
     const calendarEl = document.getElementById('calendar');
 
@@ -537,6 +540,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (cell) {
             const roomData = await fetchRoomQuantity(); 
 
+            // Display room type buttons
             const filterContainer = document.createElement('div');
             filterContainer.className = 'filter-controls';
             filterContainer.innerHTML = `
@@ -568,6 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
       displayRoomDetails(filteredData);
     }
 
+    // Function to display room detials pop up
     function displayRoomDetails(roomData) {
       const modalTitle = document.getElementById('eventModalLabel');
       const modalBody = document.querySelector('#eventModal .modal-body');

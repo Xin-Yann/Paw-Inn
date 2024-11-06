@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return user ? user.uid : null;
     }
 
+    //Function to fetch and display user detials
     async function fetchAndDisplayPersonalDetails(email) {
         try {
             console.log(`Fetching details for email: ${email}`);
@@ -46,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.log('No staff email found in session storage.');
             }
-            // updateCartItemCount(userId);
 
         } else {
             console.log('No user is authenticated. Redirecting to login page.');

@@ -15,6 +15,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+//Fetch Bookings
 async function fetchAllBookings() {
     try {
         const usersSnapshot = await getDocs(collection(db, 'users'));
@@ -63,6 +64,7 @@ async function fetchAllBookings() {
     }
 }
 
+//Calendar
 async function initCalendar() {
     const calendarEl = document.getElementById('calendar');
     const bookings = await fetchAllBookings();
@@ -124,6 +126,7 @@ async function initCalendar() {
         }
     });
 
+    //Display total room occupied
     function displayRoomCounts(events, today) {
         const roomCountsToday = events.reduce((acc, event) => {
             const eventStartDate = new Date(event.start).setHours(0, 0, 0, 0);
@@ -167,6 +170,7 @@ async function initCalendar() {
         }
     }
 
+    //Function to display booking detials pop up
     async function displayRoomDetails(details) {
         const modalTitle = document.getElementById('eventModalLabel');
         const modalBody = document.querySelector('#eventModal .modal-body');
