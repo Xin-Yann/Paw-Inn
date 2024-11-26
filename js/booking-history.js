@@ -54,16 +54,16 @@ async function fetchAndDisplayBookings(userId) {
             const paymentData = docSnap.data();
             const paymentsArray = paymentData.payments || [];
 
-            const paymentFilter = paymentsArray.filter(payment => {
-                return payment.status === status;
-            });
-
             const currentMonth = new Date().getMonth();
             const currentYear = new Date().getFullYear();
 
-            paymentsArray.filter(payment => {
+            const paymentFilter = paymentsArray.filter(payment => {
                 const bookingDate = new Date(payment.book_date);
-                return bookingDate.getMonth() === currentMonth && bookingDate.getFullYear() === currentYear;
+                return (
+                    payment.status === status &&
+                    bookingDate.getMonth() === currentMonth &&
+                    bookingDate.getFullYear() === currentYear
+                );
             });
 
             // Sort book_id in descending order
@@ -109,9 +109,10 @@ async function fetchAndDisplayBookings(userId) {
                             <strong>Check-in Date:</strong> ${payment.checkin_date}<br>
                             <strong>Check-out Date:</strong> ${payment.checkout_date}<br>
                             <strong>Room:</strong> ${payment.room_name}<br>
+                            <strong>Category: </strong> ${payment.category}<br>
                             <strong>Owner Name:</strong> ${payment.owner_name}<br>
                             <strong>Pet Name:</strong> ${payment.pet_name}<br>
-                            <strong>Total Price:</strong> ${payment.totalPrice}<br>
+                            <strong>Total Price:</strong> RM ${payment.totalPrice}<br>
                         </div>
                     `;
                     const bookingStatus = payment.status || 'Pending';

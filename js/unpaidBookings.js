@@ -109,6 +109,7 @@ async function fetchAndDisplayBookStatus(userId) {
                         <strong>Booking Date:</strong> ${new Date(book.book_date).toLocaleString()}<br>
                         <strong>Check-in Date:</strong> ${book.checkin_date}<br>
                         <strong>Check-out Date:</strong> ${book.checkout_date}<br>
+                        <strong>Category:</strong> ${book.category}<br>
                         <strong>Room:</strong> ${book.room_name}<br>
                         <strong>Pet Name:</strong> ${book.pet_name}
                     `;

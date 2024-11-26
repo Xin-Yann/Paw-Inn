@@ -5,49 +5,11 @@
     align-items: center;
 }
 
-/* .head{
-    background-color: white !important;
-    justify-content: center;
-    flex-wrap: nowrap;
-    display: flex;
-    margin-right: -15px;
-    margin-left: -15px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-} */
-
-
 .fa{
     padding-left: 15px;
     color: #127369 !important;
     font-size: 25px;
 }
-
-/* .menu{
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    justify-content: space-evenly;
-
-}
-
-.menu a{
-    color: #01647a;
-    text-decoration: none;
-    font-family: Catty Pillow Demo;
-    font-size: 30px;
-}
-
-
-
-.menu a:hover{
-    color: #a5ecfa;
-    text-decoration: none;
-} */
 
 .dropdown-content a {
     color: black;
@@ -80,16 +42,6 @@
     display: block;
 }
 
-/* .sticky {
-    position: fixed;
-    top: 0;
-    width: 100%;
-} */
-
-/* .menu-btn{
-    display: flex;
-} */
-
 .title a{
     font-family: 'Nunito', sans-serif;
     color: #127369;
@@ -98,6 +50,7 @@
 
 .title a:hover{
     text-decoration: none;
+    color: #127369;
 }
 
 .title {
@@ -141,6 +94,11 @@
 
 .foot a{
     color:#fff;
+}
+
+.foot a:hover{
+    color:#fff;
+    text-decoration: underline !important;
 }
 
 .col-sm-12 fa{

@@ -102,11 +102,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     for (const monthData of roomQuantities) {
                         if (typeof monthData === 'object' && monthData !== null) {
                             for (const [roomDate, quantity] of Object.entries(monthData)) {
-                                console.log(`Checking date ${roomDate} with quantity ${quantity}`);
+                                //console.log(`Checking date ${roomDate} with quantity ${quantity}`);
                                 const availableDate = new Date(roomDate);
                                 if (availableDate.toDateString() === new Date(date).toDateString() &&
                                     parseInt(quantity, 10) > 0) {
-                                    console.log(`Room available on ${date}`);
+                                    //console.log(`Room available on ${date}`);
                                     return true;
                                 }
                             }
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeDiff = checkout - checkin;
     const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-    return dayDiff;
+    return dayDiff + 1;
   }
 
   function calculateTotalCost(nights, roomPrice, serviceTaxRate = 6, salesTaxRate = 10) {
@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
 
-      console.log('Fetched room data:', roomData);
+      //console.log('Fetched room data:', roomData);
       return roomData;
     } catch (error) {
       console.error('Error fetching room quantity:', error);

@@ -55,6 +55,12 @@ document.getElementById('signUp').addEventListener('click', async (event) => {
             return;
         }
 
+        if (!email.endsWith('@staff.com')){
+            window.alert("Only staff are allowed to register.");
+            return;
+        }
+        
+
         if (!checkbox.checked) {
             window.alert('You must agree to the Privacy Policy & T&C.');
             return;

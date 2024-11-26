@@ -78,7 +78,8 @@ document.getElementById('googleSignIn').addEventListener('click', () => {
               userId: user.uid,
               name: user.displayName,
               email: user.email,
-              membershipId: membershipId
+              membershipId: membershipId,
+              points:0
             });
             console.log("User data saved to Firestore");
           }

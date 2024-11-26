@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 filteredOrders.sort((a, b) => b.id.localeCompare(a.id));
 
                 if (filteredOrders.length === 0) {
-                    transactionTableBody.innerHTML = '<p class="pt-3">No orders found for the selected month.</p>';
+                    transactionTableBody.innerHTML = '<p class="pt-3">No orders found for the selected filter.</p>';
                 } else {
 
                     const table = document.createElement('table');
@@ -110,9 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                        <td class="text-center">${transactionId}</td>
+                        <td class="text-center" style="color: #127369; font-weight: bold;">${transactionId}</td>
                         <td>${orderDetails}</td>
-                        <td class="text-center">Completed</td>
+                        <td class="text-center" style="color: #127369; font-weight: bold;">Completed</td>
                     `;
                         tbody.appendChild(row);
                     });

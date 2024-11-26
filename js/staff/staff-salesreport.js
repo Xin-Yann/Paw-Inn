@@ -63,9 +63,9 @@ async function fetchAndDisplaySales() {
 let myChart = null;
 let myChart2 = null;
 
-// Room Sales Report
+// Product Sales Report
 async function displaysSalesReport() {
-    const selectedCategory = document.getElementById("selectRoomCategory").value;
+    const selectedCategory = document.getElementById("selectProductCategory").value;
     document.getElementById('salesReport').style.display = 'none';
     document.getElementById('report').style.display = 'block';
     const sales = await fetchAndDisplaySales(selectedCategory);
@@ -94,26 +94,6 @@ async function displaysSalesReport() {
 
     console.log('Types:', Array.from(types));
 
-    if (Object.keys(totalSales).length === 0) {
-        document.getElementById('report-messages').textContent = 'No report found for the selected filters.';
-        document.getElementById('report-messages').style.display = 'block';
-        const chartElement = document.getElementById('myChart');
-        if (chartElement) {
-            chartElement.style.display = 'none';
-        } else {
-            console.error('Element with ID myChart not found.');
-        }
-        return;
-    } else {
-        document.getElementById('report-messages').style.display = 'none';
-        const chartElement = document.getElementById('myChart');
-        if (chartElement) {
-            chartElement.style.display = 'block';
-        } else {
-            console.error('Element with ID myChart not found.');
-        }
-    }
-
     const yValues = Array.from(types).map((type, index) => {
         const color = barColors[index % barColors.length];
         roomColorMap[type] = color;
@@ -140,7 +120,7 @@ async function displaysSalesReport() {
 
     const titleElement = document.createElement('h4');
     titleElement.classList.add('legendTitle');
-    titleElement.textContent = `${capitalProductCategory} Room Sales by Month`;
+    titleElement.textContent = `${capitalProductCategory} Product Sales by Month`;
     legendDiv.appendChild(titleElement);
 
     const legendContainer = document.createElement('div');
@@ -179,9 +159,26 @@ async function displaysSalesReport() {
 
     legendDiv.appendChild(legendContainer);
 
-
     if (myChart) {
         myChart.destroy();
+    }
+
+    if (Object.keys(totalSales).length === 0) {
+        document.getElementById('report-messages').textContent = 'No report found for the selected filters.';
+        document.getElementById('report-messages').style.display = 'block';
+        document.getElementById('productLegend').style.display = 'none';
+        const chartElement = document.getElementById('myChart');
+        if (chartElement) {
+            chartElement.style.display = 'none';
+        }
+        return;
+    } else {
+        document.getElementById('report-messages').style.display = 'none';
+        document.getElementById('productLegend').style.display = 'block';
+        const chartElement = document.getElementById('myChart');
+        if (chartElement) {
+            chartElement.style.display = 'block';
+        }
     }
 
     myChart = new Chart("myChart", {
@@ -380,6 +377,7 @@ async function displaysRoomSalesReport() {
         return;
     } else {
         document.getElementById('report-message').style.display = 'none';
+        document.getElementById('legend').style.display = 'block';
         const chartElement = document.getElementById('myChart2');
         if (chartElement) {
             chartElement.style.display = 'block';
@@ -465,8 +463,6 @@ async function filterSalesReport() {
         if (selectProductCategory) {
             selectProductCategory.addEventListener("change", displaysSalesReport);
         }
-
-        await displaysSalesReport();
 
         await displaysSalesReport();
 

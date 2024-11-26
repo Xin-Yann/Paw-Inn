@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('Email').value;
         const contact = document.getElementById('Contact').value;
 
-        const namePattern = /^[A-Za-z\s]+$/;
+        //const namePattern = /^[A-Za-z\s]+$/;
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const contactPattern = /^(\d{3}[- ]\d{3,4}[- ]\d{4})$/;
 
@@ -83,10 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
 
-        if (!namePattern.test(name)) {
-            alert('Name should contain only letters and spaces.');
-            return false;
-        }
+        // if (!namePattern.test(name)) {
+        //     alert('Name should contain only letters and spaces.');
+        //     return false;
+        // }
 
         if (!emailPattern.test(email)) {
             alert('Please enter a valid email address.');

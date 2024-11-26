@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <strong>Owner Name:</strong> ${ownerName}<br>
                             <strong>Pet Name:</strong> ${petName}<br>
                             <strong>Total Price:</strong> ${totalPrice}<br>
-                            <strong class="${isPastDate(payment.checkin_date) || isPastDate(payment.checkout_date) ? 'disabled' : ''}">Vaccination Image:</strong> <img class="vaccination-image" src="${vaccinationImage}" alt="Vaccination Image" width="150" height="150"><br>
+                            <strong class="${isPastDate(payment.checkin_date) || isPastDate(payment.checkout_date) ? 'disabled' : ''}">Vaccination Image:</strong> <img class="vaccination-image" src="${vaccinationImage}" alt="Vaccination Image" width="150" height="200"><br>
                         </div>
                     `;
 

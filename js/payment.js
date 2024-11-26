@@ -302,7 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.alert('No points available for redemption.');
         return;
       }
-      const redeemedDiscount = points / 100;
+      const redeemedDiscount = points / 1000;
       printAmount("point_amount", `-RM${redeemedDiscount.toFixed(2)}`);
       const totalPriceText = document.getElementById('totalprice').textContent;
       const totalPrice = parseFloat(totalPriceText.replace(/[^0-9.]/g, "").trim());
